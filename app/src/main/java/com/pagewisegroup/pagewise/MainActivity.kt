@@ -1,14 +1,16 @@
 package com.pagewisegroup.pagewise
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.EditText
+import java.util.*
+import kotlin.text.*
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputLayout
-
 
 class MainActivity : AppCompatActivity() {
     private val usernameLiveData = MutableLiveData<String>()
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
             }
             usernameInput.editText?.setText("")
             passwordInput.editText?.setText("")
+            setContentView(R.layout.activity_main)
         }
     }
     //Checks if formatting is correct
@@ -66,5 +69,22 @@ class MainActivity : AppCompatActivity() {
         val validUsername = username != null && username.isNotBlank()
         //val validpassword =
         return validUsername //&& validPassword
+    }
+
+    fun showDatePickerDialog(v: View) {
+        if(v is DateDisplayView) {
+            v.picker.show(supportFragmentManager, "datePicker")
+        }
+
+    }
+
+    fun buildAssignment(v: View) {
+        val name = findViewById<EditText>(R.id.assignmentName).text.toString()
+        val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
+        val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
+        val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
+
+        val assignment = Assignment(name, Date(due.picker.year, due.picker.month, due.picker.day), pageStart, pageEnd)
+        print(assignment)
     }
 }
