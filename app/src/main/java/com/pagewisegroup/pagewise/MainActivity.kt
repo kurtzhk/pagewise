@@ -1,5 +1,6 @@
 package com.pagewisegroup.pagewise
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,85 +8,54 @@ import android.widget.EditText
 import java.util.*
 import kotlin.text.*
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputLayout
 
+/*MAIN ACTIVITY
+*
+* this activity is the default set startup activity. it is a splash page that
+* will ask the user if they are a teacher or student,
+* then will start the LOGIN ACTIVITY*/
 class MainActivity : AppCompatActivity() {
-    private val usernameLiveData = MutableLiveData<String>()
-    private val passwordLiveData = MutableLiveData<String>()
-    private val validLoginLiveData = MediatorLiveData<Boolean>().apply {
-            this.value = false
-            addSource(usernameLiveData) { username ->
-                val password = passwordLiveData.value
-                this.value = formatLoginValidation(username, password)
-            }
-            addSource(passwordLiveData) { password ->
-                val username = usernameLiveData.value
-                this.value = formatLoginValidation(username,password)
-            }
-    }
+    val STUDENT_TOKEN = "STUDENT"
+    val TEACHER_TOKEN = "TEACHER"
+    private var login_group: String = STUDENT_TOKEN
+    lateinit var studentButton: Button
+    lateinit var teacherButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login)
+        setContentView(R.layout.activity_main)
 
-        //updates login relevant buttons
-        val usernameInput = findViewById<TextInputLayout>(R.id.username)
-        val passwordInput = findViewById<TextInputLayout>(R.id.password)
-        val signInButton = findViewById<Button>(R.id.signInButton)
+        /*init logo*/
+        val logo: ImageView = findViewById(R.id.pagewise_logo)
+        logo.setImageResource(R.drawable.pagewise_logo)
 
-        usernameInput.editText?.doOnTextChanged { text, _, _, _ ->
-            usernameLiveData.value = text?.toString()
+        /*init the buttons*/
+        studentButton = findViewById<Button>(R.id.student_loginbutton)
+        teacherButton = findViewById<Button>(R.id.teacher_loginbutton)
+
+        /*apply button listeners*/
+        studentButton.setOnClickListener {
+            login_group = STUDENT_TOKEN
+            sendToLogin()
         }
-
-        passwordInput.editText?.doOnTextChanged { text, _, _, _ ->
-            passwordLiveData.value = text?.toString()
-        }
-
-        validLoginLiveData.observe(this) { isValid ->
-            signInButton.isEnabled = isValid
-        }
-
-        signInButton.setOnClickListener {
-            //basic temp log in check
-            Log.d("Login","Attempted to log in with username ${usernameLiveData.value}")
-            if(usernameLiveData.value!!.contains("t")) {
-                Log.d("Login","Logged in as teacher")
-                //log in to student here
-            } else if (usernameLiveData.value!!.contains("s")) {
-                Log.d("Login","Logged in as student")
-                //log in to teacher here
-            }
-            usernameInput.editText?.setText("")
-            passwordInput.editText?.setText("")
-            setContentView(R.layout.activity_main)
+        /*apply button listeners*/
+        teacherButton.setOnClickListener {
+            login_group = TEACHER_TOKEN
+            sendToLogin()
         }
     }
-    //Checks if formatting is correct
-    private fun formatLoginValidation(username: String?, password: String?) : Boolean {
-        //would have formatting checks here
-        val validUsername = username != null && username.isNotBlank()
-        //val validpassword =
-        return validUsername //&& validPassword
-    }
 
-    fun showDatePickerDialog(v: View) {
-        if(v is DateDisplayView) {
-            v.picker.show(supportFragmentManager, "datePicker")
-        }
-
-    }
-
-    fun buildAssignment(v: View) {
-        val name = findViewById<EditText>(R.id.assignmentName).text.toString()
-        val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
-        val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
-        val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
-
-        val assignment = Assignment(name, Date(due.picker.year, due.picker.month, due.picker.day), pageStart, pageEnd)
-        Log.d("Assignment", assignment.toString())
+    /*YEET user to login*/
+    private fun sendToLogin(){
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.putExtra("LOGIN_GROUP", login_group)
+        startActivity(intent)
     }
 }
