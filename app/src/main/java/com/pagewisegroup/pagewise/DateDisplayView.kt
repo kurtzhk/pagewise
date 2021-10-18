@@ -14,7 +14,7 @@ class DateDisplayView : AppCompatEditText {
     fun updateText() {
         val builder = StringBuilder()
         builder.append("Date: ")
-            .append(picker.month)
+            .append(picker.month+1)
             .append("/")
             .append(picker.day)
             .append("/")

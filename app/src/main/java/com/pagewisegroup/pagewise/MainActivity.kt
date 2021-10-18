@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
         val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
 
-        val assignment = Assignment(name, Date(due.picker.year, due.picker.month-1, due.picker.day), pageStart, pageEnd)
+        val assignment = Assignment(name, Date(due.picker.year, due.picker.month, due.picker.day), pageStart, pageEnd)
         Log.d("Assignment", assignment.toString())
     }
 }
