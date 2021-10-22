@@ -24,7 +24,10 @@
         <TextView
             android:id="@+id/student_name_display"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="195dp"
+            android:text="Name Placeholder"
+            tools:ignore="RtlSymmetry">
 
         </TextView>
 

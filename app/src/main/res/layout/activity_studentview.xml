@@ -6,4 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".StudentViewActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/pagewise_logosmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:src="@drawable/pagewise_logosmall"
+            android:contentDescription="@string/logo_alt" />
+
+        <TextView
+            android:id="@+id/student_name_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="195dp"
+            android:text="Name Placeholder"
+            tools:ignore="RtlSymmetry">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/student_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="0dp"
+            android:src="@drawable/user_icon"
+            app:layout_constraintRight_toRightOf="parent"
+            android:contentDescription="@string/user_icon" />
+
+    </androidx.appcompat.widget.Toolbar>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
