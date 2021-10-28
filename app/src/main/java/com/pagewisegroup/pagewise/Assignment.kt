@@ -1,12 +1,13 @@
 package com.pagewisegroup.pagewise
 
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.Date
 
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
     var estimatedHours: Double = 0.0
     var assignID: String = ""
 
+    /* creates id on creation */
     init {
         if(assignID.isBlank()) createID()
     }
@@ -26,6 +27,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     /* Creates unique string id for assignment */
     fun createID() {
         if(name.isBlank()) return
+        /* String is base64 encoded with "&" as separators */
         assignID = base64Encode(name) + "&" + base64Encode((dueDate.year).toString()) + "&" +
             base64Encode((dueDate.month).toString()) + "&" + base64Encode((dueDate.date).toString()) + "&" +
             base64Encode(pageStart.toString()) + "&" + base64Encode(pageEnd.toString())
