@@ -2,6 +2,7 @@ package com.pagewisegroup.pagewise
 
 import java.util.Date
 
+// Object that tracks an assignment.
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
     var estimatedHours: Double = 0.0
 
