@@ -4,10 +4,16 @@ import java.util.Date
 
 // Object that tracks an assignment.
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
-    var estimatedHours: Double = 0.0
+    var completed: Boolean = false
+    var hoursToComplete: Double = 0.0
 
     fun updateCompletionEstimate(pagesPerHour: Double) {
-        estimatedHours = (pageEnd - pageStart) / pagesPerHour
+        hoursToComplete = (pageEnd - pageStart) / pagesPerHour
+    }
+
+    fun completeAssignment(hoursToComplete: Double) {
+        this.hoursToComplete = hoursToComplete
+        completed = true
     }
 
     override fun toString(): String {

@@ -16,9 +16,10 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
                 "due_date INT NOT NULL," + //will be stored in unix epoch time.
                 "page_start INT NOT NULL," +
                 "page_send INT NOT NULL," +
-                "estimated_ttc INT)") /*unsure if this is needed, might decide to store reading
-                                        speed in student table and just dynamically calculate
-                                        ttc at runtime. need feedback. */
+                "time_to_complete INT," +/*unsure if this is needed, might decide to store reading
+                                       speed in student table and just dynamically calculate
+                                       ttc at runtime. need feedback. */
+                "completed BOOLEAN NOT NULL)") //if true t_t_c will be considered actual ttc otherwise an esitmate.
         db?.execSQL("CREATE TABLE IF NOT EXISTS CLASSES(" +
                 "class_id INT PRIMARY KEY," +
                 "name TEXT)")
