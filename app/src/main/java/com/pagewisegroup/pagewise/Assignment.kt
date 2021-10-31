@@ -4,12 +4,22 @@ import java.nio.charset.StandardCharsets
 import java.util.Date
 
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
-    var estimatedHours: Double = 0.0
+    var completed: Boolean = false
+    var hoursToComplete: Double = 0.0
     var assignID: String = ""
 
     /* creates id on creation */
     init {
         if(assignID.isBlank()) createID()
+    }
+
+    fun updateCompletionEstimate(pagesPerHour: Double) {
+        hoursToComplete = (pageEnd - pageStart) / pagesPerHour
+    }
+
+    fun completeAssignment(hoursToComplete: Double) {
+        this.hoursToComplete = hoursToComplete
+        completed = true
     }
 
     /* Builder object, so can create assignment from id */
@@ -48,9 +58,5 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
             .append("\n")
             .append(assignID)
         return builder.toString()
-    }
-
-    fun updateCompletionEstimate(pagesPerHour: Double) {
-        estimatedHours = (pageEnd - pageStart) / pagesPerHour
     }
 }
