@@ -61,7 +61,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
         if (assignment.id != null) {
             db?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.id}", null)
         } else {
-            assignment.id = db?.insert("ASSIGNMENTS", null, values)
+            assignment.id = db?.insert("ASSIGNMENTS", null, values).toString()
         }
     }
 

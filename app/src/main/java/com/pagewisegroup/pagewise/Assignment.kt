@@ -6,11 +6,11 @@ import java.util.Date
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
     var completed: Boolean = false
     var hoursToComplete: Double = 0.0
-    var assignID: String = ""
+    var id: String = ""
 
     /* creates id on creation */
     init {
-        if(assignID.isBlank()) createID()
+        if(id.isBlank()) createID()
     }
 
     fun updateCompletionEstimate(pagesPerHour: Double) {
@@ -38,7 +38,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     fun createID() {
         if(name.isBlank()) return
         /* String is base64 encoded with "&" as separators */
-        assignID = base64Encode(name) + "&" + base64Encode((dueDate.year).toString()) + "&" +
+        id = base64Encode(name) + "&" + base64Encode((dueDate.year).toString()) + "&" +
             base64Encode((dueDate.month).toString()) + "&" + base64Encode((dueDate.date).toString()) + "&" +
             base64Encode(pageStart.toString()) + "&" + base64Encode(pageEnd.toString())
     }
@@ -56,7 +56,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
             .append("\n")
             .append(dueDate.toString())
             .append("\n")
-            .append(assignID)
+            .append(id)
         return builder.toString()
     }
 }
