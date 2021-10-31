@@ -11,28 +11,31 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
     // and a join table between students and classes.
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE IF NOT EXISTS ASSIGNMENTS(" +
-                "assignment_id INT PRIMARY KEY," +
-                "name TEXT" +
+                "assignment_id INTEGER," +
+                "name TEXT," +
                 "class_id INT NOT NULL," + //links assignments to their class.
                 "due_date INT NOT NULL," + //will be stored in unix epoch time.
                 "page_start INT NOT NULL," +
                 "page_end INT NOT NULL," +
-                "time_to_complete REAL," +/*unsure if this is needed, might decide to store reading
+                "time_to_complete REAL," + /*unsure if this is needed, might decide to store reading
                                        speed in student table and just dynamically calculate
                                        ttc at runtime. need feedback. */
-                "completed BOOLEAN NOT NULL)") //if true t_t_c will be considered actual ttc otherwise an esitmate.
+                "completed BOOLEAN NOT NULL," + //if true t_t_c will be considered actual ttc otherwise an esitmate.
+                "PRIMARY KEY(assignment_id ASC))")
         db?.execSQL("CREATE TABLE IF NOT EXISTS CLASSES(" +
-                "class_id INT PRIMARY KEY," +
-                "name TEXT)")
+                "class_id INTEGER," +
+                "name TEXT," +
+                "PRIMARY KEY(class_id ASC))")
         db?.execSQL("CREATE TABLE IF NOT EXISTS STUDENTS(" +
-                "student_id INT PRIMARY KEY," +
+                "student_id INTEGER," +
                 "name TEXT," + //do we need to store names? not sure if it's helpful.
-                "read_speed REAL)") //pages per hour
+                "read_speed REAL," + //pages per hour
+                "PRIMARY KEY(student_id ASC))")
         // join table facilitates many to many relationship of classes and students.
         db?.execSQL("CREATE TABLE IF NOT EXISTS ENROLLMENTS(" +
                 "student_id INT NOT NULL," +
-                "class_id INT NOT NULL" +
-                "PRIMARY KEY(student_id, class_id)")
+                "class_id INT NOT NULL," +
+                "PRIMARY KEY(student_id, class_id))")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
