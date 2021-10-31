@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.util.Log
 
 class StudentViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,5 +18,12 @@ class StudentViewActivity : AppCompatActivity() {
             //for final implementation, must add assignment name to intent
             startActivity(intent)
         }
+    }
+
+    /* creates assignment from id */
+    fun createAssignment(id: String) {
+        if(id.isBlank()) return
+        val assignment = Assignment.fromId(id)
+        Log.d("Assignment", assignment.toString())
     }
 }
