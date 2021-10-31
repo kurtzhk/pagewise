@@ -47,13 +47,14 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
 
     // inserts or updates student to table depending on if it has been recorded yet.
     private fun recordAssignment(db: SQLiteDatabase?, assignment: Assignment, classID: Long) {
-        val values = ContentValues(6)
+        val values = ContentValues()
         values.put("name", assignment.name)
         values.put("class_id", classID)
         values.put("due_date", assignment.dueDate.time)
         values.put("page_start", assignment.pageStart)
         values.put("page_end", assignment.pageEnd)
         values.put("time_to_complete", assignment.hoursToComplete)
+        values.put("completed", assignment.completed)
         if (assignment.id != null) {
             db?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.id}", null)
         } else {
@@ -64,7 +65,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
     // returns class id.
     // inserts or updates class to table depending on if it has been recorded yet.
     fun recordClass(db: SQLiteDatabase?, pwClass: PWClass): Long {
-        val values = ContentValues(1)
+        val values = ContentValues()
         values.put("name", pwClass.name)
         if (pwClass.id != null) {
             db?.update("CLASSES", values, "class_id = ${pwClass.id}", null)
