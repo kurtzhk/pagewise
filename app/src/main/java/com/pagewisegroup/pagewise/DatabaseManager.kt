@@ -11,7 +11,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
     // and a join table between students and classes.
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE IF NOT EXISTS ASSIGNMENTS(" +
-                "assignment_id INTEGER," +
+                "assignment_id TEXT," +
                 "name TEXT," +
                 "class_id INT NOT NULL," + //links assignments to their class.
                 "due_date INT NOT NULL," + //will be stored in unix epoch time.
