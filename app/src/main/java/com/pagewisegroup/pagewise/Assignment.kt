@@ -3,7 +3,8 @@ package com.pagewisegroup.pagewise
 import java.util.Date
 
 // Object that tracks an assignment.
-class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
+// id field should only be populated when reading from or writing to database.
+class Assignment(var id: Long? = null, val name: String, var dueDate: Date, var pageStart: Int, var pageEnd: Int) {
     var completed: Boolean = false
     var hoursToComplete: Double = 0.0
 
