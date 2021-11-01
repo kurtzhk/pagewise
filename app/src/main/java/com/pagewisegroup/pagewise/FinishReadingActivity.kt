@@ -3,6 +3,7 @@ package com.pagewisegroup.pagewise
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import java.util.*
@@ -29,6 +30,7 @@ class FinishReadingActivity : AppCompatActivity() {
                 val intent = Intent(this, StudentViewActivity::class.java)
                 startActivity(intent)
             }
+            Log.d("Proggress", "Read to page $n")
         }
     }
 }
