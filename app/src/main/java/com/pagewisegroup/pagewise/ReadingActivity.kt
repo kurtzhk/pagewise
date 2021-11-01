@@ -23,13 +23,13 @@ class ReadingActivity : AppCompatActivity() {
                 val intent = Intent(this,FinishReadingActivity::class.java).apply(){
                     putExtra("pagewise.STIME",startTime)
                     putExtra("pagewise.ETIME", currentTimeMillis())
-                    Log.d("End time in ms""+currentTimeMillis())
+                    Log.d("End time in ms",""+currentTimeMillis())
                     //TODO: grab assn name from intent and pass it forward
                 }
                 startActivity(intent)
             } else{
                 startTime = currentTimeMillis()
-                Log.d("Start time in ms",""+startTime);
+                Log.d("Start time in ms",""+startTime)
                 midSession = true
             }
         }
