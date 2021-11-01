@@ -1,5 +1,6 @@
 package com.pagewisegroup.pagewise
 
+import android.util.Log
 import java.nio.charset.StandardCharsets
 import java.util.Date
 
@@ -25,8 +26,8 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
 
     /* Builder object, so can create assignment from id */
     companion object IDBuilder {
-        fun fromId(id: String): Assignment {
-            val codedAssignInfo = id.split("&")
+        fun fromId(assignId: String): Assignment {
+            val codedAssignInfo = assignId.split("&")
             if(codedAssignInfo.size != 6) error("Incorrect assignment ID string")
             val date = Date(base64Decode(codedAssignInfo[1]).toInt(), base64Decode(codedAssignInfo[2]).toInt(),base64Decode(codedAssignInfo[3]).toInt())
             return Assignment(base64Decode(codedAssignInfo[0]), date, base64Decode(codedAssignInfo[4]).toInt(),base64Decode(codedAssignInfo[5]).toInt())
@@ -57,7 +58,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
             .append("\n")
             .append(dueDate.toString())
             .append("\n")
-            .append(id)
+            .append(uniqueString)
         return builder.toString()
     }
 }

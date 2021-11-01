@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.util.Log
+import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
 
 class StudentViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,11 +20,25 @@ class StudentViewActivity : AppCompatActivity() {
             //for final implementation, must add assignment name to intent
             startActivity(intent)
         }
+
+        //test for assignment entering via string
+        val assignBtn = findViewById<Button>(R.id.string_test_button)
+        assignBtn.setOnClickListener{
+            setContentView(R.layout.activity_temp_enter_assign)
+            val assignIdBtn = findViewById<Button>(R.id.assignID_button)
+            val assignIdInput = findViewById<EditText>(R.id.assignID_input).text
+            assignIdBtn.setOnClickListener {
+                createAssignment(assignIdInput.toString())
+            }
+        }
+
     }
 
     /* creates assignment from id */
     fun createAssignment(id: String) {
+        Log.d("WORK", "here")
         if(id.isBlank()) return
+        Log.d("WORK", "here2")
         val assignment = Assignment.fromId(id)
         Log.d("Assignment", assignment.toString())
     }
