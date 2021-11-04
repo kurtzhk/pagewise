@@ -10,6 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PageWise">
         <activity
+            android:name=".FinishReadingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReadingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_reading"
+            android:theme="@style/Theme.PageWise.NoActionBar" />
+        <activity
             android:name=".StudentViewActivity"
             android:exported="false" />
         <activity
