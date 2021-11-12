@@ -34,12 +34,10 @@ class StudentViewActivity : AppCompatActivity() {
 
     }
 
-    /* creates assignment from id */
-    fun createAssignment(id: String) {
-        Log.d("WORK", "here")
-        if(id.isBlank()) return
-        Log.d("WORK", "here2")
-        val assignment = Assignment.fromId(id)
+    /* creates assignment from uniqueString */
+    fun createAssignment(uniqueString: String) {
+        if(uniqueString.isBlank()) return
+        val assignment = Assignment.fromUniqueString(uniqueString)
         Log.d("Assignment", assignment.toString())
     }
 }
