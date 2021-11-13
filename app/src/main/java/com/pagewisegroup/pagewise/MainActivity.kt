@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, StudentViewActivity::class.java)
         startActivity(intent)
-        /*
+
         /*init logo*/
         val logo: ImageView = findViewById(R.id.pagewise_logo)
         logo.setImageResource(R.drawable.pagewise_logo)
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         teacherButton.setOnClickListener {
             login_group = TEACHER_TOKEN
             sendToLogin()
-        }*/
+        }
     }
 
     /*YEET user to login*/

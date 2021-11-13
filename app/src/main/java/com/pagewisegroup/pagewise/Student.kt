@@ -49,26 +49,16 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
         classes.add(PWClass("Test Class", ArrayList() ,null))
         //finished assignments (to get reading speed)
         classes[0].assignments.add(Assignment("Assignment 1", Date(),0,25))
-        classes[0].assignments[0].minutesSpend = 25.0
+        classes[0].assignments[0].minutesSpend = 75.0
         classes[0].assignments[0].completed = true
         classes[0].assignments.add(Assignment("Assignment 2", Date(),50,100))
-        classes[0].assignments[1].minutesSpend = 50.0
+        classes[0].assignments[1].minutesSpend = 100.0
         classes[0].assignments[1].completed = true
 
-        var date = Date()
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DATE, 1)
-        date = calendar.time
-
         //unfinished assignments
-        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,15,23,59),0,20))
-        //Log.d("Unfinished assignment #1",classes[0].assignments[2].toString())
-        //classes[0].assignments[2].currentPage = 0
-
-        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,16,23,59),0,10))
-        //Log.d("Unfinished assignment #2",classes[0].assignments[3].toString())
-
+        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,15,23,59),0,45))
+        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,16,23,59),0,75))
+        classes[0].assignments.get(3).currentPage = 25
     }
 
     fun createSchedule() {
@@ -90,6 +80,6 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
     }
 
     override fun toString(): String {
-        return "name: $name read speed: $reading_speed id: $id"
+        return "name: $name read speed: $reading_speed ppm id: $id"
     }
 }

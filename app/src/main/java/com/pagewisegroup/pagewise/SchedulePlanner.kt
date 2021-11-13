@@ -32,20 +32,17 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
         var currentDate = Date()
         //today only counts today as a work day if there is 10 hr+ left in it
         if(currentDate.hours >= 13) {
-            Log.d("Remove", "moving to next day")
             currentDate = incrementDay(currentDate)
         }
 
         val daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
-        Log.d("Remove", "The diffrence between ${assignment.dueDate} and $currentDate is $daysLeft")
 
         val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
-        val minutesPerDay = pagesPerDay / readingSpeed
 
         //Adds day to schedule
         var today = false
         var date = currentDate
-        var pageEnd = 0
+        var pageEnd = assignment.currentPage
         for(i in 1..daysLeft) {
             var pageStart = pageEnd
 
@@ -61,7 +58,7 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
             val dayIndex = findDayIndex(date)
             if(dayIndex < 0)
                 schedule.add(plannedDay(date, ArrayList()))
-            schedule.get(findDayIndex(date)).reading.add(plannedReading(assignment.name,minutesPerDay,pageStart,pageEnd))
+            schedule.get(findDayIndex(date)).reading.add(plannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
         }
     }
 
@@ -90,7 +87,6 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
     //prints schedule
     @RequiresApi(Build.VERSION_CODES.N)
     override fun toString(): String {
-        Log.d("Remove", ""+schedule.size)
         var scheduleString = ""
         schedule.forEach {
             scheduleString += "On ${DateFormatSymbols().getMonths()[it.date.month]} ${it.date.date} \n"
