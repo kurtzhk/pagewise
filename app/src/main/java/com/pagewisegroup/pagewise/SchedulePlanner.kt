@@ -27,7 +27,7 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
 
     //Adds given assignment to schedule
     //right now just evenly split works every day for each assignment
-    //TODO("Update so this minimizes minutes per day instead of dividing work evanly (or add a choice between the two)")
+    //TODO("Update so this minimizes minutes per day instead of dividing work evenly (or add a choice between the two)")
     fun updateSchedule(assignment: Assignment) {
         var currentDate = Date()
         //today only counts today as a work day if there is 10 hr+ left in it
