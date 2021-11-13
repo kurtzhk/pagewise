@@ -7,10 +7,12 @@ import androidx.annotation.RequiresApi
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
 
-data class plannedDay(val date: Date, var reading: ArrayList<Pair<String,Double>>)
+data class plannedReading(var assignmentName: String, var plannedMinutes: Double, var startPages: Int, var endPage: Int)
+data class plannedDay(val date: Date, var reading: ArrayList<plannedReading>)
 
 //Right now this could be merged with student, but when updated in probably will be nice to have it independent
 //TODO("Overhaul once have more data to work with")
@@ -25,6 +27,7 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
 
     //Adds given assignment to schedule
     //right now just evenly split works every day for each assignment
+    //TODO("Update so this minimizes minutes per day instead of dividing work evanly (or add a choice between the two)")
     fun updateSchedule(assignment: Assignment) {
         var currentDate = Date()
         //today only counts today as a work day if there is 10 hr+ left in it
@@ -35,13 +38,21 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
 
         val daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
         Log.d("Remove", "The diffrence between ${assignment.dueDate} and $currentDate is $daysLeft")
-        //TODO("update with current page once that is implemented")
-        val minutesPerDay = ((assignment.pageEnd - assignment.pageStart)/ daysLeft) / readingSpeed
+
+        val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
+        val minutesPerDay = pagesPerDay / readingSpeed
 
         //Adds day to schedule
         var today = false
         var date = currentDate
+        var pageEnd = 0
         for(i in 1..daysLeft) {
+            var pageStart = pageEnd
+
+            //round up except for last day, when you finish
+            pageEnd = pageStart + ceil(pagesPerDay).toInt()
+            if(pageEnd > assignment.pageEnd)  pageEnd = assignment.pageEnd
+
             //increments day if it is not today
             if(today) date = incrementDay(date)
             else today = true
@@ -50,7 +61,7 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
             val dayIndex = findDayIndex(date)
             if(dayIndex < 0)
                 schedule.add(plannedDay(date, ArrayList()))
-            schedule.get(findDayIndex(date)).reading.add(Pair(assignment.name,minutesPerDay))
+            schedule.get(findDayIndex(date)).reading.add(plannedReading(assignment.name,minutesPerDay,pageStart,pageEnd))
         }
     }
 
@@ -84,13 +95,13 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
         schedule.forEach {
             scheduleString += "On ${DateFormatSymbols().getMonths()[it.date.month]} ${it.date.date} \n"
             it.reading.forEach {
-                scheduleString += "\t read asssignment ${it.first} for "
+                scheduleString += "\t read asssignment ${it.assignmentName} for "
                 //if greater the an hour converts to hours & minutes
-                if(it.second > 60)
-                    scheduleString += "${floor(it.second/60)} hours and ${round(it.second%60)} minutes"
+                if(it.plannedMinutes > 60)
+                    scheduleString += "${floor(it.plannedMinutes/60)} hours and ${ceil(it.plannedMinutes%60)} minutes"
                 else
-                    scheduleString += "${it.second} minutes"
-                scheduleString += "\n"
+                    scheduleString += "${floor(it.plannedMinutes)} minutes"
+                scheduleString += " from pages ${it.startPages} to ${it.endPage}\n"
             }
         }
         return scheduleString
