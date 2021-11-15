@@ -31,9 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //val intent = Intent(this, StudentViewActivity::class.java)
-        //startActivity(intent)
+        
 
         /*init logo*/
         val logo: ImageView = findViewById(R.id.pagewise_logo)
