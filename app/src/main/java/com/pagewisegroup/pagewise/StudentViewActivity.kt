@@ -35,7 +35,7 @@ class StudentViewActivity : AppCompatActivity() {
         //Temp for testing/demoing schedule
         val student = Student("Test student", 0.0, null)
         student.createTempAssignments()
-        student.calculateReadingSpeed()
+        student.calculateReadingSpeed("Test Class")
 
         //Prints info
         Log.d("Student Info", student.toString())
