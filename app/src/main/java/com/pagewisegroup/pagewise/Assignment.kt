@@ -10,9 +10,14 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     var id: Long? = null
     var uniqueString = ""
 
-    /* creates id on creation */
+    //temp for schedule planning, will later be merged into reading session
+    var currentPage = 0
+    var minutesSpend = 0.0
+
+    /* creates unique string on creation */
     init {
-        if(uniqueString.isBlank()) createID()
+        currentPage = pageStart //temp for schedule planning, will later be merged into reading session
+        if(uniqueString.isBlank()) createUniqueString()
     }
 
     fun updateCompletionEstimate(pagesPerHour: Double) {
@@ -25,10 +30,10 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     }
 
     /* Builder object, so can create assignment from id */
-    companion object IDBuilder {
-        fun fromId(assignId: String): Assignment {
-            val codedAssignInfo = assignId.split("&")
-            if(codedAssignInfo.size != 6) error("Incorrect assignment ID string")
+    companion object uniqueStringBuilder {
+        fun fromUniqueString(uniqueString: String): Assignment {
+            val codedAssignInfo = uniqueString.split("&")
+            if(codedAssignInfo.size != 6) error("Incorrect assignment unique string")
             val date = Date(base64Decode(codedAssignInfo[1]).toInt(), base64Decode(codedAssignInfo[2]).toInt(),base64Decode(codedAssignInfo[3]).toInt())
             return Assignment(base64Decode(codedAssignInfo[0]), date, base64Decode(codedAssignInfo[4]).toInt(),base64Decode(codedAssignInfo[5]).toInt())
         }
@@ -36,8 +41,8 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
         fun base64Decode(str: String) : String { return String(android.util.Base64.decode(str, android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
     }
 
-    /* Creates unique string id for assignment */
-    fun createID() {
+    /* Creates unique string unique string for assignment */
+    fun createUniqueString() {
         if(name.isBlank()) return
         /* String is base64 encoded with "&" as separators */
         uniqueString = base64Encode(name) + "&" + base64Encode((dueDate.year).toString()) + "&" +

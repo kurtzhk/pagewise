@@ -62,14 +62,21 @@ class StudentViewActivity : AppCompatActivity() {
             }
         }
 
+        //Temp for testing/demoing schedule
+        val student = Student("Test student", 0.0, null)
+        student.createTempAssignments()
+        student.calculateReadingSpeed()
+
+        //Prints info
+        Log.d("Student Info", student.toString())
+        student.createSchedule()
+        Log.d("Schedule", student.schedule.toString())
     }
 
-    /* creates assignment from id */
-    fun createAssignment(id: String) {
-        Log.d("WORK", "here")
-        if(id.isBlank()) return
-        Log.d("WORK", "here2")
-        val assignment = Assignment.fromId(id)
+    /* creates assignment from uniqueString */
+    fun createAssignment(uniqueString: String) {
+        if(uniqueString.isBlank()) return
+        val assignment = Assignment.fromUniqueString(uniqueString)
         Log.d("Assignment", assignment.toString())
     }
 }

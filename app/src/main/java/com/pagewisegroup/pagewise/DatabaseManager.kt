@@ -4,6 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB", null, 1){
 
@@ -11,7 +13,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
     // and a join table between students and classes.
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE IF NOT EXISTS ASSIGNMENTS(" +
-                "assignment_id TEXT," +
+                "assignment_id INT," +
                 "name TEXT," +
                 "class_id INT NOT NULL," + //links assignments to their class.
                 "due_date INT NOT NULL," + //will be stored in unix epoch time.
@@ -106,5 +108,55 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
             db?.insert("ENROLLMENTS", null, values)
             values.remove("class_id")
         }
+    }
+
+    fun fetchStudent(db: SQLiteDatabase?, id: Long): Student {
+        val sTable = db?.rawQuery("SELECT name, read_speed FROM STUDENTS WHERE student_id = $id", null)
+        val eTable = db?.rawQuery("SELECT class_id FROM ENROLLMENTS WHERE student_id = $id", null)
+        sTable?.moveToFirst()
+        val name = sTable?.getString(0)
+        val readingSpeed = sTable?.getDouble(1)
+        val s = Student(name!!, readingSpeed!!, id)
+        if (eTable?.moveToFirst() == true) {
+            do {
+                s.classes.add(fetchClass(db, eTable.getLong(0)))
+            } while (eTable.moveToNext())
+        }
+        return s
+    }
+
+    private fun fetchClass(db: SQLiteDatabase?, id: Long): PWClass {
+        val cTable = db?.rawQuery("SELECT name FROM CLASSES WHERE class_id = $id", null)
+        val aTable = db?.rawQuery("SELECT assignment_id FROM ASSIGNMENTS WHERE class_id = $id", null)
+        cTable?.moveToFirst()
+        val assignments = ArrayList<Assignment>()
+        val name = cTable?.getString(0)
+        if (aTable?.moveToFirst() == true) {
+            do {
+                assignments.add(fetchAssignment(db, aTable.getLong(0))!!)
+            } while (aTable.moveToNext())
+        }
+        return PWClass(name!!, assignments, id)
+    }
+
+    private fun fetchAssignment(db: SQLiteDatabase?, id: Long): Assignment? {
+        val columns = arrayOf("name", "due_date", "page_start", "page_end", "time_to_complete", "completed")
+        val aTable = db?.rawQuery(
+            "SELECT ?0, ?1, ?2, ?3, ?4, ?5 FROM ASSIGNMENTS WHERE assignment_id = $id",
+            columns
+        )
+        if (aTable?.moveToFirst() == true) {
+            val name = aTable.getString(0)
+            val dueDate = aTable.getLong(1)
+            val pageStart = aTable.getInt(2)
+            val pageEnd = aTable.getInt(3)
+            val timeToComplete = aTable.getDouble(4)
+            val completed = aTable.getInt(5) == 1
+            val a = Assignment(name, Date(dueDate), pageStart, pageEnd)
+            a.hoursToComplete = timeToComplete
+            a.completed = completed
+            return a
+        }
+        return null
     }
 }
