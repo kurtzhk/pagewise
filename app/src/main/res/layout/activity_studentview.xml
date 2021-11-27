@@ -24,17 +24,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="195dp"
-            android:text="Name Placeholder"
-            tools:ignore="RtlSymmetry">
-
+            android:text="Name Placeholder">
         </TextView>
 
-        <ImageView
-            android:id="@+id/student_icon"
+        <Spinner
+            android:id="@+id/student_spinner"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:padding="0dp"
-            android:src="@drawable/user_icon"
+            android:background="@drawable/user_icon"
             app:layout_constraintRight_toRightOf="parent"
             android:contentDescription="@string/user_icon" />
 
