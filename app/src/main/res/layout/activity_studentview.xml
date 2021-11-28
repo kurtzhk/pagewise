@@ -1,60 +1,61 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StudentViewActivity">
+    tools:context=".StudentViewActivity"
+    android:orientation="vertical"
+    android:gravity="center">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_margin="0px"
+        android:padding="0px">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="6"
+            android:layout_margin="0px"
+            android:padding="0px">
+            <ImageView
+                android:id="@+id/pagewise_logosmall"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pagewise_logosmall"
+                android:contentDescription="@string/logo_alt" />
 
-        <ImageView
-            android:id="@+id/pagewise_logosmall"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            android:padding="0dp"
-            android:src="@drawable/pagewise_logosmall"
-            android:contentDescription="@string/logo_alt" />
+            <ImageView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"/>
 
-        <TextView
-            android:id="@+id/student_name_display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="195dp"
-            android:text="Name Placeholder">
-        </TextView>
+            <TextView
+                android:id="@+id/student_name_display"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Name Placeholder">
+            </TextView>
 
-        <Spinner
-            android:id="@+id/student_spinner"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="0dp"
-            android:background="@drawable/user_icon"
-            app:layout_constraintRight_toRightOf="parent"
-            android:contentDescription="@string/user_icon" />
-
+            <Spinner
+                android:id="@+id/student_spinner"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/user_icon"
+                android:contentDescription="@string/user_icon"
+                android:color="@android:color/primary_text_dark"/>
+        </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
-    <Button
-        android:id="@+id/atest_button"
-        android:layout_width="257dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="252dp"
-        android:text="test assignment tracking"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/string_test_button"
-        android:layout_width="257dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="200dp"
-        android:text="test assignment entering via string"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/atest_button" />
+    <FrameLayout
+        android:id="@+id/fragment_manager_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+</LinearLayout>
