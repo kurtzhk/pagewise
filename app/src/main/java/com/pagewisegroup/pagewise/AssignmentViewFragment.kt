@@ -23,7 +23,7 @@ class AssignmentViewFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         student.createTempAssignments()
-        student.calculateReadingSpeed()
+        student.calculateReadingSpeed(null)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)

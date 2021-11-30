@@ -18,7 +18,7 @@ class StudentViewActivity : AppCompatActivity() {
         //temp student for testing/demoing schedule
         val student = Student("Test student", 0.0, null)
         student.createTempAssignments()
-        student.calculateReadingSpeed()
+        student.calculateReadingSpeed(null)
 
         //generate toolbar with actions
         createStudentToolBar()
