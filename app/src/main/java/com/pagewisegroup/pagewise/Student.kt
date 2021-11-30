@@ -47,6 +47,9 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
     fun createTempAssignments() {
         //creates class
         classes.add(PWClass("Test Class", ArrayList() ,null))
+        classes.add(PWClass("English 101", ArrayList() ,null))
+        classes.add(PWClass("Biology 101", ArrayList() ,null))
+
         //finished assignments (to get reading speed)
         classes[0].assignments.add(Assignment("Assignment 1", Date(),0,25))
         classes[0].assignments[0].minutesSpend = 75.0

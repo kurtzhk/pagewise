@@ -1,29 +1,38 @@
 package com.pagewisegroup.pagewise
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 
 class StudentViewActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_studentview)
 
         //temp student for testing/demoing schedule
         val student = Student("Test student", 0.0, null)
-
-        createStudentToolBar()
-
-        //temporary test code
         student.createTempAssignments()
         student.calculateReadingSpeed()
+
+        //generate toolbar with actions
+        createStudentToolBar()
 
         //Prints info
         Log.d("Student Info", student.toString())
         student.createSchedule()
         Log.d("Schedule", student.schedule.toString())
+
+        //init and add all the fragments to the activity's fragment manager
+        supportFragmentManager.commit {
+            add(R.id.fragment_frame, StudentClassFragment())
+            setReorderingAllowed(true)
+        }
 
         //all this nonsense is just for my testing purposes
 //        val btn = findViewById<Button>(R.id.atest_button)
@@ -53,15 +62,22 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun displayAssignmentView(){
-
+        supportFragmentManager.commit {
+            replace<AssignmentViewFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
     }
 
-    fun displayClassview(){
-
+    fun displayClassView(){
+        supportFragmentManager.commit {
+            replace<StudentClassFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
     }
 
     fun displayReadingView(){
-
+        val intent = Intent(this, ReadingActivity::class.java)
+        startActivity(intent)
     }
 
     private fun createStudentToolBar(){
@@ -83,10 +99,10 @@ class StudentViewActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 //1=class view action
                 //2=assignment view action
-                //3= reading view(picks up on assignment user left off on
+                //3=reading view(picks up on assignment user left off on
                 //unless it is null or complete. then prompts user to pick one)
                 when(position){
-                    1 -> displayClassview()
+                    1 -> displayClassView()
                     2 -> displayAssignmentView()
                     3 -> displayReadingView()
                     else -> {

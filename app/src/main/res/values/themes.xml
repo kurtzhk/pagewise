@@ -28,10 +28,12 @@
         <item name="colorSecondaryVariant">#FFFFFF</item>
         <item name="android:textColor">#33363d</item>
     </style>
+
     <style name="Theme.PageWise.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.PageWise.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.PageWise.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

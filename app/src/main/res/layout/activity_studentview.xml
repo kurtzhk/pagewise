@@ -18,7 +18,8 @@
             android:layout_height="match_parent"
             android:weightSum="6"
             android:layout_margin="0px"
-            android:padding="0px">
+            android:padding="0px"
+            android:gravity="center">
             <ImageView
                 android:id="@+id/pagewise_logosmall"
                 android:layout_width="45dp"
@@ -38,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:layout_marginEnd="10dp"
                 android:text="Name Placeholder">
             </TextView>
 
@@ -46,16 +48,16 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/user_icon"
+                android:layout_marginEnd="10dp"
                 android:contentDescription="@string/user_icon"
                 android:color="@android:color/primary_text_dark"/>
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
-        android:id="@+id/fragment_manager_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
 
 </LinearLayout>
