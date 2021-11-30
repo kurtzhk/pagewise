@@ -22,7 +22,6 @@ class StudentViewActivity : AppCompatActivity() {
 
         //generate toolbar with actions
         createStudentToolBar()
-
         //Prints info
         Log.d("Student Info", student.toString())
         student.createSchedule()

@@ -63,8 +63,8 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
         classes[0].assignments[1].completed = true
 
         //unfinished assignments
-        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,15,23,59),0,45))
-        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,16,23,59),0,75))
+        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,28,23,59),0,45))
+        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,29,23,59),0,75))
         classes[0].assignments.get(3).currentPage = 25
     }
 
@@ -79,7 +79,6 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
     fun printClasses() {
         classes.forEach {
             val classname = it.name
-            Log.d("$classname has class", it.name)
             it.assignments.forEach {
                 Log.d("Class $classname has assignment", it.name)
             }
