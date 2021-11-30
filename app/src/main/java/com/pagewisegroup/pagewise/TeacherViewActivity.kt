@@ -25,8 +25,6 @@ class TeacherViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         s.classes.add(PWClass("test_class"))
         setContentView(R.layout.activity_teacherview)
-
-
     }
 
     fun showDatePickerDialog(v: View) {

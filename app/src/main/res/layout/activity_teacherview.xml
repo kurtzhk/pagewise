@@ -1,20 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".TeacherViewActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StudentViewActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_margin="0px"
+        android:padding="0px">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="6"
+            android:layout_margin="0px"
+            android:padding="0px"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/pagewise_logosmall"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pagewise_logosmall"
+                android:contentDescription="@string/logo_alt" />
+
+            <ImageView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"/>
+
+            <TextView
+                android:id="@+id/student_name_display"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:text="Name Placeholder">
+            </TextView>
+
+            <Spinner
+                android:id="@+id/student_spinner"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/user_icon"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/user_icon"
+                android:color="@android:color/primary_text_dark"/>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:name="com.pagewisegroup.pagewise.EnterAssignment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/fragment_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
