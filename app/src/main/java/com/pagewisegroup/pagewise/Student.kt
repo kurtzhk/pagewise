@@ -13,22 +13,26 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
     val classes = ArrayList<PWClass>()
     var schedule: SchedulePlanner? = null
 
-    //calculates reading speed in pages per minute
-    fun calculateReadingSpeed() {
+    //calculates reading speed in pages per minute based on class if given, if class is not given bases it on all assignments
+    fun calculateReadingSpeed(className: String?) {
         // TODO("Update this to work with reading sessions/activities is integrated into assignment/student")
         var total = 0.0
         var size = 0
         classes.forEach {
+            val currentClass = it.name
             it.assignments.forEach {
                 //TODO("Update once reading session finished to work with all sessions not just completed assignments")
-                if(it.completed) {
-                    total += (it.pageEnd - it.pageStart) / it.minutesSpend
-                    size++
+                if((className != null && currentClass == className) || className == null) {
+                    if (it.completed) {
+                        total += (it.pageEnd - it.pageStart) / it.minutesSpend
+                        size++
+                    }
                 }
             }
         }
         //calculates mean
-        reading_speed = total/size
+        if (size != 0)
+            reading_speed = total/size
     }
 
     //finds and returns all unfinished assignments
@@ -59,8 +63,8 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
         classes[0].assignments[1].completed = true
 
         //unfinished assignments
-        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,15,23,59),0,45))
-        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,16,23,59),0,75))
+        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,28,23,59),0,45))
+        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,29,23,59),0,75))
         classes[0].assignments.get(3).currentPage = 25
     }
 
@@ -75,7 +79,6 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
     fun printClasses() {
         classes.forEach {
             val classname = it.name
-            Log.d("$classname has class", it.name)
             it.assignments.forEach {
                 Log.d("Class $classname has assignment", it.name)
             }
