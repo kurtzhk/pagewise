@@ -24,7 +24,6 @@ class AssignmentRecyclerViewAdapter(private val values: List<PlaceholderItem>) :
                 false
             )
         )
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

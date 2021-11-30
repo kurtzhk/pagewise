@@ -33,25 +33,6 @@ class StudentViewActivity : AppCompatActivity() {
             add(R.id.fragment_frame, StudentClassFragment())
             setReorderingAllowed(true)
         }
-
-        //all this nonsense is just for my testing purposes
-//        val btn = findViewById<Button>(R.id.atest_button)
-//        btn.setOnClickListener{
-//            val intent = Intent(this, ReadingActivity::class.java)
-//            //for final implementation, must add assignment name to intent
-//            startActivity(intent)
-//        }
-
-        //test for assignment entering via string
-//        val assignBtn = findViewById<Button>(R.id.string_test_button)
-//        assignBtn.setOnClickListener{
-//            setContentView(R.layout.activity_temp_enter_assign)
-//            val assignIdBtn = findViewById<Button>(R.id.assignID_button)
-//            val assignIdInput = findViewById<EditText>(R.id.assignID_input).text
-//            assignIdBtn.setOnClickListener {
-//                createAssignment(assignIdInput.toString())
-//            }
-//        }
     }
 
     /* creates assignment from uniqueString */
@@ -80,6 +61,14 @@ class StudentViewActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    //this should be moved to teach view later
+    fun displayAssignmentEntry(){
+        supportFragmentManager.commit {
+            replace<EnterAssignment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
     private fun createStudentToolBar(){
         //student taskbar actions are initialized here
         val studentActionsStrings = resources.getStringArray(R.array.StudentActions)
@@ -105,6 +94,7 @@ class StudentViewActivity : AppCompatActivity() {
                     1 -> displayClassView()
                     2 -> displayAssignmentView()
                     3 -> displayReadingView()
+                    4 -> displayAssignmentEntry()
                     else -> {
                         spinner.setSelection(0)
                     }

@@ -2,18 +2,16 @@ package com.pagewisegroup.pagewise
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-import com.pagewisegroup.pagewise.placeholder.PlaceholderContent.PlaceholderItem
 import com.pagewisegroup.pagewise.databinding.FragmentClassViewBinding
 
 /**
  * [RecyclerView.Adapter] that can display a [PWClass].
  * this will take the student object's PWClass and generate a view for it.
  */
-class ClassRecyclerViewAdapter(private val values: List<PWClass>) : RecyclerView.Adapter<ClassRecyclerViewAdapter.ViewHolder>() {
+class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : RecyclerView.Adapter<StudentClassRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 

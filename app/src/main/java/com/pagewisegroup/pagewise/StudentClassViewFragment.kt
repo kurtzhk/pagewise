@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pagewisegroup.pagewise.placeholder.PlaceholderContent
 
 /**
  * A fragment representing a list of Items.
@@ -42,7 +41,7 @@ class StudentClassFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = ClassRecyclerViewAdapter(student.classes)
+                adapter = StudentClassRecyclerViewAdapter(student.classes)
             }
         }
         return view
