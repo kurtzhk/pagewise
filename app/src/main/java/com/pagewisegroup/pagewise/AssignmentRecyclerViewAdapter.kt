@@ -2,7 +2,6 @@ package com.pagewisegroup.pagewise
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
@@ -13,10 +12,8 @@ import com.pagewisegroup.pagewise.databinding.FragmentAssignmentViewBinding
  * [RecyclerView.Adapter] that can display a [PlaceholderItem].
  * TODO: Replace the implementation with code for your data type.
  */
-class AssignmentRecyclerViewAdapter(private val values: List<PlaceholderItem>) : RecyclerView.Adapter<AssignmentRecyclerViewAdapter.ViewHolder>() {
-
+class AssignmentRecyclerViewAdapter(private val assignments: ArrayList<Assignment>) : RecyclerView.Adapter<AssignmentRecyclerViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(
             FragmentAssignmentViewBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -27,12 +24,12 @@ class AssignmentRecyclerViewAdapter(private val values: List<PlaceholderItem>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
+        val assignment = assignments[position]
+        holder.idView.text = assignment.dueDate.toString()
+        holder.contentView.text = assignment.name
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = assignments.size
 
     inner class ViewHolder(binding: FragmentAssignmentViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -40,7 +37,7 @@ class AssignmentRecyclerViewAdapter(private val values: List<PlaceholderItem>) :
         val contentView: TextView = binding.content
 
         override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+            return super.toString() + " " + contentView.text + "'"
         }
     }
 }
