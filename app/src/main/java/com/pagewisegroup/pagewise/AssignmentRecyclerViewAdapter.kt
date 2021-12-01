@@ -25,8 +25,8 @@ class AssignmentRecyclerViewAdapter(private val assignments: ArrayList<Assignmen
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val assignment = assignments[position]
-        holder.idView.text = assignment.dueDate.toString()
-        holder.contentView.text = assignment.name
+        holder.idView.text = assignment.name
+        holder.contentView.text = assignment.dueDate.toString()
     }
 
     override fun getItemCount(): Int = assignments.size
@@ -37,7 +37,7 @@ class AssignmentRecyclerViewAdapter(private val assignments: ArrayList<Assignmen
         val contentView: TextView = binding.content
 
         override fun toString(): String {
-            return super.toString() + " " + contentView.text + "'"
+            return super.toString() + " '" + contentView.text + "'"
         }
     }
 }
