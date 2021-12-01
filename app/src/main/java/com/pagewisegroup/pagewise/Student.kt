@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null)
 
 // Object that tracks a Student and their information including names, reading speed, and their classes.
-class Student(var name: String, var reading_speed: Double, val context: Context, var id: Long? = null)  {
+class Student(var name: String, var reading_speed: Double, val context: Context, var id: Long? = null) {
     val classes = ArrayList<PWClass>()
     var dbm: DatabaseManager? = null
     var schedule: SchedulePlanner? = null
@@ -123,7 +123,7 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         //creates class
         addClass("CSCI Pain")
         addClass("English 101")
-        addClass("Chem 101")
+        addClass("Bio 101")
 
         //finished assignments (to get reading speed)
         /*classes[0].assignments.add(Assignment("Assignment Here", Date(),0,25))
