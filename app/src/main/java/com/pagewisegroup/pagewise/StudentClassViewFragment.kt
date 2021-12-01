@@ -22,8 +22,8 @@ class StudentClassFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        student.createTempAssignments()
-        student.calculateReadingSpeed(null)
+        //student.createTempAssignments()
+        //student.calculateReadingSpeed(null)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)

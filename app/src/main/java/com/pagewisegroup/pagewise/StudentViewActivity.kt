@@ -11,12 +11,13 @@ import androidx.fragment.app.replace
 
 class StudentViewActivity : AppCompatActivity() {
 
+    val student = Student("Test student", 0.0,null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_studentview)
 
         //temp student for testing/demoing schedule
-        val student = Student("Test student", 0.0, null)
         student.createTempAssignments()
         student.calculateReadingSpeed(null)
 
@@ -24,8 +25,8 @@ class StudentViewActivity : AppCompatActivity() {
         createStudentToolBar()
         //Prints info
         Log.d("Student Info", student.toString())
-        student.createSchedule()
-        Log.d("Schedule", student.schedule.toString())
+        //student.createSchedule()
+        /*Log.d("Schedule", student.schedule.toString())*/
 
         //init and add all the fragments to the activity's fragment manager
         supportFragmentManager.commit {

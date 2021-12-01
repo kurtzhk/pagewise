@@ -19,9 +19,10 @@ class AssignmentViewFragment : Fragment() {
 
     val student = Student("Test student", 0.0, null)
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         student.createTempAssignments()
         student.calculateReadingSpeed(null)
 

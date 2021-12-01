@@ -1,7 +1,8 @@
 package com.pagewisegroup.pagewise
 
+import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import java.lang.Error
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -11,7 +12,14 @@ data class PWClass(val name: String, val assignments: ArrayList<Assignment> = Ar
 // Object that tracks a Student and their information including names, reading speed, and their classes.
 class Student(var name: String, var reading_speed: Double, var id: Long? = null) {
     val classes = ArrayList<PWClass>()
+    var dbm = DatabaseManager(this)
+    var db: SQLiteDatabase? = null
     var schedule: SchedulePlanner? = null
+
+    init {
+        db = dbm.writableDatabase
+        getClasses()
+    }
 
     //calculates reading speed in pages per minute based on class if given, if class is not given bases it on all assignments
     fun calculateReadingSpeed(className: String?) {
@@ -47,15 +55,73 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
         return unfishedAssignments
     }
 
+    //gets all classes from db and adds them to class arraylist
+    fun getClasses() {
+        for(i in 1..dbm?.numberOfClasses(db)!!) {
+            classes.add(dbm?.fetchClass(db,i.toLong())!!)
+        }
+    }
+
+    //print classes from DB -- temp for testing
+    fun printDBClasses() {
+        Log.d("Class number->",dbm?.numberOfClasses(db).toString());
+        for(i in 1..dbm?.numberOfClasses(db)!!) {
+            Log.d("DB class", dbm?.fetchClass(db,i.toLong())?.name.toString());
+        }
+    }
+    //print assignments from DB -- temp for testing
+    fun printDBAssign() {
+        Log.d("Assignment number->",dbm?.numberOfAssignments(db).toString())
+        for(i in 1..dbm?.numberOfAssignments(db)!!) {
+            Log.d("DB assignment", dbm?.fetchAssignment(db,i.toLong())?.name.toString())
+        }
+    }
+
+    //Returns the index of a class if it already exists, otherwise returns -1
+    fun getClassIndex(name: String) : Int {
+        var i = 0;
+        classes.forEach {
+            i++;
+            if(it.name == name) return i
+        }
+        return -1
+    }
+
+    //Returns the index of a assignment if it already exists, otherwise returns -1
+    fun getAssignIndex(name: String, pwClass: PWClass) : Int {
+        var i = 0;
+        pwClass.assignments.forEach {
+            i++;
+            if(it.name == name) return i
+        }
+        return -1
+    }
+
+    //adds a class both locally and to db
+    fun addClass(name: String) {
+        if(getClassIndex(name) > 0) { return }
+        val pwClass = PWClass(name,ArrayList(),null)
+        classes.add(pwClass)
+        dbm?.recordClass(db, pwClass)
+    }
+
+    fun addAssignment(assignment: Assignment, className: String) {
+        val pwClass = classes[getClassIndex(className)-1]
+        if(getAssignIndex(assignment.name,pwClass) > 0) { return }
+        Log.d("--------", pwClass.name)
+        pwClass.assignments.add(assignment)
+        dbm?.recordAssignment(db,assignment,getClassIndex(className).toLong())
+    }
+
     //temp for testing/demoing scheduling
     fun createTempAssignments() {
         //creates class
-        classes.add(PWClass("Test Class", ArrayList() ,null))
-        classes.add(PWClass("English 101", ArrayList() ,null))
-        classes.add(PWClass("Biology 101", ArrayList() ,null))
+        addClass("CSCI Pain")
+        addClass("English 101")
+        addClass("Chem 101")
 
         //finished assignments (to get reading speed)
-        classes[0].assignments.add(Assignment("Assignment 1", Date(),0,25))
+        /*classes[0].assignments.add(Assignment("Assignment Here", Date(),0,25))
         classes[0].assignments[0].minutesSpend = 75.0
         classes[0].assignments[0].completed = true
         classes[0].assignments.add(Assignment("Assignment 2", Date(),50,100))
@@ -65,7 +131,15 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
         //unfinished assignments
         classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,28,23,59),0,45))
         classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,29,23,59),0,75))
-        classes[0].assignments.get(3).currentPage = 25
+        classes[0].assignments.get(3).currentPage = 25*/
+        addAssignment(Assignment("Assignment one", Date(),0,25),"CSCI Pain")
+        addAssignment(Assignment("Assignment two", Date(),0,25),"CSCI Pain")
+        addAssignment(Assignment("Assignment Work", Date(),0,25),"English 101")
+
+        //prints for testing
+        //printDBClasses()
+        //printClasses()
+        //printDBAssign()
     }
 
     fun createSchedule() {
@@ -78,9 +152,9 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
 
     fun printClasses() {
         classes.forEach {
-            val classname = it.name
+            Log.d("Class ", it.name  + " " + it.id)
             it.assignments.forEach {
-                Log.d("Class $classname has assignment", it.name)
+                Log.d("has assignment", it.name)
             }
         }
     }
