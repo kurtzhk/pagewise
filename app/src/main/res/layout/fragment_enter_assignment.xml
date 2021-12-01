@@ -20,7 +20,8 @@
         android:contentDescription="Finish"
         android:src="@drawable/ic_baseline_check_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <EditText
         android:id="@+id/assignmentName"
@@ -29,10 +30,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:text="Assignment Name"
-        android:selectAllOnFocus="true"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:text="Assignment Name"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,11 +44,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:inputType="none"
-        android:focusable="false"
         android:ems="10"
+        android:focusable="false"
+        android:inputType="none"
         android:onClick="showDatePickerDialog"
         android:text="Due: MM/DD/YYYY"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/assignmentName" />
 
@@ -58,6 +61,7 @@
         android:layout_marginTop="24dp"
         android:ems="10"
         android:inputType="number"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/assignmentDueDate" />
 
@@ -69,6 +73,7 @@
         android:layout_marginTop="24dp"
         android:ems="10"
         android:inputType="number"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toEndOf="@+id/hyphen"
         app:layout_constraintTop_toBottomOf="@+id/assignmentDueDate" />
 
