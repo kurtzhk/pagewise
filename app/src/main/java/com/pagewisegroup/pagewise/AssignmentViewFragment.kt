@@ -17,11 +17,11 @@ class AssignmentViewFragment : Fragment() {
 
     private var columnCount = 1
 
-    val student = Student("Test student", 0.0, requireActivity(),null)
+    val student = getActivity()?.let { Student("Test student", 0.0, it,null) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        student.createTempAssignments()
-        student.calculateReadingSpeed(null)
+        student?.createTempAssignments()
+        student?.calculateReadingSpeed(null)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
