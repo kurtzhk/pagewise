@@ -37,7 +37,7 @@ class AssignmentRecyclerViewAdapter(private val assignments: ArrayList<Assignmen
         val contentView: TextView = binding.content
 
         override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+            return super.toString() + "'" + contentView.text + "'"
         }
     }
 }
