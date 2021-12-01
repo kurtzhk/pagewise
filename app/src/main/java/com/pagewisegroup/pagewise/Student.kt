@@ -133,30 +133,12 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
     //temp for testing/demoing scheduling
     fun createTempAssignments() {
         //creates class
-        addClass("CSCI Pain")
+        addClass("CSCI 492")
         addClass("English 101")
         addClass("Bio 101")
-
-        //finished assignments (to get reading speed)
-        /*classes[0].assignments.add(Assignment("Assignment Here", Date(),0,25))
-        classes[0].assignments[0].minutesSpend = 75.0
-        classes[0].assignments[0].completed = true
-        classes[0].assignments.add(Assignment("Assignment 2", Date(),50,100))
-        classes[0].assignments[1].minutesSpend = 100.0
-        classes[0].assignments[1].completed = true
-
-        //unfinished assignments
-        classes[0].assignments.add(Assignment("Assignment 3", Date(121,10,28,23,59),0,45))
-        classes[0].assignments.add(Assignment("Assignment 4", Date(121,10,29,23,59),0,75))
-        classes[0].assignments.get(3).currentPage = 25*/
-        addAssignment(Assignment("Assignment one", Date(),0,25),"CSCI Pain")
-        addAssignment(Assignment("Assignment two", Date(),0,25),"CSCI Pain")
-        addAssignment(Assignment("Assignment Work", Date(),0,25),"English 101")
-
-        //prints for testing
-        //printDBClasses()
-        //printClasses()
-        //printDBAssign()
+        addAssignment(Assignment("Some CSCI Paper", Date(2021,11,1,23,59,59),0,1000),"CSCI 492")
+        addAssignment(Assignment("Kotlin Research", Date(2021,11,6,23,59,59),5,25),"CSCI 492")
+        addAssignment(Assignment("English Book #5", Date(2022,0,1,23,59,59),17,100),"English 101")
     }
 
     fun createSchedule() {

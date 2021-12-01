@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">#33363d</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">#16171a</item>
+        <item name="android:buttonBarNegativeButtonStyle">
+            @style/DatePickerTheme.ButtonBarNegativeButtonStyle
+        </item>
+        <item name="android:buttonBarPositiveButtonStyle">
+            @style/DatePickerTheme.ButtonBarPositiveButtonStyle
+        </item>
+    </style>
+
+    <style name="DatePickerTheme.ButtonBarNegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="DatePickerTheme.ButtonBarPositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
+</resources>
