@@ -17,10 +17,7 @@ class AssignmentViewFragment : Fragment() {
 
     private var columnCount = 1
 
-    val student = Student("Test student", 0.0, null)
-
-
-
+    val student = Student("Test student", 0.0, requireActivity(),null)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         student.createTempAssignments()

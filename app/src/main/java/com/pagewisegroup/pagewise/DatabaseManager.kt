@@ -8,7 +8,7 @@ import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB", null, 1){
+class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PagewiseDB", null, 1){
 
     // Creates the tables for our database. Assignments, classes, students,
     // and a join table between students and classes.
@@ -117,7 +117,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "PagewiseDB"
         sTable?.moveToFirst()
         val name = sTable?.getString(0)
         val readingSpeed = sTable?.getDouble(1)
-        val s = Student(name!!, readingSpeed!!, id)
+        val s = Student(name!!, readingSpeed!!, context,id)
         if (eTable?.moveToFirst() == true) {
             do {
                 s.classes.add(fetchClass(db, eTable.getLong(0)))

@@ -1,5 +1,7 @@
 package com.pagewisegroup.pagewise
 
+import android.app.Application
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -10,14 +12,13 @@ import kotlin.collections.ArrayList
 data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null)
 
 // Object that tracks a Student and their information including names, reading speed, and their classes.
-class Student(var name: String, var reading_speed: Double, var id: Long? = null) {
+class Student(var name: String, var reading_speed: Double, val context: Context, var id: Long? = null)  {
     val classes = ArrayList<PWClass>()
-    var dbm = DatabaseManager(this)
-    var db: SQLiteDatabase? = null
+    var dbm: DatabaseManager? = null
     var schedule: SchedulePlanner? = null
 
     init {
-        db = dbm.writableDatabase
+        dbm = DatabaseManager(context)
         getClasses()
     }
 
@@ -57,6 +58,7 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
 
     //gets all classes from db and adds them to class arraylist
     fun getClasses() {
+        val db = dbm?.writableDatabase
         for(i in 1..dbm?.numberOfClasses(db)!!) {
             classes.add(dbm?.fetchClass(db,i.toLong())!!)
         }
@@ -64,13 +66,15 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
 
     //print classes from DB -- temp for testing
     fun printDBClasses() {
-        Log.d("Class number->",dbm?.numberOfClasses(db).toString());
+        val db = dbm?.writableDatabase
+        Log.d("Class number->",dbm?.numberOfClasses(db).toString())
         for(i in 1..dbm?.numberOfClasses(db)!!) {
             Log.d("DB class", dbm?.fetchClass(db,i.toLong())?.name.toString());
         }
     }
     //print assignments from DB -- temp for testing
     fun printDBAssign() {
+        val db = dbm?.writableDatabase
         Log.d("Assignment number->",dbm?.numberOfAssignments(db).toString())
         for(i in 1..dbm?.numberOfAssignments(db)!!) {
             Log.d("DB assignment", dbm?.fetchAssignment(db,i.toLong())?.name.toString())
@@ -99,6 +103,7 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
 
     //adds a class both locally and to db
     fun addClass(name: String) {
+        val db = dbm?.writableDatabase
         if(getClassIndex(name) > 0) { return }
         val pwClass = PWClass(name,ArrayList(),null)
         classes.add(pwClass)
@@ -106,9 +111,9 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
     }
 
     fun addAssignment(assignment: Assignment, className: String) {
+        val db = dbm?.writableDatabase
         val pwClass = classes[getClassIndex(className)-1]
         if(getAssignIndex(assignment.name,pwClass) > 0) { return }
-        Log.d("--------", pwClass.name)
         pwClass.assignments.add(assignment)
         dbm?.recordAssignment(db,assignment,getClassIndex(className).toLong())
     }
@@ -152,7 +157,7 @@ class Student(var name: String, var reading_speed: Double, var id: Long? = null)
 
     fun printClasses() {
         classes.forEach {
-            Log.d("Class ", it.name  + " " + it.id)
+            Log.d("Class ", it.name)
             it.assignments.forEach {
                 Log.d("has assignment", it.name)
             }

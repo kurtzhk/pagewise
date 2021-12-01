@@ -17,13 +17,12 @@ class StudentClassFragment : Fragment() {
     private var columnCount = 1
     lateinit var studentClasses: ArrayList<PWClass>
 
-    val student = Student("Test student", 0.0, null)
-
+    val student = getContext()?.let { Student("Test student", 0.0, it,null) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //student.createTempAssignments()
-        //student.calculateReadingSpeed(null)
+        student?.createTempAssignments()
+        student?.calculateReadingSpeed(null)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
@@ -41,7 +40,7 @@ class StudentClassFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = StudentClassRecyclerViewAdapter(student.classes)
+                adapter = student?.classes?.let { StudentClassRecyclerViewAdapter(it) }
             }
         }
         return view

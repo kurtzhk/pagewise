@@ -11,13 +11,13 @@ import androidx.fragment.app.replace
 
 class StudentViewActivity : AppCompatActivity() {
 
-    val student = Student("Test student", 0.0,null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_studentview)
 
         //temp student for testing/demoing schedule
+        val student = Student("Test student", 0.0,this,null)
         student.createTempAssignments()
         student.calculateReadingSpeed(null)
 
