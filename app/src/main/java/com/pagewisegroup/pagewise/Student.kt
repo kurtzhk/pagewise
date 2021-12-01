@@ -5,14 +5,15 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
 // id fields should only be populated when reading from or writing to database.
-data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null)
+data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null) : Serializable
 
 // Object that tracks a Student and their information including names, reading speed, and their classes.
-class Student(var name: String, var reading_speed: Double, val context: Context, var id: Long? = null) {
+class Student(var name: String, var reading_speed: Double, val context: Context, var id: Long? = null) : Serializable {
     val classes = ArrayList<PWClass>()
     var dbm: DatabaseManager? = null
     var schedule: SchedulePlanner? = null
