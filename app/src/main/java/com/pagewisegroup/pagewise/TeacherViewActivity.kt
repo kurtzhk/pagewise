@@ -46,7 +46,7 @@ class TeacherViewActivity : AppCompatActivity() {
     }
 
     // Temporary function to show database working.
-    private val s = Student("test_student", 0.0)
+    private val s = Student("test_student", 0.0, this)
     private fun demoDatabaseRecording(a: Assignment) {
 
         Log.d("Student", s.toString())

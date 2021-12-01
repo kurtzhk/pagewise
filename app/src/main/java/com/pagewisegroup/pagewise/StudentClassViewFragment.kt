@@ -1,5 +1,6 @@
 package com.pagewisegroup.pagewise
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,15 +17,10 @@ class StudentClassFragment : Fragment() {
 
     private var columnCount = 1
     lateinit var studentClasses: ArrayList<PWClass>
-
-    val student = Student("Test student", 0.0, null)
-
+    lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        student.createTempAssignments()
-        student.calculateReadingSpeed(null)
-
+        student = Student("Test student", 0.0, requireActivity(),null)
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
             //studentClasses = it.getParcelableArrayList<>()(STUDENT_CLASSES)
@@ -41,7 +37,7 @@ class StudentClassFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = StudentClassRecyclerViewAdapter(student.classes)
+                adapter = student?.classes?.let { StudentClassRecyclerViewAdapter(it) }
             }
         }
         return view
