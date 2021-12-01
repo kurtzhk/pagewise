@@ -1,10 +1,11 @@
 package com.pagewisegroup.pagewise
 
 import android.util.Log
+import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.util.Date
 
-class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int) {
+class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int): Serializable {
     var completed: Boolean = false
     var hoursToComplete: Double = 0.0
     var id: Long? = null
