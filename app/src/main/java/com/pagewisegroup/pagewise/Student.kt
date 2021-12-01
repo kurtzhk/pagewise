@@ -45,6 +45,17 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
             reading_speed = total/size
     }
 
+    //list of all assignments
+    fun getAllAssignments() : ArrayList<Assignment> {
+        val assignments = ArrayList<Assignment>()
+        classes.forEach {
+            it.assignments.forEach {
+                assignments.add(it)
+            }
+        }
+        return assignments
+    }
+
     //finds and returns all unfinished assignments
     fun unfishedAssignments(): ArrayList<Assignment> {
         val unfishedAssignments = ArrayList<Assignment>()

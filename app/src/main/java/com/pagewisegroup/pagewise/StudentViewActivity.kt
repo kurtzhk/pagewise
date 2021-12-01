@@ -8,16 +8,16 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import java.util.*
 
 class StudentViewActivity : AppCompatActivity() {
-
-
+    lateinit var student: Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_studentview)
 
         //temp student for testing/demoing schedule
-        val student = Student("Test student", 0.0,this,null)
+        student = Student("Test student", 0.0,this,null)
         student.createTempAssignments()
         student.calculateReadingSpeed(null)
 
@@ -59,6 +59,22 @@ class StudentViewActivity : AppCompatActivity() {
     fun displayReadingView(){
         val intent = Intent(this, ReadingActivity::class.java)
         startActivity(intent)
+    }
+
+    fun showDatePickerDialog(v: View) {
+        if(v is DateDisplayView) {
+            v.picker.show(supportFragmentManager, "datePicker")
+        }
+    }
+
+    fun buildAssignment(v: View) {
+        val name = findViewById<EditText>(R.id.assignmentName).text.toString()
+        val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
+        val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
+        val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
+
+        val assignment = Assignment(name, Date(due.picker.year, due.picker.month, due.picker.day), pageStart, pageEnd)
+        student.addAssignment(assignment,student.classes[0].name)
     }
 
     //this should be moved to teach view later
