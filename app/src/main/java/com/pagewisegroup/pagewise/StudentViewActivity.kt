@@ -91,8 +91,6 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun displayScheduleEntry(){
-        student.reading_speed = 1.0 //temp to we have a current page/progress tracker
-        student.createSchedule()
         supportFragmentManager.commit {
             replace<ScheduleViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)

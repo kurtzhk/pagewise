@@ -23,7 +23,6 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         unfinishedAssignments.forEach {
             updateSchedule(it)
         }
-        //Log.d("Schedule", this.toString())
     }
 
     //Adds given assignment to schedule
@@ -37,7 +36,6 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         }
 
         var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
-        Log.d("Days left", "${assignment.name}: " + daysLeft.toString())
         if(daysLeft < 0) { return }
 
         val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
@@ -58,17 +56,17 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
             else today = true
 
             //adds/updates day in schedule
-            val dayIndex = findDayIndex(date)
+            val dayIndex = findDayIndex(schedule, date)
             if(dayIndex < 0)
                 schedule.add(PlannedDay(date, ArrayList()))
-            schedule[findDayIndex(date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
+            schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
         }
     }
 
     //returns index of date in schedule
     //returns -1 if not in schedule
-    fun findDayIndex(date: Date) : Int {
-        for ((index, day) in schedule.withIndex())
+    fun findDayIndex(currSchedule: ArrayList<PlannedDay>, date: Date) : Int {
+        for ((index, day) in currSchedule.withIndex())
             if(day.date.date == date.date && day.date.month == date.month) return index
         return -1
     }
@@ -87,8 +85,17 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         return calendar.time
     }
 
-    fun getDates() {
-
+    fun byAssignment() : ArrayList<PlannedDay> {
+        var byAssignmentSchedule = ArrayList<PlannedDay>()
+        var index = 0
+        schedule.forEach {
+            val size = it.reading.size
+            for(i in 0 until size) {
+                byAssignmentSchedule.add(PlannedDay(it.date, ArrayList()))
+                byAssignmentSchedule[byAssignmentSchedule.size-1].reading.add(it.reading[i])
+            }
+        }
+        return byAssignmentSchedule
     }
 
     //prints schedule

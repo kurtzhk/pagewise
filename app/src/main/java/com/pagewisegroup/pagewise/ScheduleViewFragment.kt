@@ -1,6 +1,7 @@
 package com.pagewisegroup.pagewise
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,7 +39,7 @@ class ScheduleViewFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = student.schedule?.let { ScheduleRecyclerViewAdapter(it) }
+                adapter = student.schedule?.let { ScheduleRecyclerViewAdapter(it.byAssignment()) }
             }
         }
         return view
@@ -52,7 +53,7 @@ class ScheduleViewFragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            AssignmentViewFragment().apply {
+            ScheduleViewFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }

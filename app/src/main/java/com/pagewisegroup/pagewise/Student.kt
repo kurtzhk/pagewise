@@ -1,9 +1,7 @@
 package com.pagewisegroup.pagewise
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
@@ -20,6 +18,9 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
     init {
         dbm = DatabaseManager(context)
         getClasses()
+        createTempAssignments()
+        reading_speed = 1.0 //TODO replaces once progress tracking is in place
+        createSchedule()
     }
 
     //calculates reading speed in pages per minute based on class if given, if class is not given bases it on all assignments
@@ -125,12 +126,11 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         addClass("CSCI 492")
         addClass("English 101")
         addClass("Bio 101")
-        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,0,25,23,59,59),0,1000),"CSCI 492")
-        addAssignment(Assignment("Kotlin Research", Date(2022-1900,0,22,23,59,59),5,25),"CSCI 492")
-        addAssignment(Assignment("English Book #5", Date(2022-1900,1,1,23,59,59),17,100),"English 101")
+        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,0,20,23,59,59),0,1000),"CSCI 492")
+        addAssignment(Assignment("Kotlin Research", Date(2022-1900,0,21,23,59,59),5,53),"CSCI 492")
+        addAssignment(Assignment("English Book #5", Date(2022-1900,0,22,23,59,59),17,125),"English 101")
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun createSchedule() {
         if(reading_speed == 0.0)
             error("Please complete assignment, so we can calculate reading speed")
@@ -142,7 +142,7 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
 
     override fun toString(): String {
         val studentInfo = StringBuilder()
-        studentInfo.append("name: $name read speed: $reading_speed ppm id: $id\n")
+            .append("name: $name read speed: $reading_speed ppm id: $id\n")
         classes.forEach {
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
             if(!it.assignments.isEmpty()) {
