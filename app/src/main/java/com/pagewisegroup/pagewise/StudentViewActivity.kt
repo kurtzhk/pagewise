@@ -27,7 +27,6 @@ class StudentViewActivity : AppCompatActivity() {
         //Prints info
         Log.d("Student Info", student.toString())
         //student.createSchedule()
-        /*Log.d("Schedule", student.schedule.toString())*/
 
         //init and add all the fragments to the activity's fragment manager
         supportFragmentManager.commit {
@@ -56,7 +55,7 @@ class StudentViewActivity : AppCompatActivity() {
         val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
 
         val assignment = Assignment(name, Date(due.picker.year-1900, due.picker.month, due.picker.day), pageStart, pageEnd)
-        student.addAssignment(assignment,student.classes[0].name)
+        student.addAssignment(assignment,student.classes[0].name) //TODO: Make it go into correct class
     }
 
     fun buildClass(v: View) {
@@ -91,6 +90,15 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
+    fun displayScheduleEntry(){
+        student.reading_speed = 1.0 //temp to we have a current page/progress tracker
+        student.createSchedule()
+        supportFragmentManager.commit {
+            replace<ScheduleViewFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
     private fun createStudentToolBar(){
         //student taskbar actions are initialized here
         val studentActionsStrings = resources.getStringArray(R.array.StudentActions)
@@ -118,6 +126,7 @@ class StudentViewActivity : AppCompatActivity() {
                     3 -> displayReadingView()
                     4 -> displayAssignmentEntry()
                     5 -> displayClassEntry()
+                    6 -> displayScheduleEntry()
                     else -> {
                         spinner.setSelection(0)
                     }

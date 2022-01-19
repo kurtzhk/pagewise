@@ -2,6 +2,7 @@ package com.pagewisegroup.pagewise
 
 import android.icu.text.DateFormatSymbols
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -14,6 +15,7 @@ data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>)
 
 //Right now this could be merged with student, but when updated in probably will be nice to have it independent
 //TODO("Overhaul once have more data to work with")
+@RequiresApi(Build.VERSION_CODES.N)
 class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val readingSpeed: Double) {
     var schedule = ArrayList<PlannedDay>()
 
@@ -21,6 +23,7 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         unfinishedAssignments.forEach {
             updateSchedule(it)
         }
+        //Log.d("Schedule", this.toString())
     }
 
     //Adds given assignment to schedule
@@ -33,7 +36,9 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
             currentDate = incrementDay(currentDate)
         }
 
-        val daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
+        var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
+        Log.d("Days left", "${assignment.name}: " + daysLeft.toString())
+        if(daysLeft < 0) { return }
 
         val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
 
@@ -80,6 +85,10 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         calendar.time = date
         calendar.add(Calendar.DATE, 1)
         return calendar.time
+    }
+
+    fun getDates() {
+
     }
 
     //prints schedule

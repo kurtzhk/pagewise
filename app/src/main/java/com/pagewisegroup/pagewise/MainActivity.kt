@@ -23,7 +23,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         login_group = STUDENT_TOKEN
-        sendToLogin()
+        //sendToLogin()
+        val intent = Intent(this, StudentViewActivity::class.java)
+        startActivity(intent)
 
         /*init logo*/
         val logo: ImageView = findViewById(R.id.pagewise_logo)

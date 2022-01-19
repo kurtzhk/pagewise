@@ -1,7 +1,9 @@
 package com.pagewisegroup.pagewise
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
@@ -123,11 +125,12 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         addClass("CSCI 492")
         addClass("English 101")
         addClass("Bio 101")
-        addAssignment(Assignment("Some CSCI Paper", Date(2021-1900,11,1,23,59,59),0,1000),"CSCI 492")
-        addAssignment(Assignment("Kotlin Research", Date(2021-1900,11,6,23,59,59),5,25),"CSCI 492")
-        addAssignment(Assignment("English Book #5", Date(2022-1900,0,1,23,59,59),17,100),"English 101")
+        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,0,25,23,59,59),0,1000),"CSCI 492")
+        addAssignment(Assignment("Kotlin Research", Date(2022-1900,0,22,23,59,59),5,25),"CSCI 492")
+        addAssignment(Assignment("English Book #5", Date(2022-1900,1,1,23,59,59),17,100),"English 101")
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun createSchedule() {
         if(reading_speed == 0.0)
             error("Please complete assignment, so we can calculate reading speed")
@@ -142,8 +145,13 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         studentInfo.append("name: $name read speed: $reading_speed ppm id: $id\n")
         classes.forEach {
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
-            it.assignments.forEach {
-                studentInfo.append("${it.name} ")
+            if(!it.assignments.isEmpty()) {
+                for(i in 0 until (it.assignments.size-1)) {
+                    studentInfo.append("${it.assignments[i].name}, ")
+                }
+                studentInfo.append("${it.assignments[it.assignments.size-1].name}\n")
+            } else {
+                studentInfo.append("N/A \n")
             }
         }
         return studentInfo.toString()
