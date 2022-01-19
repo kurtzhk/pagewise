@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import java.util.*
-import kotlin.collections.ArrayList
 
 /* TEACHER VIEW ACTIVITY
 *
