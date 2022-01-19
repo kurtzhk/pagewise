@@ -16,7 +16,6 @@ import android.view.ViewGroup
 class StudentClassFragment : Fragment() {
 
     private var columnCount = 1
-    lateinit var studentClasses: ArrayList<PWClass>
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,10 +1,7 @@
 package com.pagewisegroup.pagewise
 
-import android.app.Application
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
@@ -76,28 +73,11 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         }
     }
 
-    //print classes from DB -- temp for testing
-    fun printDBClasses() {
-        val db = dbm?.writableDatabase
-        Log.d("Class number->",dbm?.numberOfClasses(db).toString())
-        for(i in 1..dbm?.numberOfClasses(db)!!) {
-            Log.d("DB class", dbm?.fetchClass(db,i.toLong())?.name.toString());
-        }
-    }
-    //print assignments from DB -- temp for testing
-    fun printDBAssign() {
-        val db = dbm?.writableDatabase
-        Log.d("Assignment number->",dbm?.numberOfAssignments(db).toString())
-        for(i in 1..dbm?.numberOfAssignments(db)!!) {
-            Log.d("DB assignment", dbm?.fetchAssignment(db,i.toLong())?.name.toString())
-        }
-    }
-
     //Returns the index of a class if it already exists, otherwise returns -1
     fun getClassIndex(name: String) : Int {
-        var i = 0;
+        var i = 0
         classes.forEach {
-            i++;
+            i++
             if(it.name == name) return i
         }
         return -1
@@ -105,9 +85,9 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
 
     //Returns the index of a assignment if it already exists, otherwise returns -1
     fun getAssignIndex(name: String, pwClass: PWClass) : Int {
-        var i = 0;
+        var i = 0
         pwClass.assignments.forEach {
-            i++;
+            i++
             if(it.name == name) return i
         }
         return -1
@@ -130,15 +110,22 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         dbm?.recordAssignment(db,assignment,getClassIndex(className).toLong())
     }
 
+    /* creates assignment from uniqueString */
+    fun createAssignmentUniqueString(uniqueString: String) {
+        if(uniqueString.isBlank()) return
+        val assignment = Assignment.fromUniqueString(uniqueString)
+        Log.d("Assignment", assignment.toString())
+    }
+
     //temp for testing/demoing scheduling
     fun createTempAssignments() {
         //creates class
         addClass("CSCI 492")
         addClass("English 101")
         addClass("Bio 101")
-        addAssignment(Assignment("Some CSCI Paper", Date(2021,11,1,23,59,59),0,1000),"CSCI 492")
-        addAssignment(Assignment("Kotlin Research", Date(2021,11,6,23,59,59),5,25),"CSCI 492")
-        addAssignment(Assignment("English Book #5", Date(2022,0,1,23,59,59),17,100),"English 101")
+        addAssignment(Assignment("Some CSCI Paper", Date(2021-1900,11,1,23,59,59),0,1000),"CSCI 492")
+        addAssignment(Assignment("Kotlin Research", Date(2021-1900,11,6,23,59,59),5,25),"CSCI 492")
+        addAssignment(Assignment("English Book #5", Date(2022-1900,0,1,23,59,59),17,100),"English 101")
     }
 
     fun createSchedule() {
@@ -149,16 +136,16 @@ class Student(var name: String, var reading_speed: Double, val context: Context,
         schedule = SchedulePlanner(unfishedAssignments(),reading_speed)
     }
 
-    fun printClasses() {
-        classes.forEach {
-            Log.d("Class ", it.name)
-            it.assignments.forEach {
-                Log.d("has assignment", it.name)
-            }
-        }
-    }
 
     override fun toString(): String {
-        return "name: $name read speed: $reading_speed ppm id: $id"
+        val studentInfo = StringBuilder()
+        studentInfo.append("name: $name read speed: $reading_speed ppm id: $id\n")
+        classes.forEach {
+            studentInfo.append("Class ${it.name} \n\t Assignments: ")
+            it.assignments.forEach {
+                studentInfo.append("${it.name} ")
+            }
+        }
+        return studentInfo.toString()
     }
 }

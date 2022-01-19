@@ -10,7 +10,7 @@ class Progress(val assignment: Assignment) {
 
     //page the user left off on and will continue from
     //possible future thing: support for reading out of order? (this would be a whole lot of work)
-    fun getCurrentPage(): Int{
+    fun getCurrentPage(): Int {
         if(sessions.isEmpty()) return assignment.pageStart
         return sessions.last().endPage
     }
