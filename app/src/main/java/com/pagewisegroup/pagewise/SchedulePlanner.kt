@@ -15,7 +15,6 @@ data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>)
 
 //Right now this could be merged with student, but when updated in probably will be nice to have it independent
 //TODO("Overhaul once have more data to work with")
-@RequiresApi(Build.VERSION_CODES.N)
 class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val readingSpeed: Double) {
     var schedule = ArrayList<PlannedDay>()
 
@@ -36,7 +35,7 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         }
 
         var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
-        if(daysLeft < 0) { return }
+        if(daysLeft <= 0) { return }
 
         val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
 
@@ -59,7 +58,8 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
             val dayIndex = findDayIndex(schedule, date)
             if(dayIndex < 0)
                 schedule.add(PlannedDay(date, ArrayList()))
-            schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
+            if(pageEnd-pageStart != 0)
+                schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
         }
     }
 
