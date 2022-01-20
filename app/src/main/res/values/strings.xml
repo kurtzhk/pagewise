@@ -24,5 +24,7 @@
         <item>Assignments</item>
         <item>Reading View</item>
         <item>Create Assignment</item>
+        <item>Create Class</item>
+        <item>Create Schedule</item>
     </string-array>
 </resources>

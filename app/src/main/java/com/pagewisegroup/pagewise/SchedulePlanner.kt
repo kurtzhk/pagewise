@@ -9,18 +9,17 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.round
 
-data class plannedReading(var assignmentName: String, var plannedMinutes: Double, var startPages: Int, var endPage: Int)
-data class plannedDay(val date: Date, var reading: ArrayList<plannedReading>)
+data class PlannedReading(var assignmentName: String, var plannedMinutes: Double, var startPages: Int, var endPage: Int)
+data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>)
 
 //Right now this could be merged with student, but when updated in probably will be nice to have it independent
 //TODO("Overhaul once have more data to work with")
-class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readingSpeed: Double) {
-    var schedule = ArrayList<plannedDay>()
+class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val readingSpeed: Double) {
+    var schedule = ArrayList<PlannedDay>()
 
     init {
-        unfishedAssignments.forEach {
+        unfinishedAssignments.forEach {
             updateSchedule(it)
         }
     }
@@ -35,7 +34,8 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
             currentDate = incrementDay(currentDate)
         }
 
-        val daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
+        var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
+        if(daysLeft <= 0) { return }
 
         val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
 
@@ -44,7 +44,7 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
         var date = currentDate
         var pageEnd = assignment.currentPage
         for(i in 1..daysLeft) {
-            var pageStart = pageEnd
+            val pageStart = pageEnd
 
             //round up except for last day, when you finish
             pageEnd = pageStart + ceil(pagesPerDay).toInt()
@@ -55,17 +55,18 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
             else today = true
 
             //adds/updates day in schedule
-            val dayIndex = findDayIndex(date)
+            val dayIndex = findDayIndex(schedule, date)
             if(dayIndex < 0)
-                schedule.add(plannedDay(date, ArrayList()))
-            schedule.get(findDayIndex(date)).reading.add(plannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
+                schedule.add(PlannedDay(date, ArrayList()))
+            if(pageEnd-pageStart != 0)
+                schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
         }
     }
 
     //returns index of date in schedule
     //returns -1 if not in schedule
-    fun findDayIndex(date: Date) : Int {
-        for ((index, day) in schedule.withIndex())
+    fun findDayIndex(currSchedule: ArrayList<PlannedDay>, date: Date) : Int {
+        for ((index, day) in currSchedule.withIndex())
             if(day.date.date == date.date && day.date.month == date.month) return index
         return -1
     }
@@ -84,19 +85,32 @@ class SchedulePlanner (val unfishedAssignments: ArrayList<Assignment>, val readi
         return calendar.time
     }
 
+    fun byAssignment() : ArrayList<PlannedDay> {
+        var byAssignmentSchedule = ArrayList<PlannedDay>()
+        var index = 0
+        schedule.forEach {
+            val size = it.reading.size
+            for(i in 0 until size) {
+                byAssignmentSchedule.add(PlannedDay(it.date, ArrayList()))
+                byAssignmentSchedule[byAssignmentSchedule.size-1].reading.add(it.reading[i])
+            }
+        }
+        return byAssignmentSchedule
+    }
+
     //prints schedule
     @RequiresApi(Build.VERSION_CODES.N)
     override fun toString(): String {
         var scheduleString = ""
         schedule.forEach {
-            scheduleString += "On ${DateFormatSymbols().getMonths()[it.date.month]} ${it.date.date} \n"
+            scheduleString += "On ${DateFormatSymbols().months[it.date.month]} ${it.date.date} \n"
             it.reading.forEach {
-                scheduleString += "\t read asssignment ${it.assignmentName} for "
+                scheduleString += "\t read assignment ${it.assignmentName} for "
                 //if greater the an hour converts to hours & minutes
-                if(it.plannedMinutes > 60)
-                    scheduleString += "${floor(it.plannedMinutes/60)} hours and ${ceil(it.plannedMinutes%60)} minutes"
+                scheduleString += if(it.plannedMinutes > 60)
+                    "${floor(it.plannedMinutes/60)} hours and ${ceil(it.plannedMinutes%60)} minutes"
                 else
-                    scheduleString += "${floor(it.plannedMinutes)} minutes"
+                    "${floor(it.plannedMinutes)} minutes"
                 scheduleString += " from pages ${it.startPages} to ${it.endPage}\n"
             }
         }

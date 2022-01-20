@@ -1,7 +1,7 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,21 +13,24 @@ import android.view.ViewGroup
 /**
  * A fragment representing a list of Items.
  */
-class StudentClassFragment : Fragment() {
+class ScheduleViewFragment : Fragment() {
 
     private var columnCount = 1
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         student = Student("Test student", 0.0, requireActivity(),null)
+
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
-            //studentClasses = it.getParcelableArrayList<>()(STUDENT_CLASSES)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_class_view_list, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_assignment_view_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -36,7 +39,7 @@ class StudentClassFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = student?.classes?.let { StudentClassRecyclerViewAdapter(it) }
+                adapter = student.schedule?.let { ScheduleRecyclerViewAdapter(it.byAssignment()) }
             }
         }
         return view
@@ -44,15 +47,15 @@ class StudentClassFragment : Fragment() {
 
     companion object {
 
+        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
-        const val STUDENT_CLASSES = "student_class_list"
 
+        // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            StudentClassFragment().apply {
+            ScheduleViewFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
-                    //putParcelableArrayList(STUDENT_CLASSES, studentClasses)
                 }
             }
     }

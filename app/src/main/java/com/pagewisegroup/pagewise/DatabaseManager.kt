@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -23,7 +22,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
                 "time_to_complete REAL," + /*unsure if this is needed, might decide to store reading
                                        speed in student table and just dynamically calculate
                                        ttc at runtime. need feedback. */
-                "completed BOOLEAN NOT NULL," + //if true t_t_c will be considered actual ttc otherwise an esitmate.
+                "completed BOOLEAN NOT NULL," + //if true t_t_c will be considered actual ttc otherwise an estimate.
                 "PRIMARY KEY(assignment_id ASC))")
         db?.execSQL("CREATE TABLE IF NOT EXISTS CLASSES(" +
                 "class_id INTEGER," +
@@ -127,16 +126,12 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
     }
 
     fun numberOfClasses(db: SQLiteDatabase?) : Int {
-        val cTable = db?.rawQuery("SELECT class_id FROM CLASSES", null)
-        if(cTable == null)
-            return 0
+        val cTable = db?.rawQuery("SELECT class_id FROM CLASSES", null) ?: return 0
         return cTable.count
     }
 
     fun numberOfAssignments(db: SQLiteDatabase?) : Int {
-        val ATable = db?.rawQuery("SELECT class_id FROM ASSIGNMENTS", null)
-        if(ATable == null)
-            return 0
+        val ATable = db?.rawQuery("SELECT class_id FROM ASSIGNMENTS", null) ?: return 0
         return ATable.count
     }
 

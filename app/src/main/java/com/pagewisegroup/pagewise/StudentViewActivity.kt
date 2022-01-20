@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 class StudentViewActivity : AppCompatActivity() {
@@ -26,7 +27,6 @@ class StudentViewActivity : AppCompatActivity() {
         //Prints info
         Log.d("Student Info", student.toString())
         //student.createSchedule()
-        /*Log.d("Schedule", student.schedule.toString())*/
 
         //init and add all the fragments to the activity's fragment manager
         supportFragmentManager.commit {
@@ -35,30 +35,11 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    /* creates assignment from uniqueString */
-    fun createAssignment(uniqueString: String) {
-        if(uniqueString.isBlank()) return
-        val assignment = Assignment.fromUniqueString(uniqueString)
-        Log.d("Assignment", assignment.toString())
-    }
-
     fun displayAssignmentView(){
         supportFragmentManager.commit {
             replace<AssignmentViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
-    }
-
-    fun displayClassView(){
-        supportFragmentManager.commit {
-            replace<StudentClassFragment>(R.id.fragment_frame)
-            setReorderingAllowed(true)
-        }
-    }
-
-    fun displayReadingView(){
-        val intent = Intent(this, ReadingActivity::class.java)
-        startActivity(intent)
     }
 
     fun showDatePickerDialog(v: View) {
@@ -73,14 +54,45 @@ class StudentViewActivity : AppCompatActivity() {
         val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
         val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
 
-        val assignment = Assignment(name, Date(due.picker.year, due.picker.month, due.picker.day), pageStart, pageEnd)
-        student.addAssignment(assignment,student.classes[0].name)
+        val assignment = Assignment(name, Date(due.picker.year-1900, due.picker.month, due.picker.day), pageStart, pageEnd)
+        student.addAssignment(assignment,student.classes[0].name) //TODO: Make it go into correct class
+    }
+
+    fun buildClass(v: View) {
+        val className = findViewById<TextInputLayout>(R.id.classNameInput).editText?.text.toString()
+        student.addClass(className)
+    }
+
+    fun displayClassView(){
+        supportFragmentManager.commit {
+            replace<StudentClassFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
+    fun displayReadingView(){
+        val intent = Intent(this, ReadingActivity::class.java)
+        startActivity(intent)
     }
 
     //this should be moved to teach view later
     fun displayAssignmentEntry(){
         supportFragmentManager.commit {
             replace<EnterAssignment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
+    fun displayClassEntry(){
+        supportFragmentManager.commit {
+            replace<CreateClassFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
+    fun displayScheduleEntry(){
+        supportFragmentManager.commit {
+            replace<ScheduleViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
     }
@@ -111,6 +123,8 @@ class StudentViewActivity : AppCompatActivity() {
                     2 -> displayAssignmentView()
                     3 -> displayReadingView()
                     4 -> displayAssignmentEntry()
+                    5 -> displayClassEntry()
+                    6 -> displayScheduleEntry()
                     else -> {
                         spinner.setSelection(0)
                     }

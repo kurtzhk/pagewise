@@ -2,19 +2,9 @@ package com.pagewisegroup.pagewise
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.EditText
-import java.util.*
-import kotlin.text.*
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import com.google.android.material.textfield.TextInputLayout
 
 /*MAIN ACTIVITY
 *
@@ -32,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        login_group = STUDENT_TOKEN
+        //sendToLogin()
         val intent = Intent(this, StudentViewActivity::class.java)
         startActivity(intent)
 

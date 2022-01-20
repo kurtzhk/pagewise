@@ -1,9 +1,8 @@
 package com.pagewisegroup.pagewise
 
-import android.util.Log
 import java.io.Serializable
 import java.nio.charset.StandardCharsets
-import java.util.Date
+import java.util.*
 
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int): Serializable {
     var completed: Boolean = false
@@ -31,7 +30,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     }
 
     /* Builder object, so can create assignment from id */
-    companion object uniqueStringBuilder {
+    companion object UniqueStringBuilder {
         fun fromUniqueString(uniqueString: String): Assignment {
             val codedAssignInfo = uniqueString.split("&")
             if(codedAssignInfo.size != 6) error("Incorrect assignment unique string")
