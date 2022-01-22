@@ -19,7 +19,9 @@ class ScheduleViewFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        student = Student("Test student", 0.0, requireActivity(),null)
+
+        //TODO: remove when bundles added
+        student = StudentController(requireActivity()).student
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
@@ -39,7 +41,7 @@ class ScheduleViewFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = student.schedule?.let { ScheduleRecyclerViewAdapter(it.byAssignment()) }
+                adapter = ScheduleRecyclerViewAdapter(student.getScheduleByAssignment())
             }
         }
         return view

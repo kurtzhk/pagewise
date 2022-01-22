@@ -12,21 +12,19 @@ import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 class StudentViewActivity : AppCompatActivity() {
-    lateinit var student: Student
+    lateinit var studentController: StudentController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_studentview)
 
         //temp student for testing/demoing schedule
-        student = Student("Test student", 0.0,this,null)
-        student.createTempAssignments()
-        student.calculateReadingSpeed(null)
+        studentController = StudentController(this)
 
         //generate toolbar with actions
         createStudentToolBar()
         //Prints info
-        Log.d("Student Info", student.toString())
-        //student.createSchedule()
+        Log.d("Student Info", studentController.student.toString())
 
         //init and add all the fragments to the activity's fragment manager
         supportFragmentManager.commit {
@@ -55,12 +53,12 @@ class StudentViewActivity : AppCompatActivity() {
         val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
 
         val assignment = Assignment(name, Date(due.picker.year-1900, due.picker.month, due.picker.day), pageStart, pageEnd)
-        student.addAssignment(assignment,student.classes[0].name) //TODO: Make it go into correct class
+        studentController.addAssignment(assignment,studentController.student.classes[0].name) //TODO: Make it go into correct class
     }
 
     fun buildClass(v: View) {
         val className = findViewById<TextInputLayout>(R.id.classNameInput).editText?.text.toString()
-        student.addClass(className)
+        studentController.addClass(className)
     }
 
     fun displayClassView(){
@@ -97,7 +95,7 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    private fun createStudentToolBar(){
+    private fun createStudentToolBar() {
         //student taskbar actions are initialized here
         val studentActionsStrings = resources.getStringArray(R.array.StudentActions)
         //init spinner
@@ -130,7 +128,7 @@ class StudentViewActivity : AppCompatActivity() {
                     }
                 }
 
-                //reset arrayadapter's textview to empty string for a e s t h e t i c
+                //reset array adapter's textview to empty string for a e s t h e t i c
                 spinner.setSelection(0)
             }
 

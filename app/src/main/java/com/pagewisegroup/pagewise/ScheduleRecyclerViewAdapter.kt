@@ -31,20 +31,12 @@ class ScheduleRecyclerViewAdapter(private val schedule: ArrayList<PlannedDay>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val day = schedule[position]
         //date
-        val date = StringBuilder()
-            .append(DateFormatSymbols().months[day.date.month])
-            .append(" ")
-            .append(day.date.date)
+        val date = StringBuilder().append(DateFormatSymbols().months[day.date.month]).append(" ").append(day.date.date)
         holder.idView.text = date
         //reading
         val assignment = day.reading[0]
-        val reading = StringBuilder()
-            .append(assignment.assignmentName)
-            .append(" ")
-            .append(assignment.startPages)
-            .append("-")
-            .append(assignment.endPage)
-            .append(" (")
+        val reading = StringBuilder().append(assignment.assignmentName).append(" ").append(assignment.startPages)
+            .append("-").append(assignment.endPage).append(" (")
         if(assignment.plannedMinutes > 60) {
             reading.append(floor(assignment.plannedMinutes/60).toInt())
                 .append("hrs ")

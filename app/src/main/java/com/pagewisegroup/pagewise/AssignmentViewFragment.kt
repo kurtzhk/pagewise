@@ -18,7 +18,9 @@ class AssignmentViewFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        student = Student("Test student", 0.0, requireActivity(),null)
+
+        //TODO: remove when bundles added
+        student = StudentController(requireActivity()).student
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
