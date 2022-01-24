@@ -2,7 +2,6 @@ package com.pagewisegroup.pagewise
 
 import android.icu.text.DateFormatSymbols
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -83,19 +82,6 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         calendar.time = date
         calendar.add(Calendar.DATE, 1)
         return calendar.time
-    }
-
-    fun byAssignment() : ArrayList<PlannedDay> {
-        var byAssignmentSchedule = ArrayList<PlannedDay>()
-        var index = 0
-        schedule.forEach {
-            val size = it.reading.size
-            for(i in 0 until size) {
-                byAssignmentSchedule.add(PlannedDay(it.date, ArrayList()))
-                byAssignmentSchedule[byAssignmentSchedule.size-1].reading.add(it.reading[i])
-            }
-        }
-        return byAssignmentSchedule
     }
 
     //prints schedule

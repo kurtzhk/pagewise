@@ -19,7 +19,6 @@ import java.util.*
 * TODO: like everything lol*/
 class TeacherViewActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         s.classes.add(PWClass("test_class"))
@@ -30,7 +29,6 @@ class TeacherViewActivity : AppCompatActivity() {
         if(v is DateDisplayView) {
             v.picker.show(supportFragmentManager, "datePicker")
         }
-
     }
 
     fun buildAssignment(v: View) {
@@ -45,7 +43,7 @@ class TeacherViewActivity : AppCompatActivity() {
     }
 
     // Temporary function to show database working.
-    private val s = Student("test_student", 0.0, this)
+    private val s = Student("test_student", 0L, this)
     private fun demoDatabaseRecording(a: Assignment) {
 
         Log.d("Student", s.toString())

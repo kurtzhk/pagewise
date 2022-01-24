@@ -89,7 +89,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
     fun recordStudent(db: SQLiteDatabase?, student: Student) {
         val values = ContentValues()
         values.put("name", student.name)
-        values.put("read_speed", student.reading_speed)
+        values.put("read_speed", student.readingSpeed)
         if (student.id != null) {
             db?.update("STUDENTS", values, "student_id = ${student.id}", null)
         } else {
@@ -116,7 +116,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         sTable?.moveToFirst()
         val name = sTable?.getString(0)
         val readingSpeed = sTable?.getDouble(1)
-        val s = Student(name!!, readingSpeed!!, context,id)
+        val s = Student(name!!, id, context)
         if (eTable?.moveToFirst() == true) {
             do {
                 s.classes.add(fetchClass(db, eTable.getLong(0)))
