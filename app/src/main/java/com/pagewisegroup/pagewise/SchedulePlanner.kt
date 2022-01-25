@@ -3,14 +3,15 @@ package com.pagewisegroup.pagewise
 import android.icu.text.DateFormatSymbols
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.io.Serializable
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.math.ceil
 import kotlin.math.floor
 
-data class PlannedReading(var assignmentName: String, var plannedMinutes: Double, var startPages: Int, var endPage: Int)
-data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>)
+data class PlannedReading(var assignmentName: String, var plannedMinutes: Double, var startPages: Int, var endPage: Int) : Serializable
+data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>): Serializable
 
 //Right now this could be merged with student, but when updated in probably will be nice to have it independent
 //TODO("Overhaul once have more data to work with")

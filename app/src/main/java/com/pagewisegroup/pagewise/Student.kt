@@ -10,7 +10,7 @@ import kotlin.collections.ArrayList
 data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null) : Serializable
 
 // Object that tracks a Student and their information including names, reading speed, and their classes.
-class Student(var name: String, var id: Long? = null, val context: Context) : Serializable {
+class Student(var name: String, var id: Long? = null) : Serializable {
     val classes = ArrayList<PWClass>()
     var readingSpeed = 0.0
     var schedule = ArrayList<PlannedDay>()

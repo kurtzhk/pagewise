@@ -16,7 +16,7 @@ class StudentController (context: Context) {
         val id = 0L
 
         dbm = DatabaseManager(context)
-        student = Student(name, id, context)
+        student = Student(name, id)
         fetchClasses()
         calculateReadingSpeed(null)
 
@@ -32,7 +32,7 @@ class StudentController (context: Context) {
     fun fetchClasses() {
         val db = dbm.writableDatabase
         for(i in 1..dbm.numberOfClasses(db)) {
-            student.classes.add(dbm.fetchClass(db,i.toLong())!!)
+            student.classes.add(dbm.fetchClass(i.toLong()))
         }
     }
 
@@ -42,7 +42,7 @@ class StudentController (context: Context) {
         if(student.getClassIndex(name) > 0) { return }
         val pwClass = PWClass(name,ArrayList(),null)
         student.classes.add(pwClass)
-        dbm.recordClass(db, pwClass)
+        dbm.recordClass(pwClass)
     }
 
     //adds assignment to student && database
@@ -51,7 +51,7 @@ class StudentController (context: Context) {
         val pwClass = student.classes[student.getClassIndex(className)-1]
         if(student.getAssignIndex(assignment.name,pwClass) > 0) { return }
         pwClass.assignments.add(assignment)
-        dbm.recordAssignment(db,assignment,student.getClassIndex(className).toLong())
+        dbm.recordAssignment(assignment,student.getClassIndex(className).toLong())
     }
 
     //temp for testing/demoing scheduling
