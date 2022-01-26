@@ -1,11 +1,15 @@
 package com.pagewisegroup.pagewise.profile
 
 import android.content.DialogInterface
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.setPadding
 import com.pagewisegroup.pagewise.DatabaseManager
 import com.pagewisegroup.pagewise.R
 import com.pagewisegroup.pagewise.Student
@@ -18,10 +22,11 @@ ProfileViewActivity : AppCompatActivity() {
     }
 
     fun newProfile(v: View) {
-        val enterName = AlertDialog.Builder(this)
+        val enterName = AlertDialog.Builder(this, R.style.Theme_PageWise_Dialog)
         enterName.setTitle("Enter Profile Name:")
         enterName.setCancelable(false)
         val input = EditText(this)
+        input.setTextColor(Color.WHITE)
         enterName.setView(input)
         enterName
             .setPositiveButton(
