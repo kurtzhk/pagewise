@@ -8,5 +8,5 @@
     android:layout_height="match_parent"
     android:layout_margin="50dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ProfileViewFragment"
+    tools:context=".profile.ProfileViewFragment"
     tools:listitem="@layout/fragment_profile_view" />

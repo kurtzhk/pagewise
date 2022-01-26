@@ -1,12 +1,11 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.profile
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.pagewisegroup.pagewise.Student
 
-import com.pagewisegroup.pagewise.placeholder.PlaceholderContent.PlaceholderItem
 import com.pagewisegroup.pagewise.databinding.FragmentProfileViewBinding
 
 /**
