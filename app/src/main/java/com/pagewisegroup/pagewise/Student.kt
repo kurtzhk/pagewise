@@ -26,6 +26,14 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
         return assignments
     }
 
+    fun getAllClassNames() : ArrayList<String> {
+        val justClasses = ArrayList<String>()
+        classes.forEach {
+            justClasses.add(it.name)
+        }
+        return justClasses
+    }
+
     //finds and returns all unfinished assignments
     fun getUnfishedAssignments(): ArrayList<Assignment> {
         val unfishedAssignments = ArrayList<Assignment>()
@@ -58,6 +66,7 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
         return -1
     }
 
+    //Gets schedule where there is one assignment per class
     fun getScheduleByAssignment() : ArrayList<PlannedDay> {
         var byAssignmentSchedule = ArrayList<PlannedDay>()
         var index = 0

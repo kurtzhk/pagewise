@@ -48,12 +48,13 @@ class StudentViewActivity : AppCompatActivity() {
 
     fun buildAssignment(v: View) {
         val name = findViewById<EditText>(R.id.assignmentName).text.toString()
+        val pickedClass = findViewById<AutoCompleteTextView>(R.id.class_choice).text.toString()
         val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
         val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
         val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
 
         val assignment = Assignment(name, Date(due.picker.year-1900, due.picker.month, due.picker.day), pageStart, pageEnd)
-        studentController.addAssignment(assignment,studentController.student.classes[0].name) //TODO: Make it go into correct class
+        studentController.addAssignment(assignment,pickedClass) //TODO: Make it go into correct class
     }
 
     fun buildClass(v: View) {
@@ -74,7 +75,7 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     //this should be moved to teach view later
-    fun displayAssignmentEntry(){
+    fun displayAssignmentEntry() {
         supportFragmentManager.commit {
             replace<EnterAssignment>(R.id.fragment_frame)
             setReorderingAllowed(true)
