@@ -1,6 +1,5 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -62,6 +61,13 @@ class StudentViewActivity : AppCompatActivity() {
         studentController.addClass(className)
     }
 
+    fun buildReadingSession(v: View) {
+        val startPage = findViewById<TextView>(R.id.startPage).text.trim().toString().toInt()
+        val endPage = findViewById<TextView>(R.id.endPage).text.trim().toString().toInt()
+        val time = findViewById<TextView>(R.id.sessionTime).text.trim().toString().toLong()
+        studentController.addReadingSession(startPage,endPage,time)
+    }
+
     fun displayClassView(){
         supportFragmentManager.commit {
             replace<StudentClassFragment>(R.id.fragment_frame)
@@ -70,14 +76,18 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun displayReadingView(){
-        val intent = Intent(this, ReadingActivity::class.java)
-        startActivity(intent)
+        /*val intent = Intent(this, ReadingActivity::class.java)
+        startActivity(intent)*/
+        supportFragmentManager.commit {
+            replace<RecordReadingFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
     }
 
     //this should be moved to teach view later
     fun displayAssignmentEntry() {
         supportFragmentManager.commit {
-            replace<EnterAssignment>(R.id.fragment_frame)
+            replace<EnterAssignmentFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
     }

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 
-class EnterAssignment : Fragment() {
+class EnterAssignmentFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

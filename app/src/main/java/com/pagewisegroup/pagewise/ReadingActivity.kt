@@ -16,11 +16,10 @@ class ReadingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_reading)
 
         val startEndButton = findViewById<Button>(R.id.start_end_button)
-
         startEndButton.setOnClickListener{
-            if(midSession){
+            if(midSession) {
                 //go to separate view to enter final page number
-                val intent = Intent(this,FinishReadingActivity::class.java).apply(){
+                val intent = Intent(this,FinishReadingActivity::class.java).apply() {
                     putExtra("pagewise.STIME",startTime)
                     putExtra("pagewise.ETIME", currentTimeMillis())
                     Log.d("End time in ms",""+currentTimeMillis())

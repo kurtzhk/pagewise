@@ -12,8 +12,9 @@ data class PWClass(val name: String, val assignments: ArrayList<Assignment> = Ar
 // Object that tracks a Student and their information including names, reading speed, and their classes.
 class Student(var name: String, var id: Long? = null, val context: Context) : Serializable {
     val classes = ArrayList<PWClass>()
-    var readingSpeed = 0.0
     var schedule = ArrayList<PlannedDay>()
+    var pastReadings = ArrayList<ReadingSession>()
+    var readingSpeed = 0.0
 
     //list of all assignments without classes
     fun getAllAssignments() : ArrayList<Assignment> {
@@ -27,11 +28,26 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
     }
 
     fun getAllClassNames() : ArrayList<String> {
-        val justClasses = ArrayList<String>()
+        val className = ArrayList<String>()
         classes.forEach {
-            justClasses.add(it.name)
+            className.add(it.name)
         }
-        return justClasses
+        return className
+    }
+
+    fun getAssignNames(className : String?) : ArrayList<String> {
+        val assignName = ArrayList<String>()
+        if(className.isNullOrEmpty()) {
+            return assignName
+        }
+        classes.forEach {
+            if(className == it.name) {
+                it.assignments.forEach {
+                    assignName.add(it.name)
+                }
+            }
+        }
+        return assignName
     }
 
     //finds and returns all unfinished assignments
@@ -64,6 +80,19 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
             if(it.name == name) return i
         }
         return -1
+    }
+
+    //checks if assign exists in given class
+    fun assignExists(className: String, assignName: String) : Boolean {
+        classes.forEach {
+            if(it.name == className) {
+                it.assignments.forEach {
+                    if(it.name == assignName) { return true}
+                }
+                return false
+            }
+        }
+        return false
     }
 
     //Gets schedule where there is one assignment per class

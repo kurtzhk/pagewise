@@ -54,6 +54,13 @@ class StudentController (context: Context) {
         dbm.recordAssignment(db,assignment,student.getClassIndex(className).toLong())
     }
 
+    //adds reading assignment to student && database
+    fun addReadingSession(startPage: Int, endPage: Int,time: Long) {
+        student.pastReadings.add(ReadingSession(startPage, endPage, time))
+        Log.d("Reading session", "Adding reading session with $startPage - $endPage over $time min")
+        //TODO Add to database once incorporated
+    }
+
     //temp for testing/demoing scheduling
     fun createTempAssignments() {
         //creates class
