@@ -18,8 +18,7 @@ class StudentClassFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO: remove when bundles added
-        student = StudentController(requireActivity()).student
+        student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
             //studentClasses = it.getParcelableArrayList<>()(STUDENT_CLASSES)
@@ -36,7 +35,7 @@ class StudentClassFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = student?.classes?.let { StudentClassRecyclerViewAdapter(it) }
+                adapter = student.classes.let { StudentClassRecyclerViewAdapter(it) }
             }
         }
         return view

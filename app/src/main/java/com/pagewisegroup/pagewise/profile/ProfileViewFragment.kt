@@ -1,7 +1,6 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.profile
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,19 +8,25 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pagewisegroup.pagewise.DatabaseManager
+import com.pagewisegroup.pagewise.R
+import com.pagewisegroup.pagewise.Student
 
 /**
  * A fragment representing a list of Items.
  */
-class ScheduleViewFragment : Fragment() {
+class ProfileViewFragment : Fragment() {
 
     private var columnCount = 1
-    lateinit var student : Student
+    val students = ArrayList<Student>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
-
+        val dbm = DatabaseManager(requireContext())
+        val sCursor = dbm.readableDatabase?.rawQuery("SELECT * FROM STUDENTS", null)
+        while (sCursor!!.moveToNext()) {
+            students.add(dbm.fetchStudent(sCursor.getLong(0)))
+        }
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
@@ -31,7 +36,7 @@ class ScheduleViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_assignment_view_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile_view_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -40,23 +45,20 @@ class ScheduleViewFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = ScheduleRecyclerViewAdapter(student.getScheduleByAssignment())
+                adapter = ProfileRecyclerViewAdapter(students)
             }
         }
         return view
     }
 
     companion object {
-
-        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int) =
-            ScheduleViewFragment().apply {
+        fun newInstance() =
+            ProfileViewFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
+                    putInt(ARG_COLUMN_COUNT, 1)
                 }
             }
     }
