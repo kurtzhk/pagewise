@@ -19,7 +19,7 @@ class StudentViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_studentview)
 
         //temp student for testing/demoing schedule
-        studentController = StudentController(this)
+        studentController = StudentController(this, intent.getSerializableExtra("STUDENT") as Student)
 
         //generate toolbar with actions
         createStudentToolBar()
@@ -46,7 +46,7 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    fun buildAssignment(v: View) {
+    fun buildAssignment() {
         val name = findViewById<EditText>(R.id.assignmentName).text.toString()
         val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
         val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
@@ -56,7 +56,7 @@ class StudentViewActivity : AppCompatActivity() {
         studentController.addAssignment(assignment,studentController.student.classes[0].name) //TODO: Make it go into correct class
     }
 
-    fun buildClass(v: View) {
+    fun buildClass() {
         val className = findViewById<TextInputLayout>(R.id.classNameInput).editText?.text.toString()
         studentController.addClass(className)
     }
@@ -100,6 +100,7 @@ class StudentViewActivity : AppCompatActivity() {
         val studentActionsStrings = resources.getStringArray(R.array.StudentActions)
         //init spinner
         val spinner = findViewById<Spinner>(R.id.student_spinner)
+        findViewById<TextView>(R.id.student_name_display).text = studentController.student.name
 
         if (spinner != null) {
             val adapter =

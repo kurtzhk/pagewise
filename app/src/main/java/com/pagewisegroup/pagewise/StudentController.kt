@@ -5,18 +5,11 @@ import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
 
-class StudentController (context: Context) {
-    val student: Student
-    val dbm: DatabaseManager
-    val schedulePlanner: SchedulePlanner
+class StudentController (context: Context, val student: Student) {
+    private val dbm: DatabaseManager = DatabaseManager(context)
+    private val schedulePlanner: SchedulePlanner
 
     init {
-        //TODO: Fetch name/id from database based on login (this can also be done in login and passed to here)
-        val name = "temp student"
-        val id = 0L
-
-        dbm = DatabaseManager(context)
-        student = Student(name, id)
         fetchClasses()
         calculateReadingSpeed(null)
 
@@ -38,7 +31,6 @@ class StudentController (context: Context) {
 
     //adds class to student && database
     fun addClass(name: String) {
-        val db = dbm.writableDatabase
         if(student.getClassIndex(name) > 0) { return }
         val pwClass = PWClass(name,ArrayList(),null)
         student.classes.add(pwClass)
@@ -47,7 +39,6 @@ class StudentController (context: Context) {
 
     //adds assignment to student && database
     fun addAssignment(assignment: Assignment, className: String) {
-        val db = dbm.writableDatabase
         val pwClass = student.classes[student.getClassIndex(className)-1]
         if(student.getAssignIndex(assignment.name,pwClass) > 0) { return }
         pwClass.assignments.add(assignment)

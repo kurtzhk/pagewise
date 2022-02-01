@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.pagewisegroup.pagewise.profile.ProfileViewActivity
 
 /*MAIN ACTIVITY
 *
@@ -24,8 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         login_group = STUDENT_TOKEN
         //sendToLogin()
-        val intent = Intent(this, StudentViewActivity::class.java)
-        startActivity(intent)
+        val intent = Intent(this, ProfileViewActivity::class.java)
 
         /*init logo*/
         val logo: ImageView = findViewById(R.id.pagewise_logo)
@@ -37,8 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         /*apply button listeners*/
         studentButton.setOnClickListener {
-            login_group = STUDENT_TOKEN
-            sendToLogin()
+            startActivity(intent)
         }
         /*apply button listeners*/
         teacherButton.setOnClickListener {
