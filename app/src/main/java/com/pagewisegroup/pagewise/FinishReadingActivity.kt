@@ -25,12 +25,12 @@ class FinishReadingActivity : AppCompatActivity() {
             val n = num.text.toString().toIntOrNull()
             if(n != null && n >= progressObj.getCurrentPage() && n <= progressObj.assignment.pageEnd){
                 //log session and return to student view
-                progressObj.addSession(ReadingSession(n,intent.getLongExtra("pagewise.STIME",0),
-                    intent.getLongExtra("pagewise.ETIME",1)))
+                progressObj.addSession(n,intent.getLongExtra("pagewise.STIME",0),
+                    intent.getLongExtra("pagewise.ETIME",1))
                 val intent = Intent(this, StudentViewActivity::class.java)
                 startActivity(intent)
             }
-            Log.d("Proggress", "Read to page $n")
+            Log.d("Progress", "Read to page $n")
         }
     }
 }

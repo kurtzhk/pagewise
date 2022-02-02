@@ -95,6 +95,13 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
+    fun displayChartsView(){
+        supportFragmentManager.commit {
+            replace<ChartViewFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
     private fun createStudentToolBar() {
         //student taskbar actions are initialized here
         val studentActionsStrings = resources.getStringArray(R.array.StudentActions)
@@ -124,6 +131,7 @@ class StudentViewActivity : AppCompatActivity() {
                     4 -> displayAssignmentEntry()
                     5 -> displayClassEntry()
                     6 -> displayScheduleEntry()
+                    7 -> displayChartsView()
                     else -> {
                         spinner.setSelection(0)
                     }

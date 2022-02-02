@@ -25,6 +25,7 @@
         <item>Create Assignment</item>
         <item>Create Class</item>
         <item>Create Schedule</item>
+        <item>View Charts</item>
     </string-array>
     <string name="large_text">
         "Material is the metaphor.\n\n"
