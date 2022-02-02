@@ -2,6 +2,7 @@ package com.pagewisegroup.pagewise
 
 import android.content.Context
 import android.util.Log
+import java.lang.System.currentTimeMillis
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -10,12 +11,13 @@ class StudentController (context: Context, val student: Student) {
     private val schedulePlanner: SchedulePlanner
 
     init {
-        fetchClasses()
+        if(student.classes.isEmpty()) fetchClasses() //avoid class duplication
         calculateReadingSpeed(null)
 
         //temp values replace once reading sessions are in database
         student.readingSpeed = .5
         createTempAssignments()
+        createTempProgress() //for testing charts
 
         schedulePlanner = SchedulePlanner(student.getUnfishedAssignments(),student.readingSpeed)
         createSchedule()
@@ -54,6 +56,12 @@ class StudentController (context: Context, val student: Student) {
         addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,0,26,23,59,59),0,1000),"CSCI 492")
         addAssignment(Assignment("Kotlin Research", Date(2022-1900,0,28,23,59,59),5,53),"CSCI 492")
         addAssignment(Assignment("English Book #5", Date(2022-1900,1,2,23,59,59),17,125),"English 101")
+    }
+
+    fun createTempProgress(){
+        val prog = student.classes[0].assignments[0].progress
+        prog.addSession(20,currentTimeMillis()-300010000,currentTimeMillis()-300000000)
+        prog.addSession(50,currentTimeMillis()-10000,currentTimeMillis())
     }
 
     /* creates assignment from uniqueString */

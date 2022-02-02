@@ -5,21 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.mikephil.charting.charts.LineChart
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [ChartViewFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * A [Fragment] displaying a chart of pages read over the last 30 days
+ *
  */
 class ChartViewFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var pagesChart: LineChart? = null
+    private var pagesChart: BarChart? = null
     private var student: Student? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,28 +28,21 @@ class ChartViewFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_chart_view, container, false)
-        pagesChart = view.findViewById<LineChart>(R.id.chart1)
+        pagesChart = view.findViewById(R.id.chart1)
+
+        val entries = ArrayList<BarEntry>()
+        val hist = student?.getReadingHistory(30)
+        for(i in hist!!.indices){
+            entries.add(BarEntry(30f-i,hist[i].toFloat()))
+        }
+
+        val set = BarDataSet(entries,"Daily Pages")
+        val data = BarData(set)
+        data.barWidth = 0.5f
+
+        pagesChart?.data = data
+        pagesChart?.invalidate()
 
         return view
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChartViewFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChartViewFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

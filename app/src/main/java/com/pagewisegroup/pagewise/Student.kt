@@ -101,9 +101,9 @@ class Student(var name: String, var id: Long? = null) : Serializable {
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
             if(!it.assignments.isEmpty()) {
                 for(i in 0 until (it.assignments.size-1)) {
-                    studentInfo.append("${it.assignments[i].name}, ")
+                    studentInfo.append("${it.assignments[i].name} (Page ${it.assignments[i].progress.getCurrentPage()}), ")
                 }
-                studentInfo.append("${it.assignments[it.assignments.size-1].name}\n")
+                studentInfo.append("${it.assignments[it.assignments.size-1].name} (Page ${it.assignments[it.assignments.size-1].progress.getCurrentPage()})\n")
             } else {
                 studentInfo.append("N/A \n")
             }

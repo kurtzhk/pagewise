@@ -70,6 +70,7 @@ class StudentViewActivity : AppCompatActivity() {
 
     fun displayReadingView(){
         val intent = Intent(this, ReadingActivity::class.java)
+        intent.putExtra("STUDENT",studentController.student)
         startActivity(intent)
     }
 

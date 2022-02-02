@@ -1,11 +1,14 @@
 package com.pagewisegroup.pagewise
 
+import java.io.Serializable
+
 //represents a user's history with a particular assignment
-class Progress(val assignment: Assignment) {
+class Progress(val assignment: Assignment) : Serializable {
     private val sessions: MutableList<ReadingSession> = mutableListOf()
 
     fun addSession(endPage: Int, startTime: Long, endTime: Long){
-        var startPage = sessions.last().endPage
+        var startPage = 1
+        if(sessions.isNotEmpty()) startPage  = sessions.last().endPage
         var rs = ReadingSession(startPage,endPage,startTime,endTime)
         sessions.add(rs)
     }
@@ -28,4 +31,4 @@ class Progress(val assignment: Assignment) {
     }
 }
 
-data class ReadingSession(val startPage: Int, val endPage: Int, val startTime: Long, val endTime: Long)
+data class ReadingSession(val startPage: Int, val endPage: Int, val startTime: Long, val endTime: Long):Serializable

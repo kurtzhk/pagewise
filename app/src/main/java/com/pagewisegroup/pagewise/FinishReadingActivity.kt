@@ -13,9 +13,8 @@ class FinishReadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_finish_reading)
 
-        //TODO: get actual progress obj of relevant assignment
-        //will need to get assn name from intent, look up in database
-        val progressObj = Progress(Assignment("temp", Date(2022,3,19),1,100))
+        val student = intent.getSerializableExtra("STUDENT") as Student
+        val progressObj = intent.getSerializableExtra("pagewise.PROGRESS") as Progress
 
         val btn = findViewById<Button>(R.id.confirm_session_button)
         val num = findViewById<EditText>(R.id.lastpagenum)
@@ -27,7 +26,9 @@ class FinishReadingActivity : AppCompatActivity() {
                 //log session and return to student view
                 progressObj.addSession(n,intent.getLongExtra("pagewise.STIME",0),
                     intent.getLongExtra("pagewise.ETIME",1))
-                val intent = Intent(this, StudentViewActivity::class.java)
+                val intent = Intent(this, StudentViewActivity::class.java).apply(){
+                    putExtra("STUDENT",student)
+                }
                 startActivity(intent)
             }
             Log.d("Progress", "Read to page $n")

@@ -9,7 +9,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     var hoursToComplete: Double = 0.0
     var id: Long? = null
     var uniqueString = ""
-    var progress: Progress? = null
+    var progress: Progress = Progress(this)
 
     //temp for schedule planning, will later be merged into reading session
     var currentPage = 0
@@ -19,8 +19,6 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     init {
         currentPage = pageStart //temp for schedule planning, will later be merged into reading session
         if(uniqueString.isBlank()) createUniqueString()
-
-        progress = Progress(this)
     }
 
     fun updateCompletionEstimate(pagesPerHour: Double) {
