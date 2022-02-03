@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ReadingActivity">
 
+    <TextView
+        android:id="@+id/assn_name"
+        android:layout_width="230dp"
+        android:layout_height="67dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/start_end_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/start_end_button"
         android:layout_width="wrap_content"

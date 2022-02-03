@@ -70,6 +70,7 @@ class StudentViewActivity : AppCompatActivity() {
 
     fun displayReadingView(){
         val intent = Intent(this, ReadingActivity::class.java)
+        intent.putExtra("STUDENT",studentController.student)
         startActivity(intent)
     }
 
@@ -91,6 +92,13 @@ class StudentViewActivity : AppCompatActivity() {
     fun displayScheduleEntry(){
         supportFragmentManager.commit {
             replace<ScheduleViewFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
+    }
+
+    fun displayChartsView(){
+        supportFragmentManager.commit {
+            replace<ChartViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
     }
@@ -124,6 +132,7 @@ class StudentViewActivity : AppCompatActivity() {
                     4 -> displayAssignmentEntry()
                     5 -> displayClassEntry()
                     6 -> displayScheduleEntry()
+                    7 -> displayChartsView()
                     else -> {
                         spinner.setSelection(0)
                     }

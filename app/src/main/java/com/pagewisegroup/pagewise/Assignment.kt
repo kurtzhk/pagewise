@@ -9,6 +9,7 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     var hoursToComplete: Double = 0.0
     var id: Long? = null
     var uniqueString = ""
+    var progress: Progress = Progress(this)
 
     //temp for schedule planning, will later be merged into reading session
     var currentPage = 0

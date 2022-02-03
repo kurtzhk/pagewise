@@ -1,9 +1,9 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Context
 import android.util.Log
 import java.io.Serializable
-import java.util.*
+import java.lang.System.currentTimeMillis
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 // id fields should only be populated when reading from or writing to database.
@@ -71,7 +71,28 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         return byAssignmentSchedule
     }
 
+    //Returns pages read per day for the past n days
+    fun getReadingHistory(days: Int) : IntArray {
+        val arr = IntArray(days)
 
+        classes.forEach{
+            it.assignments.forEach{
+                var now = currentTimeMillis()
+                it.progress?.getSessions()?.forEach{
+                    var daysAgo = TimeUnit.DAYS.convert(now - it.startTime,TimeUnit.MILLISECONDS)
+                    if(daysAgo < arr.size){
+                        if(daysAgo < 0){
+                            Log.w("Student","Encountered reading session from the future")
+                        }
+                        else{
+                            arr[daysAgo.toInt()] += it.endPage - it.startPage
+                        }
+                    }
+                }
+            }
+        }
+        return arr
+    }
 
     override fun toString(): String {
         val studentInfo = StringBuilder()
@@ -80,9 +101,9 @@ class Student(var name: String, var id: Long? = null) : Serializable {
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
             if(!it.assignments.isEmpty()) {
                 for(i in 0 until (it.assignments.size-1)) {
-                    studentInfo.append("${it.assignments[i].name}, ")
+                    studentInfo.append("${it.assignments[i].name} (Page ${it.assignments[i].progress.getCurrentPage()}), ")
                 }
-                studentInfo.append("${it.assignments[it.assignments.size-1].name}\n")
+                studentInfo.append("${it.assignments[it.assignments.size-1].name} (Page ${it.assignments[it.assignments.size-1].progress.getCurrentPage()})\n")
             } else {
                 studentInfo.append("N/A \n")
             }
