@@ -2,27 +2,22 @@ package com.pagewisegroup.pagewise
 
 import android.content.Context
 import android.util.Log
+import java.lang.System.currentTimeMillis
 import java.util.*
 import kotlin.collections.ArrayList
 
-class StudentController (context: Context) {
-    val student: Student
-    val dbm: DatabaseManager
-    val schedulePlanner: SchedulePlanner
+class StudentController (context: Context, val student: Student) {
+    private val dbm: DatabaseManager = DatabaseManager(context)
+    private val schedulePlanner: SchedulePlanner
 
     init {
-        //TODO: Fetch name/id from database based on login (this can also be done in login and passed to here)
-        val name = "temp student"
-        val id = 0L
-
-        dbm = DatabaseManager(context)
-        student = Student(name, id, context)
-        fetchClasses()
+        if(student.classes.isEmpty()) fetchClasses() //avoid class duplication
         calculateReadingSpeed(null)
 
         //temp values replace once reading sessions are in database
         student.readingSpeed = .5
         createTempAssignments()
+        createTempProgress() //for testing charts
 
         schedulePlanner = SchedulePlanner(student.getUnfishedAssignments(),student.readingSpeed)
         createSchedule()
@@ -32,32 +27,30 @@ class StudentController (context: Context) {
     fun fetchClasses() {
         val db = dbm.writableDatabase
         for(i in 1..dbm.numberOfClasses(db)) {
-            student.classes.add(dbm.fetchClass(db,i.toLong())!!)
+            student.classes.add(dbm.fetchClass(i.toLong()))
         }
     }
 
     //adds class to student && database
     fun addClass(name: String) {
-        val db = dbm.writableDatabase
         if(student.getClassIndex(name) > 0) { return }
         val pwClass = PWClass(name,ArrayList(),null)
         student.classes.add(pwClass)
-        dbm.recordClass(db, pwClass)
+        dbm.recordClass(pwClass)
     }
 
     //adds assignment to student && database
     fun addAssignment(assignment: Assignment, className: String) {
-        val db = dbm.writableDatabase
         val pwClass = student.classes[student.getClassIndex(className)-1]
         if(student.getAssignIndex(assignment.name,pwClass) > 0) { return }
         pwClass.assignments.add(assignment)
-        dbm.recordAssignment(db,assignment,student.getClassIndex(className).toLong())
+        dbm.recordAssignment(assignment,student.getClassIndex(className).toLong())
     }
 
     //adds reading assignment to student && database
-    fun addReadingSession(startPage: Int, endPage: Int,time: Long) {
-        student.pastReadings.add(ReadingSession(startPage, endPage, time))
-        Log.d("Reading session", "Adding reading session with $startPage - $endPage over $time min")
+    fun addReadingSession(assignName: String, startPage: Int, endPage: Int, startTime: Long, endTime: Long) {
+        Log.d("Reading session", "$assignName from $startPage - $endPage over ${(endTime-startTime)/60000} mins")
+        student.getAssignment(assignName).progress.addSession(endPage, startTime,endTime)
         //TODO Add to database once incorporated
     }
 
@@ -70,6 +63,12 @@ class StudentController (context: Context) {
         addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,0,26,23,59,59),0,1000),"CSCI 492")
         addAssignment(Assignment("Kotlin Research", Date(2022-1900,0,28,23,59,59),5,53),"CSCI 492")
         addAssignment(Assignment("English Book #5", Date(2022-1900,1,2,23,59,59),17,125),"English 101")
+    }
+
+    fun createTempProgress(){
+        val prog = student.classes[0].assignments[0].progress
+        prog.addSession(20,currentTimeMillis()-300010000,currentTimeMillis()-300000000)
+        prog.addSession(50,currentTimeMillis()-10000,currentTimeMillis())
     }
 
     /* creates assignment from uniqueString */

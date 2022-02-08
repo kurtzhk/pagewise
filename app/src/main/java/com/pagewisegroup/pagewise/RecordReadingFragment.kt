@@ -20,8 +20,7 @@ class RecordReadingFragment : Fragment() {
         var currentClass = ""
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            //TODO: remove when bundles added
-            student = StudentController(requireActivity()).student
+            student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
         }
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             val view = inflater.inflate(R.layout.fragment_record_reading_picker, container, false)
@@ -42,6 +41,8 @@ class RecordReadingFragment : Fragment() {
                 if(student.assignExists(classDropdown.text.toString(),assignDropdown.text.toString())) {
                     //TODO set student through here in bundle once bundles are worked out
                     val intent = Intent(requireActivity().baseContext, ReadingActivity::class.java)
+                    intent.putExtra("STUDENT",student)
+                    intent.putExtra("ASSIGN_NAME",assignDropdown.text.toString())
                     startActivity(intent)
                 }
             }
@@ -49,9 +50,14 @@ class RecordReadingFragment : Fragment() {
             //to record past completed reading assignment
             view.findViewById<MaterialButton>(R.id.pastReadingButton).setOnClickListener {
                 if(student.assignExists(classDropdown.text.toString(),assignDropdown.text.toString())) {
-                    //TODO set student through here in bundle once bundles are worked out
+                    //puts assignment name in bundle
+                    val bundle = Bundle()
+                    bundle.putString("assignName", assignDropdown.text.toString()) // Put anything what you want
+                    val fragment = EnterReadingFragment()
+                    fragment.setArguments(bundle)
+
                     requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_frame,EnterReadingFragment())
+                        .replace(R.id.fragment_frame, fragment)
                         .commit();
                 }
             }
@@ -59,6 +65,7 @@ class RecordReadingFragment : Fragment() {
             return view
         }
 
+        //updates assignment dropdown based on class dropdown
         private fun updateAssignDropdown(view: View, classDropdown: AutoCompleteTextView, assignDropdown: AutoCompleteTextView) {
             val assignArrayAdapter = ArrayAdapter(requireActivity().baseContext, R.layout.fragment_dropdown_item, student.getAssignNames(classDropdown.text.toString()))
             assignDropdown.setAdapter(assignArrayAdapter)

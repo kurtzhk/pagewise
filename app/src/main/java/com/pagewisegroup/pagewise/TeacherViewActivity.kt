@@ -43,7 +43,7 @@ class TeacherViewActivity : AppCompatActivity() {
     }
 
     // Temporary function to show database working.
-    private val s = Student("test_student", 0L, this)
+    private val s = Student("test_student", 0L)
     private fun demoDatabaseRecording(a: Assignment) {
 
         Log.d("Student", s.toString())
@@ -52,7 +52,7 @@ class TeacherViewActivity : AppCompatActivity() {
         Log.d("Class", s.classes[0].toString())
         val dbm = DatabaseManager(this)
         val db: SQLiteDatabase? = dbm.writableDatabase
-        dbm.recordStudent(db, s)
+        dbm.recordStudent(s)
         val aTable = db?.rawQuery("SELECT * FROM ASSIGNMENTS", null)
         val cTable = db?.rawQuery("SELECT * FROM CLASSES", null)
         val sTable = db?.rawQuery("SELECT * FROM STUDENTS", null)

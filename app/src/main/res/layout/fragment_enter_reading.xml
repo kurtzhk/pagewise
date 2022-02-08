@@ -7,13 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".EnterReadingFragment">
 
+
     <TextView
+        android:id="@+id/pageStartText"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:text="Page Start:"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/startPage"
         app:layout_constraintEnd_toEndOf="@+id/startPage"
         app:layout_constraintStart_toStartOf="@+id/startPage" />
@@ -34,6 +36,7 @@
         android:id="@+id/hyphen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp"
         android:text="-"
         android:textSize="20pt"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,12 +45,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/pageEndText"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:text="Page End:"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/endPage"
         app:layout_constraintEnd_toEndOf="@+id/endPage"
         app:layout_constraintStart_toStartOf="@+id/endPage" />
@@ -80,17 +84,55 @@
 
     <EditText
         android:id="@+id/sessionTime"
-        android:hint="Time (min)"
-        android:textColorHint="@color/white"
-        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:ems="10"
+        android:hint="Time Spent Reading(min)  "
         android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+
+    <TextView
+        android:id="@+id/assignementName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:contentDescription="Assignment Name"
+        android:text="Assignment Name"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/hyphen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.pagewisegroup.pagewise.DateDisplayView
+        android:id="@+id/readingDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="none"
+        android:onClick="showDatePickerDialog"
+        android:text="Started Reading: "
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hyphen" />
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="215dp"
+        android:layout_height="81dp"
+        android:layout_centerHorizontal="true"
+        android:numbersInnerTextColor="@color/white"
+        android:numbersTextColor="@color/white"
+        android:theme="@style/timePicker"
+        android:timePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="@+id/endPage"
+        app:layout_constraintStart_toStartOf="@+id/startPage"
+        app:layout_constraintTop_toBottomOf="@+id/readingDate" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

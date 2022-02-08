@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PageWise">
         <activity
+            android:name=".profile.ProfileViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".FinishReadingActivity"
             android:exported="false" />
         <activity

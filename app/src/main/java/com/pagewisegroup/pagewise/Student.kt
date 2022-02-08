@@ -1,19 +1,18 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Context
 import android.util.Log
 import java.io.Serializable
-import java.util.*
+import java.lang.System.currentTimeMillis
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 // id fields should only be populated when reading from or writing to database.
 data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null) : Serializable
 
 // Object that tracks a Student and their information including names, reading speed, and their classes.
-class Student(var name: String, var id: Long? = null, val context: Context) : Serializable {
+class Student(var name: String, var id: Long? = null) : Serializable {
     val classes = ArrayList<PWClass>()
     var schedule = ArrayList<PlannedDay>()
-    var pastReadings = ArrayList<ReadingSession>()
     var readingSpeed = 0.0
 
     //list of all assignments without classes
@@ -27,6 +26,16 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
         return assignments
     }
 
+    //gets assignment by name
+    fun getAssignment(assignName: String) : Assignment {
+        val allAssignments = getAllAssignments()
+        allAssignments.forEach {
+            if(it.name == assignName) return it
+        }
+        return allAssignments[0]
+    }
+
+    //gets all class names
     fun getAllClassNames() : ArrayList<String> {
         val className = ArrayList<String>()
         classes.forEach {
@@ -35,6 +44,7 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
         return className
     }
 
+    //gets all assignment names for a given class
     fun getAssignNames(className : String?) : ArrayList<String> {
         val assignName = ArrayList<String>()
         if(className.isNullOrEmpty()) {
@@ -109,7 +119,28 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
         return byAssignmentSchedule
     }
 
+    //Returns pages read per day for the past n days
+    fun getReadingHistory(days: Int) : IntArray {
+        val arr = IntArray(days)
 
+        classes.forEach{
+            it.assignments.forEach{
+                var now = currentTimeMillis()
+                it.progress?.getSessions()?.forEach{
+                    var daysAgo = TimeUnit.DAYS.convert(now - it.startTime,TimeUnit.MILLISECONDS)
+                    if(daysAgo < arr.size){
+                        if(daysAgo < 0){
+                            Log.w("Student","Encountered reading session from the future")
+                        }
+                        else{
+                            arr[daysAgo.toInt()] += it.endPage - it.startPage
+                        }
+                    }
+                }
+            }
+        }
+        return arr
+    }
 
     override fun toString(): String {
         val studentInfo = StringBuilder()
@@ -118,9 +149,9 @@ class Student(var name: String, var id: Long? = null, val context: Context) : Se
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
             if(!it.assignments.isEmpty()) {
                 for(i in 0 until (it.assignments.size-1)) {
-                    studentInfo.append("${it.assignments[i].name}, ")
+                    studentInfo.append("${it.assignments[i].name} (Page ${it.assignments[i].progress.getCurrentPage()}), ")
                 }
-                studentInfo.append("${it.assignments[it.assignments.size-1].name}\n")
+                studentInfo.append("${it.assignments[it.assignments.size-1].name} (Page ${it.assignments[it.assignments.size-1].progress.getCurrentPage()})\n")
             } else {
                 studentInfo.append("N/A \n")
             }

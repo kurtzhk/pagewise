@@ -2,8 +2,10 @@ package com.pagewisegroup.pagewise
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -51,7 +53,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
     }
 
     // inserts or updates student to table depending on if it has been recorded yet.
-    fun recordAssignment(db: SQLiteDatabase?, assignment: Assignment, classID: Long) {
+    fun recordAssignment(assignment: Assignment, classID: Long) {
         val values = ContentValues()
         values.put("name", assignment.name)
         values.put("class_id", classID)
@@ -61,24 +63,24 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         values.put("time_to_complete", assignment.hoursToComplete)
         values.put("completed", assignment.completed)
         if (assignment.id != null) {
-            db?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.id}", null)
+            writableDatabase?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.id}", null)
         } else {
-            assignment.id = db?.insert("ASSIGNMENTS", null, values)
+            assignment.id = writableDatabase?.insert("ASSIGNMENTS", null, values)
         }
     }
 
     // returns class id.
     // inserts or updates class to table depending on if it has been recorded yet.
-    fun recordClass(db: SQLiteDatabase?, pwClass: PWClass): Long {
+    fun recordClass(pwClass: PWClass): Long {
         val values = ContentValues()
         values.put("name", pwClass.name)
         if (pwClass.id != null) {
-            db?.update("CLASSES", values, "class_id = ${pwClass.id}", null)
+            writableDatabase?.update("CLASSES", values, "class_id = ${pwClass.id}", null)
         } else {
-            pwClass.id = db?.insert("CLASSES", null, values)
+            pwClass.id = writableDatabase?.insert("CLASSES", null, values)
         }
         for (a in pwClass.assignments) {
-            recordAssignment(db, a, pwClass.id!!) //should already be non null as long as the insert
+            recordAssignment(a, pwClass.id!!) //should already be non null as long as the insert
                                             //succeeded. we want to throw an exception otherwise.
         }
         return pwClass.id!!
@@ -86,14 +88,14 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
 
     // inserts or updates student to table depending on if it has been recorded yet.
     // also updates enrollment table.
-    fun recordStudent(db: SQLiteDatabase?, student: Student) {
+    fun recordStudent(student: Student) {
         val values = ContentValues()
         values.put("name", student.name)
         values.put("read_speed", student.readingSpeed)
         if (student.id != null) {
-            db?.update("STUDENTS", values, "student_id = ${student.id}", null)
+            writableDatabase?.update("STUDENTS", values, "student_id = ${student.id}", null)
         } else {
-            student.id = db?.insert("STUDENTS", null, values)
+            student.id = writableDatabase?.insert("STUDENTS", null, values)
         }
         values.clear()
         values.put("student_id", student.id)
@@ -101,25 +103,25 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         // of duplicate enrollments as well as dropping enrollments from the database if they don't
         // exist anymore. Maybe a method in student that handles dropping classes that also manages
         // the DB? I have to think about it.
-        db?.delete("ENROLLMENTS", "student_id = ${student.id}", null)
+        writableDatabase?.delete("ENROLLMENTS", "student_id = ${student.id}", null)
         for (c in student.classes) {
-            val cID: Long = recordClass(db, c)
+            val cID: Long = recordClass(c)
             values.put("class_id", cID)
-            db?.insert("ENROLLMENTS", null, values)
+            writableDatabase?.insert("ENROLLMENTS", null, values)
             values.remove("class_id")
         }
     }
 
-    fun fetchStudent(db: SQLiteDatabase?, id: Long): Student {
-        val sTable = db?.rawQuery("SELECT name, read_speed FROM STUDENTS WHERE student_id = $id", null)
-        val eTable = db?.rawQuery("SELECT class_id FROM ENROLLMENTS WHERE student_id = $id", null)
+    fun fetchStudent(id: Long): Student {
+        val sTable = readableDatabase?.rawQuery("SELECT name, read_speed FROM STUDENTS WHERE student_id = $id", null)
+        val eTable = readableDatabase?.rawQuery("SELECT class_id FROM ENROLLMENTS WHERE student_id = $id", null)
         sTable?.moveToFirst()
         val name = sTable?.getString(0)
         val readingSpeed = sTable?.getDouble(1)
-        val s = Student(name!!, id, context)
+        val s = Student(name!!, id)
         if (eTable?.moveToFirst() == true) {
             do {
-                s.classes.add(fetchClass(db, eTable.getLong(0)))
+                s.classes.add(fetchClass(eTable.getLong(0)))
             } while (eTable.moveToNext())
         }
         return s
@@ -135,22 +137,22 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         return ATable.count
     }
 
-    fun fetchClass(db: SQLiteDatabase?, id: Long): PWClass {
-        val cTable = db?.rawQuery("SELECT name FROM CLASSES WHERE class_id = $id", null)
-        val aTable = db?.rawQuery("SELECT assignment_id FROM ASSIGNMENTS WHERE class_id = $id", null)
+    fun fetchClass(id: Long): PWClass {
+        val cTable = readableDatabase?.rawQuery("SELECT name FROM CLASSES WHERE class_id = $id", null)
+        val aTable = readableDatabase?.rawQuery("SELECT assignment_id FROM ASSIGNMENTS WHERE class_id = $id", null)
         cTable?.moveToFirst()
         val assignments = ArrayList<Assignment>()
         val name = cTable?.getString(0)
         if (aTable?.moveToFirst() == true) {
             do {
-                assignments.add(fetchAssignment(db, aTable.getLong(0))!!)
+                assignments.add(fetchAssignment(aTable.getLong(0))!!)
             } while (aTable.moveToNext())
         }
         return PWClass(name!!, assignments, id)
     }
 
-    fun fetchAssignment(db: SQLiteDatabase?, id: Long): Assignment? {
-        val aTable = db?.rawQuery(
+    fun fetchAssignment(id: Long): Assignment? {
+        val aTable = readableDatabase?.rawQuery(
             "SELECT name,due_date,page_start,page_end,time_to_complete,completed FROM ASSIGNMENTS WHERE assignment_id = $id",
             null
         )
@@ -167,5 +169,34 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
             return a
         }
         return null
+    }
+
+    //Prints the database to the log for debugging.
+    fun logDatabase() {
+        val aTable = readableDatabase?.rawQuery("SELECT * FROM ASSIGNMENTS", null)
+        val cTable = readableDatabase?.rawQuery("SELECT * FROM CLASSES", null)
+        val sTable = readableDatabase?.rawQuery("SELECT * FROM STUDENTS", null)
+        val eTable = readableDatabase?.rawQuery("SELECT * FROM ENROLLMENTS", null)
+        Log.d("Assignment Table", cursorToString(aTable!!))
+        Log.d("Class Table", cursorToString(cTable!!))
+        Log.d("Student Table", cursorToString(sTable!!))
+        Log.d("Enrollment Table", cursorToString(eTable!!))
+        aTable.close()
+        cTable.close()
+        sTable.close()
+        eTable.close()
+    }
+    private fun cursorToString(c: Cursor): String {
+        val out = StringBuilder()
+        out.append("--TABLE--\n")
+        for (i in 0 until c.columnCount) {
+            c.moveToFirst()
+            out.append(c.getColumnName(i)).append(": ")
+            do {
+                out.append(c.getString(i)).append(", ")
+            } while (c.moveToNext())
+            out.append("\n")
+        }
+        return out.toString()
     }
 }

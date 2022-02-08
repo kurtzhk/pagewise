@@ -14,7 +14,7 @@ class EnterAssignmentFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         //TODO: remove when bundles added
-        student = StudentController(requireActivity()).student
+        student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_enter_assignment, container, false)
