@@ -18,6 +18,11 @@ class ReadingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_reading)
 
         val startEndButton = findViewById<Button>(R.id.start_end_button)
+        val student = intent.getSerializableExtra("STUDENT") as Student
+        val assignment = student.getAllAssignments()[0] //TODO: dropdown menu to select assignment
+
+        //TODO: make this all look pretty
+        findViewById<TextView>(R.id.assn_name).text = assignment.name + "\nPage " + assignment.progress.getCurrentPage()
 
         val student = intent.getSerializableExtra("STUDENT") as Student
         val assignName = intent.getSerializableExtra("ASSIGN_NAME") as String
