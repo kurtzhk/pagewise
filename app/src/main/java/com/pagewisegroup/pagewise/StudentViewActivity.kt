@@ -48,7 +48,7 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    fun buildAssignment() {
+    fun buildAssignment(v: View) {
         val name = findViewById<EditText>(R.id.assignmentName).text.toString()
         val pickedClass = findViewById<AutoCompleteTextView>(R.id.class_choice).text.toString()
         val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
@@ -59,7 +59,7 @@ class StudentViewActivity : AppCompatActivity() {
         studentController.addAssignment(assignment,pickedClass) //TODO: Make it go into correct class
     }
 
-    fun buildClass() {
+    fun buildClass(v: View) {
         val className = findViewById<TextInputLayout>(R.id.classNameInput).editText?.text.toString()
         studentController.addClass(className)
     }
