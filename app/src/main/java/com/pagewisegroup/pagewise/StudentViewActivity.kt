@@ -1,14 +1,16 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.google.android.material.textfield.TextInputLayout
+import java.text.SimpleDateFormat
 import java.util.*
 
 class StudentViewActivity : AppCompatActivity() {
@@ -46,19 +48,37 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    fun buildAssignment() {
+    fun buildAssignment(v: View) {
         val name = findViewById<EditText>(R.id.assignmentName).text.toString()
+        val pickedClass = findViewById<AutoCompleteTextView>(R.id.class_choice).text.toString()
         val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
         val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
         val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
 
         val assignment = Assignment(name, Date(due.picker.year-1900, due.picker.month, due.picker.day), pageStart, pageEnd)
-        studentController.addAssignment(assignment,studentController.student.classes[0].name) //TODO: Make it go into correct class
+        studentController.addAssignment(assignment,pickedClass) //TODO: Make it go into correct class
     }
 
-    fun buildClass() {
+    fun buildClass(v: View) {
         val className = findViewById<TextInputLayout>(R.id.classNameInput).editText?.text.toString()
         studentController.addClass(className)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun buildReadingSession(v: View) {
+        val assignmentName = findViewById<TextView>(R.id.assignementName).text.trim().toString()
+        val startPage = findViewById<TextView>(R.id.startPage).text.trim().toString().toInt()
+        val endPage = findViewById<TextView>(R.id.endPage).text.trim().toString().toInt()
+        val date = findViewById<DateDisplayView>(R.id.readingDate)
+        val time = findViewById<TimePicker>(R.id.timePicker)
+        //converts date && time to milliseconds
+        val formattedDate = "${date.picker.year-1900}/${date.picker.month}/${date.picker.day} ${time.hour}:${time.minute}:00"
+        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+        val startTime = sdf.parse(formattedDate).time
+        val addedTime = findViewById<TextView>(R.id.sessionTime).text.trim().toString().toLong()
+        val endTime = startTime + addedTime*60000
+        //adds reading session to assignment
+        studentController.addReadingSession(assignmentName,startPage,endPage,startTime,endTime)
     }
 
     fun displayClassView(){
@@ -69,15 +89,16 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun displayReadingView(){
-        val intent = Intent(this, ReadingActivity::class.java)
-        intent.putExtra("STUDENT",studentController.student)
-        startActivity(intent)
+        supportFragmentManager.commit {
+            replace<RecordReadingFragment>(R.id.fragment_frame)
+            setReorderingAllowed(true)
+        }
     }
 
     //this should be moved to teach view later
-    fun displayAssignmentEntry(){
+    fun displayAssignmentEntry() {
         supportFragmentManager.commit {
-            replace<EnterAssignment>(R.id.fragment_frame)
+            replace<EnterAssignmentFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
     }

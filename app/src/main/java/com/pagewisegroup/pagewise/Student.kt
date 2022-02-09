@@ -12,8 +12,8 @@ data class PWClass(val name: String, val assignments: ArrayList<Assignment> = Ar
 // Object that tracks a Student and their information including names, reading speed, and their classes.
 class Student(var name: String, var id: Long? = null) : Serializable {
     val classes = ArrayList<PWClass>()
-    var readingSpeed = 0.0
     var schedule = ArrayList<PlannedDay>()
+    var readingSpeed = 0.0
 
     //list of all assignments without classes
     fun getAllAssignments() : ArrayList<Assignment> {
@@ -24,6 +24,40 @@ class Student(var name: String, var id: Long? = null) : Serializable {
             }
         }
         return assignments
+    }
+
+    //gets assignment by name
+    fun getAssignment(assignName: String) : Assignment {
+        val allAssignments = getAllAssignments()
+        allAssignments.forEach {
+            if(it.name == assignName) return it
+        }
+        return allAssignments[0]
+    }
+
+    //gets all class names
+    fun getAllClassNames() : ArrayList<String> {
+        val className = ArrayList<String>()
+        classes.forEach {
+            className.add(it.name)
+        }
+        return className
+    }
+
+    //gets all assignment names for a given class
+    fun getAssignNames(className : String?) : ArrayList<String> {
+        val assignName = ArrayList<String>()
+        if(className.isNullOrEmpty()) {
+            return assignName
+        }
+        classes.forEach {
+            if(className == it.name) {
+                it.assignments.forEach {
+                    assignName.add(it.name)
+                }
+            }
+        }
+        return assignName
     }
 
     //finds and returns all unfinished assignments
@@ -58,6 +92,20 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         return -1
     }
 
+    //checks if assign exists in given class
+    fun assignExists(className: String, assignName: String) : Boolean {
+        classes.forEach {
+            if(it.name == className) {
+                it.assignments.forEach {
+                    if(it.name == assignName) { return true}
+                }
+                return false
+            }
+        }
+        return false
+    }
+
+    //Gets schedule where there is one assignment per class
     fun getScheduleByAssignment() : ArrayList<PlannedDay> {
         var byAssignmentSchedule = ArrayList<PlannedDay>()
         var index = 0
