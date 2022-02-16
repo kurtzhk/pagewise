@@ -2,6 +2,7 @@ package com.pagewisegroup.pagewise
 
 import android.icu.text.DateFormatSymbols
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -42,7 +43,11 @@ class ScheduleRecyclerViewAdapter(private val schedule: ArrayList<PlannedDay>) :
                 .append("hrs ")
                 .append(ceil(assignment.plannedMinutes%60).toInt())
         } else {
-            reading.append(floor(assignment.plannedMinutes).toInt())
+            val time = floor(assignment.plannedMinutes).toInt()
+            if (time != 0)
+                reading.append(floor(assignment.plannedMinutes).toInt())
+            else
+                reading.append("<1")
         }
         reading.append("mins)")
         holder.contentView.text = reading

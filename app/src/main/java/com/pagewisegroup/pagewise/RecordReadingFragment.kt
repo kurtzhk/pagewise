@@ -52,7 +52,7 @@ class RecordReadingFragment : Fragment() {
                 if(student.assignExists(classDropdown.text.toString(),assignDropdown.text.toString())) {
                     //puts assignment name in bundle
                     val bundle = Bundle()
-                    bundle.putString("assignName", assignDropdown.text.toString()) // Put anything what you want
+                    bundle.putString("assignName", assignDropdown.text.toString())
                     val fragment = EnterReadingFragment()
                     fragment.setArguments(bundle)
 

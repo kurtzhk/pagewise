@@ -13,7 +13,8 @@ data class PWClass(val name: String, val assignments: ArrayList<Assignment> = Ar
 class Student(var name: String, var id: Long? = null) : Serializable {
     val classes = ArrayList<PWClass>()
     var schedule = ArrayList<PlannedDay>()
-    var readingSpeed = 0.0
+    //reading speed for classes
+    var readingSpeed = ArrayList<Double>()
 
     //list of all assignments without classes
     fun getAllAssignments() : ArrayList<Assignment> {
@@ -119,6 +120,19 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         return byAssignmentSchedule
     }
 
+    //gets reading time by assignment
+    fun getReadingSpeedByAssign() : ArrayList<Double> {
+        var byAssign = ArrayList<Double>()
+        var index = 0
+        classes.forEach {
+            it.assignments.forEach {
+                if(!it.completed) byAssign.add(readingSpeed[index])
+            }
+            index++
+        }
+        return byAssign
+    }
+
     //Returns pages read per day for the past n days
     fun getReadingHistory(days: Int) : IntArray {
         val arr = IntArray(days)
@@ -142,6 +156,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         return arr
     }
 
+    //prints info about student
     override fun toString(): String {
         val studentInfo = StringBuilder()
             .append("name: $name read speed: $readingSpeed ppm id: $id\n")
