@@ -15,27 +15,27 @@ data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>): S
 
 //Right now this could be merged with student, but when updated in probably will be nice to have it independent
 //TODO("Overhaul once have more data to work with")
-class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val readingSpeed: Double) {
+class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val readingSpeed: ArrayList<Double>) {
     var schedule = ArrayList<PlannedDay>()
 
     init {
-        unfinishedAssignments.forEach {
-            updateSchedule(it)
-        }
+        for(i in 0 until unfinishedAssignments.size)
+            updateSchedule(unfinishedAssignments[i],readingSpeed[i])
     }
 
     //Adds given assignment to schedule
     //right now just evenly split works every day for each assignment
     //TODO("Update so this minimizes minutes per day instead of dividing work evenly (or add a choice between the two)")
-    fun updateSchedule(assignment: Assignment) {
+    fun updateSchedule(assignment: Assignment, readingSpeedAssign: Double) {
         var currentDate = Date()
         //today only counts today as a work day if there is 10 hr+ left in it
         if(currentDate.hours >= 13) {
             currentDate = incrementDay(currentDate)
         }
 
+        //if the assignment is passed due ignore it
         var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
-        if(daysLeft <= 0) { return }
+        if(daysLeft <= 0) return
 
         val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
 
@@ -59,7 +59,7 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
             if(dayIndex < 0)
                 schedule.add(PlannedDay(date, ArrayList()))
             if(pageEnd-pageStart != 0)
-                schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeed,pageStart,pageEnd))
+                schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeedAssign,pageStart,pageEnd))
         }
     }
 
@@ -78,6 +78,7 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS)
     }
 
+    //increases the day by one
     fun incrementDay(date: Date) : Date {
         val calendar = Calendar.getInstance()
         calendar.time = date

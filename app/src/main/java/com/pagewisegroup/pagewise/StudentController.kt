@@ -2,25 +2,21 @@ package com.pagewisegroup.pagewise
 
 import android.content.Context
 import android.util.Log
+import java.lang.System.console
 import java.lang.System.currentTimeMillis
 import java.util.*
 import kotlin.collections.ArrayList
 
 class StudentController (context: Context, val student: Student) {
     private val dbm: DatabaseManager = DatabaseManager(context)
-    private val schedulePlanner: SchedulePlanner
+    private lateinit var schedulePlanner: SchedulePlanner
 
     init {
         if(student.classes.isEmpty()) fetchClasses() //avoid class duplication
-        calculateReadingSpeed(null)
 
-        //temp values replace once reading sessions are in database
-        student.readingSpeed = .5
-        createTempAssignments()
-        createTempProgress() //for testing charts
-
-        schedulePlanner = SchedulePlanner(student.getUnfishedAssignments(),student.readingSpeed)
-        createSchedule()
+        createTempAssignments() //for testing
+        createTempProgress() //for testing charts & schedule
+        calculateReadingSpeeds() //temp
     }
 
     //gets all classes from db and adds them to class arraylist
@@ -60,15 +56,20 @@ class StudentController (context: Context, val student: Student) {
         addClass("CSCI 492")
         addClass("English 101")
         addClass("Bio 101")
-        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,0,26,23,59,59),0,1000),"CSCI 492")
-        addAssignment(Assignment("Kotlin Research", Date(2022-1900,0,28,23,59,59),5,53),"CSCI 492")
-        addAssignment(Assignment("English Book #5", Date(2022-1900,1,2,23,59,59),17,125),"English 101")
+        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,1,26,23,59,59),0,1000),"CSCI 492")
+        addAssignment(Assignment("Kotlin Research", Date(2022-1900,1,28,23,59,59),5,53),"CSCI 492")
+        addAssignment(Assignment("English Book #5", Date(2022-1900,2,2,23,59,59),17,125),"English 101")
     }
 
+    //creates temp progress for testing
     fun createTempProgress(){
         val prog = student.classes[0].assignments[0].progress
-        prog.addSession(20,currentTimeMillis()-300010000,currentTimeMillis()-300000000)
-        prog.addSession(50,currentTimeMillis()-10000,currentTimeMillis())
+        prog.addSession(20,currentTimeMillis()-301000000,currentTimeMillis()-300000000)
+        prog.addSession(50,currentTimeMillis()-1500000,currentTimeMillis())
+        prog.addSession(85,currentTimeMillis()-1500000,currentTimeMillis())
+        prog.addSession(110,currentTimeMillis()-1500000,currentTimeMillis())
+        prog.addSession(150,currentTimeMillis()-1500000,currentTimeMillis())
+        student.classes[1].assignments[0].progress.addSession(50,currentTimeMillis()-1500000,currentTimeMillis())
     }
 
     /* creates assignment from uniqueString */
@@ -78,34 +79,56 @@ class StudentController (context: Context, val student: Student) {
         addAssignment(assignment,className)
     }
 
-    //calculates reading speed in pages per minute based on class if given, if class is not given bases it on all assignments
-    fun calculateReadingSpeed(className: String?) {
-        // TODO("Update this to work with reading sessions/activities is integrated into assignment/student")
+    //calculates reading speeds for all classes
+    fun calculateReadingSpeeds() {
+        //finds total readings speed
+        var totalReadingSpeed = calculateReadingSpeed(null)
+        //If there is no readings record do the average of a page a minute
+        if(totalReadingSpeed == 0.0) totalReadingSpeed = 1.0
+        Log.d("Global reading speed", totalReadingSpeed.toString()) //TEMP
+        student.classes.forEach {
+            val classReadingSpeed = calculateReadingSpeed(it.name)
+            //if there is > 5 sessions adds classReading speed, else adds total
+            if(classReadingSpeed == 0.0)
+                student.readingSpeed.add(totalReadingSpeed)
+            else
+                student.readingSpeed.add(classReadingSpeed)
+        }
+    }
+
+    //calculates reading speed for specific class if given else the global total
+    fun calculateReadingSpeed(className: String?) : Double {
         var total = 0.0
         var size = 0
         student.classes.forEach {
             val currentClass = it.name
             it.assignments.forEach {
-                //TODO("Update once reading session finished to work with all sessions not just completed assignments")
                 if((className != null && currentClass == className) || className == null) {
-                    if (it.completed) {
-                        total += (it.pageEnd - it.pageStart) / it.minutesSpend
-                        size++
+                    it.progress.getSessions().forEach {
+                        val time = (it.endTime-it.startTime).toDouble()/60000
+                        //only includes reading sessions longer then 1 minute
+                        if(time > 1.0) {
+                            total += (it.endPage - it.startPage) / time
+                            size++
+                        }
                     }
                 }
             }
         }
-        //calculates mean
-        if (size != 0)
-            student.readingSpeed = total/size
+        //only calculates by class if it has > 5 sessions
+        if(size == 0 || (!className.isNullOrEmpty() && size < 5))
+            return 0.0
+        else
+            return total/size
     }
 
 
     fun createSchedule() {
-        if(student.readingSpeed == 0.0)
-            error("Please complete reading session, so we can calculate reading speed")
-        if(student.getUnfishedAssignments().isEmpty())
-            error("Please enter an assignment")
+        //calculates reading speeds
+        calculateReadingSpeeds()
+        //creates schedule
+        schedulePlanner = SchedulePlanner(student.getUnfishedAssignments(),student.getReadingSpeedByAssign())
+        //sets student schedule
         student.schedule = schedulePlanner.schedule
     }
 }

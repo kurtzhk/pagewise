@@ -111,6 +111,9 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun displayScheduleEntry(){
+        //updates schedule or creates one if it does not exist
+        studentController.createSchedule()
+
         supportFragmentManager.commit {
             replace<ScheduleViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)

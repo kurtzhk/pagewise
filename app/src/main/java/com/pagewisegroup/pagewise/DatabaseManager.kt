@@ -33,7 +33,6 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         db?.execSQL("CREATE TABLE IF NOT EXISTS STUDENTS(" +
                 "student_id INTEGER," +
                 "name TEXT," + //do we need to store names? not sure if it's helpful.
-                "read_speed REAL," + //pages per hour
                 "PRIMARY KEY(student_id ASC))")
         // join table facilitates many to many relationship of classes and students.
         db?.execSQL("CREATE TABLE IF NOT EXISTS ENROLLMENTS(" +
@@ -91,7 +90,6 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
     fun recordStudent(student: Student) {
         val values = ContentValues()
         values.put("name", student.name)
-        values.put("read_speed", student.readingSpeed)
         if (student.id != null) {
             writableDatabase?.update("STUDENTS", values, "student_id = ${student.id}", null)
         } else {
@@ -113,11 +111,10 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
     }
 
     fun fetchStudent(id: Long): Student {
-        val sTable = readableDatabase?.rawQuery("SELECT name, read_speed FROM STUDENTS WHERE student_id = $id", null)
+        val sTable = readableDatabase?.rawQuery("SELECT name FROM STUDENTS WHERE student_id = $id", null)
         val eTable = readableDatabase?.rawQuery("SELECT class_id FROM ENROLLMENTS WHERE student_id = $id", null)
         sTable?.moveToFirst()
         val name = sTable?.getString(0)
-        val readingSpeed = sTable?.getDouble(1)
         val s = Student(name!!, id)
         if (eTable?.moveToFirst() == true) {
             do {

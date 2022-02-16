@@ -7,8 +7,9 @@ class Progress(val assignment: Assignment) : Serializable {
     private val sessions: MutableList<ReadingSession> = mutableListOf()
 
     fun addSession(endPage: Int, startTime: Long, endTime: Long){
-        var startPage = 1
+        var startPage = getCurrentPage()
         if(sessions.isNotEmpty()) startPage  = sessions.last().endPage
+        if(endPage >= assignment.pageEnd) assignment.completed = true
         var rs = ReadingSession(startPage,endPage,startTime,endTime)
         sessions.add(rs)
     }
@@ -26,7 +27,7 @@ class Progress(val assignment: Assignment) : Serializable {
 
     //fraction of assignment complete between 0 and 1
     //note: would need a separate check for completely finished
-    fun getPortionComplete(): Float{
+    fun getPortionComplete(): Float {
         return (getCurrentPage() - assignment.pageStart).toFloat()/(assignment.pageEnd - assignment.pageStart + 1)
     }
 }

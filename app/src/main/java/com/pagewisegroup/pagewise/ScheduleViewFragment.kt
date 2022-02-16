@@ -32,7 +32,18 @@ class ScheduleViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_assignment_view_list, container, false)
+        //Checks if empty and gives error message if there is
+        if(student.schedule.isEmpty()) {
+            val bundle = Bundle()
+            bundle.putString("errorMessage", "Please add a non-overdue assignment")
+            val fragment = ErrorFragment()
+            fragment.setArguments(bundle)
 
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_frame, fragment)
+                .commit();
+            return view
+        }
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
