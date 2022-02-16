@@ -1,7 +1,9 @@
 package com.pagewisegroup.pagewise
 
+import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
@@ -28,18 +30,29 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         val item = values[position]
         holder.nameView.text = item.name
         holder.timeView.text = "Spring 2020"
+        holder.pwClass = item
     }
 
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(binding: FragmentClassViewBinding) :
-
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         val nameView: TextView = binding.className
         val timeView: TextView = binding.classTime
+        lateinit var pwClass: PWClass
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         override fun toString(): String {
             return super.toString() + " '" + timeView.text + "'"
+        }
+
+        override fun onClick(v: View) {
+            if (v.context is StudentViewActivity) {
+                (v.context as StudentViewActivity).displayAssignmentView(pwClass.assignments)
+            }
         }
     }
 

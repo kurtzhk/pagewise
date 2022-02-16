@@ -10,8 +10,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.google.android.material.textfield.TextInputLayout
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class StudentViewActivity : AppCompatActivity() {
     lateinit var studentController: StudentController
@@ -35,10 +37,15 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    fun displayAssignmentView(){
+    fun displayAssignmentView(assignments: ArrayList<Assignment>? = null){
         supportFragmentManager.commit {
-            replace<AssignmentViewFragment>(R.id.fragment_frame)
-            setReorderingAllowed(true)
+            intent.removeExtra("CLASS_ASSIGNMENTS")
+            intent.putExtra("CLASS_ASSIGNMENTS", assignments);
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                addToBackStack("assignments")
+                replace<AssignmentViewFragment>(R.id.fragment_frame)
+            }
         }
     }
 

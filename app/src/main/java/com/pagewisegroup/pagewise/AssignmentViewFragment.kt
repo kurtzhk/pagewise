@@ -12,15 +12,16 @@ import android.view.ViewGroup
 /**
  * A fragment representing a list of Items.
  */
-class AssignmentViewFragment : Fragment() {
+class AssignmentViewFragment() : Fragment() {
 
     private var columnCount = 1
-    lateinit var student : Student
+    private var assignments: ArrayList<Assignment>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
-
+        assignments = requireActivity().intent.getSerializableExtra("CLASS_ASSIGNMENTS") as ArrayList<Assignment>?
+        if (assignments == null) {
+            assignments = (requireActivity().intent.getSerializableExtra("STUDENT") as Student).getAllAssignments()
+        }
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
@@ -39,7 +40,7 @@ class AssignmentViewFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = AssignmentRecyclerViewAdapter(student.getAllAssignments())
+                adapter = AssignmentRecyclerViewAdapter(assignments!!)
             }
         }
         return view
