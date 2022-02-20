@@ -78,6 +78,17 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         }
     }
 
+    fun recordSession(session: ReadingSession, assignment_id: Long, student_id: Long) {
+        val values = ContentValues()
+        values.put("assignment_id", assignment_id)
+        values.put("student_id", student_id)
+        values.put("page_start", session.startPage)
+        values.put("page_end", session.endPage)
+        values.put("start_time", session.startTime)
+        values.put("end_time", session.endTime)
+        writableDatabase.insert("SESSIONS", null, values)
+    }
+
     // returns class id.
     // inserts or updates class to table depending on if it has been recorded yet.
     fun recordClass(pwClass: PWClass): Long {
