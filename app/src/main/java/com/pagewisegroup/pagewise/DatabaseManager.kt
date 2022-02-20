@@ -39,6 +39,16 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
                 "student_id INT NOT NULL," +
                 "class_id INT NOT NULL," +
                 "PRIMARY KEY(student_id, class_id))")
+        // reading session table
+        db?.execSQL("CREATE TABLE IF NOT EXISTS SESSIONS(" +
+                "session_id INTEGER," +
+                "assignment_id INTEGER," +
+                "student_id INTEGER," +
+                "page_start INTEGER," +
+                "page_end INTEGER," +
+                "start_time INTEGER," +
+                "end_time INTEGER," +
+                "PRIMARY KEY(session_id)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
