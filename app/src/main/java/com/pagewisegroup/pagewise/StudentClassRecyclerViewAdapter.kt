@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 
 import com.pagewisegroup.pagewise.databinding.FragmentClassViewBinding
@@ -29,7 +30,9 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         holder.nameView.text = item.name
-        holder.timeView.text = "Spring 2020"
+        //holder.timeView.text = "Spring 2020"
+        val assignmentProgresses : List<Float> = item.assignments.map { it.progress.getPortionComplete() }
+        holder.bar.progress = (assignmentProgresses.average() * 10).toInt()
         holder.pwClass = item
     }
 
@@ -38,7 +41,8 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
     inner class ViewHolder(binding: FragmentClassViewBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         val nameView: TextView = binding.className
-        val timeView: TextView = binding.classTime
+        val bar: ProgressBar = binding.weeklyProgress
+        //val timeView: TextView = binding.classTime
         lateinit var pwClass: PWClass
 
         init {
@@ -46,7 +50,7 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         }
 
         override fun toString(): String {
-            return super.toString() + " '" + timeView.text + "'"
+            return super.toString() + " '" //+ timeView.text + "'"
         }
 
         override fun onClick(v: View) {

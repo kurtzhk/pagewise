@@ -17,12 +17,23 @@
         android:textSize="22sp"
         android:textAppearance="?attr/textAppearanceListItem"/>
 
-    <TextView
+    <!--TextView
         android:id="@+id/class_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/text_margin"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"/>
+        android:textAppearance="?attr/textAppearanceListItem"/-->
+
+    <ProgressBar
+        android:id="@+id/weekly_progress"
+        style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="0"
+        android:padding="10dp"
+        android:progressTint="#DDFF"
+        android:min="0"
+        android:max="100" />
 </LinearLayout>
