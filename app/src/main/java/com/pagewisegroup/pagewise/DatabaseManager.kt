@@ -39,6 +39,16 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
                 "student_id INT NOT NULL," +
                 "class_id INT NOT NULL," +
                 "PRIMARY KEY(student_id, class_id))")
+        // reading session table
+        db?.execSQL("CREATE TABLE IF NOT EXISTS SESSIONS(" +
+                "session_id INTEGER," +
+                "assignment_id INTEGER," +
+                "student_id INTEGER," +
+                "page_start INTEGER," +
+                "page_end INTEGER," +
+                "start_time INTEGER," +
+                "end_time INTEGER," +
+                "PRIMARY KEY(session_id)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -66,6 +76,17 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         } else {
             assignment.id = writableDatabase?.insert("ASSIGNMENTS", null, values)
         }
+    }
+
+    fun recordSession(session: ReadingSession, assignment_id: Long, student_id: Long) {
+        val values = ContentValues()
+        values.put("assignment_id", assignment_id)
+        values.put("student_id", student_id)
+        values.put("page_start", session.startPage)
+        values.put("page_end", session.endPage)
+        values.put("start_time", session.startTime)
+        values.put("end_time", session.endTime)
+        writableDatabase.insert("SESSIONS", null, values)
     }
 
     // returns class id.
