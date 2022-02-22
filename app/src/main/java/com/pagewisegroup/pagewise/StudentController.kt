@@ -16,7 +16,7 @@ class StudentController (context: Context, val student: Student) {
 
         createTempAssignments() //for testing
         createTempProgress() //for testing charts & schedule
-        student.printProgress() //temp
+        student.printProgress()
     }
 
     //gets all classes from db and adds them to class arraylist
@@ -29,7 +29,7 @@ class StudentController (context: Context, val student: Student) {
 
     //adds class to student && database
     fun addClass(name: String) {
-        if(student.getClassIndex(name) > 0) { return }
+        if(student.getClassIndex(name) > 0) return
         val pwClass = PWClass(name,ArrayList(),null)
         student.classes.add(pwClass)
         dbm.recordClass(pwClass)
@@ -38,18 +38,17 @@ class StudentController (context: Context, val student: Student) {
     //adds assignment to student && database
     fun addAssignment(assignment: Assignment, className: String) {
         val pwClass = student.classes[student.getClassIndex(className)-1]
-        if(student.getAssignIndex(assignment.name,pwClass) > 0) { return }
+        if(student.getAssignIndex(assignment.name,pwClass) > 0) return
         pwClass.assignments.add(assignment)
         dbm.recordAssignment(assignment,student.getClassIndex(className).toLong())
     }
 
     //adds reading assignment to student && database
     fun addReadingSession(assignName: String, startPage: Int, endPage: Int, startTime: Long, endTime: Long) {
-        Log.d("Reading session", "$assignName from $startPage - $endPage over ${(endTime-startTime)/60000} mins") //TEMP
-        val progress = student.getAssignment(assignName).progress
-        progress.addSession(endPage, startTime,endTime)
-        dbm.recordSession(progress.getLastSession(),student.getAssignment(assignName).id!!, student.id!!)
-        student.printProgress()
+        val rs = ReadingSession(startPage,endPage,startTime,endTime)
+        if(student.getAssignment(assignName).progress.sessionExists(rs)) return
+        student.getAssignment(assignName).progress.addFullSession(rs)
+        dbm.recordSession(rs,student.getAssignment(assignName).id!!, student.id!!)
     }
 
     //temp for testing/demoing scheduling
@@ -65,13 +64,13 @@ class StudentController (context: Context, val student: Student) {
 
     //creates temp progress for testing
     fun createTempProgress(){
-        val prog = student.classes[0].assignments[0].progress
-        prog.addSession(20,currentTimeMillis()-301000000,currentTimeMillis()-300000000)
-        prog.addSession(50,currentTimeMillis()-1500000,currentTimeMillis())
-        prog.addSession(85,currentTimeMillis()-1500000,currentTimeMillis())
-        prog.addSession(110,currentTimeMillis()-1500000,currentTimeMillis())
-        prog.addSession(150,currentTimeMillis()-1500000,currentTimeMillis())
-        student.classes[1].assignments[0].progress.addSession(50,currentTimeMillis()-1500000,currentTimeMillis())
+        val assign = student.classes[0].assignments[0]
+        addReadingSession(assign.name, 0, 20, currentTimeMillis()-301000000, currentTimeMillis()-300000000)
+        addReadingSession(assign.name, 20, 50, currentTimeMillis()-1500000, currentTimeMillis())
+        addReadingSession(assign.name, 50, 85, currentTimeMillis()-1500000, currentTimeMillis())
+        addReadingSession(assign.name, 85, 110, currentTimeMillis()-1500000, currentTimeMillis())
+        addReadingSession(assign.name, 110, 150, currentTimeMillis()-1500000, currentTimeMillis())
+        addReadingSession(student.classes[1].assignments[0].name,17,50,currentTimeMillis()-1500000,currentTimeMillis())
     }
 
     /* creates assignment from uniqueString */
