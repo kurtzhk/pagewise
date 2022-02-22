@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        var activityStarted = false;
 
         val intent = Intent(this, ProfileViewActivity::class.java)
 
@@ -28,15 +29,16 @@ class MainActivity : AppCompatActivity() {
         val logo: ImageView = findViewById(R.id.pagewise_logo)
         logo.setImageResource(R.drawable.pagewise_logo)
 
+        //After 3 seconds move to profile page
+        Executors.newSingleThreadScheduledExecutor().schedule({
+            if(!activityStarted)  startActivity(intent)
+        }, 3, TimeUnit.SECONDS)
+
         //on click move to profile page
         val layout = findViewById<View>(R.id.loginView) as LinearLayout
         layout.setOnClickListener {
             startActivity(intent)
+            activityStarted = true
         }
-
-        //After 3 seconds move to profile page
-        Executors.newSingleThreadScheduledExecutor().schedule({
-            startActivity(intent)
-        }, 3, TimeUnit.SECONDS)
     }
 }
