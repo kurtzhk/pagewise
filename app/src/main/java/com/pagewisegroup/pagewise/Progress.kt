@@ -14,8 +14,16 @@ class Progress(val assignment: Assignment) : Serializable {
         sessions.add(rs)
     }
 
+    fun addFullSession(session: ReadingSession) {
+        sessions.add(session)
+    }
+
     fun getSessions() : MutableList<ReadingSession>{
         return sessions
+    }
+
+    fun getLastSession() : ReadingSession {
+        return sessions[sessions.size-1]
     }
 
     //page the user left off on and will continue from

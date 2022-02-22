@@ -16,7 +16,7 @@ class StudentController (context: Context, val student: Student) {
 
         createTempAssignments() //for testing
         createTempProgress() //for testing charts & schedule
-        calculateReadingSpeeds() //temp
+        student.printProgress() //temp
     }
 
     //gets all classes from db and adds them to class arraylist
@@ -45,9 +45,11 @@ class StudentController (context: Context, val student: Student) {
 
     //adds reading assignment to student && database
     fun addReadingSession(assignName: String, startPage: Int, endPage: Int, startTime: Long, endTime: Long) {
-        Log.d("Reading session", "$assignName from $startPage - $endPage over ${(endTime-startTime)/60000} mins")
-        student.getAssignment(assignName).progress.addSession(endPage, startTime,endTime)
-        //TODO Add to database once incorporated
+        Log.d("Reading session", "$assignName from $startPage - $endPage over ${(endTime-startTime)/60000} mins") //TEMP
+        val progress = student.getAssignment(assignName).progress
+        progress.addSession(endPage, startTime,endTime)
+        dbm.recordSession(progress.getLastSession(),student.getAssignment(assignName).id!!, student.id!!)
+        student.printProgress()
     }
 
     //temp for testing/demoing scheduling

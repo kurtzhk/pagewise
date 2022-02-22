@@ -23,12 +23,6 @@
         <activity
             android:name=".StudentViewActivity"
             android:exported="false" />
-        <activity
-            android:name=".TeacherViewActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

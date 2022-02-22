@@ -42,13 +42,13 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         // reading session table
         db?.execSQL("CREATE TABLE IF NOT EXISTS SESSIONS(" +
                 "session_id INTEGER," +
-                "assignment_id INTEGER," +
-                "student_id INTEGER," +
-                "page_start INTEGER," +
-                "page_end INTEGER," +
-                "start_time INTEGER," +
-                "end_time INTEGER," +
-                "PRIMARY KEY(session_id)")
+                "assignment_id INT NOT NULL," +
+                "student_id INT NOT NULL," +
+                "page_start INT," +
+                "page_end INT," +
+                "start_time REAL," +
+                "end_time REAL," +
+                "PRIMARY KEY(session_id ASC))")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -57,6 +57,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         db?.execSQL("DROP TABLE IF EXISTS CLASSES")
         db?.execSQL("DROP TABLE IF EXISTS STUDENTS")
         db?.execSQL("DROP TABLE IF EXISTS ENROLLMENTS")
+        db?.execSQL("DROP TABLE IF EXISTS SESSIONS")
         //reconstruct db.
         onCreate(db)
     }
@@ -78,6 +79,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         }
     }
 
+    //records reading session
     fun recordSession(session: ReadingSession, assignment_id: Long, student_id: Long) {
         val values = ContentValues()
         values.put("assignment_id", assignment_id)
@@ -174,6 +176,10 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
             "SELECT name,due_date,page_start,page_end,time_to_complete,completed FROM ASSIGNMENTS WHERE assignment_id = $id",
             null
         )
+        val sTable = readableDatabase?.rawQuery(
+            "SELECT session_id FROM SESSIONS WHERE assignment_id = $id",
+            null
+        )
         if (aTable?.moveToFirst() == true) {
             val name = aTable.getString(0)
             val dueDate = aTable.getLong(1)
@@ -184,7 +190,31 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
             val a = Assignment(name, Date(dueDate), pageStart, pageEnd)
             a.hoursToComplete = timeToComplete
             a.completed = completed
+            a.id = id
+            //updates progress
+            val progress = Progress(a)
+            if (sTable?.moveToFirst() == true) {
+                do {
+                    progress.addFullSession(fetchSession(sTable.getLong(0))!!)
+                } while (sTable.moveToNext())
+            }
+            a.progress = progress
             return a
+        }
+        return null
+    }
+
+    fun fetchSession(id: Long): ReadingSession? {
+        val rTable = readableDatabase?.rawQuery(
+            "SELECT page_start, page_end, start_time, end_time FROM SESSIONS WHERE session_id = $id",
+            null
+        )
+        if (rTable?.moveToFirst() == true) {
+            val pageStart = rTable.getInt(0)
+            val pageEnd = rTable.getInt(1)
+            val timeStart = rTable.getLong(2)
+            val timeEnd = rTable.getLong(3)
+            return ReadingSession(pageStart,pageEnd,timeStart,timeEnd)
         }
         return null
     }
