@@ -46,8 +46,8 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
                 "student_id INT NOT NULL," +
                 "page_start INT," +
                 "page_end INT," +
-                "start_time REAL," +
-                "end_time REAL," +
+                "start_time INT," +
+                "end_time INT," +
                 "PRIMARY KEY(session_id ASC))")
     }
 
@@ -195,7 +195,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
             val progress = Progress(a)
             if (sTable?.moveToFirst() == true) {
                 do {
-                    progress.addFullSession(fetchSession(sTable.getLong(0))!!)
+                    progress.Session(fetchSession(sTable.getLong(0))!!)
                 } while (sTable.moveToNext())
             }
             a.progress = progress
