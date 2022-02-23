@@ -4,17 +4,39 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+    <ProgressBar
+        android:id="@+id/assignment_progress"
+        style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="6dp"
+        android:progressTint="#DDFF"
+        android:min="0"
+        android:max="100"
+        android:minWidth="75dp" />
+
+    <TextView
+        android:id="@+id/progress_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="6dp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
     <TextView
         android:id="@+id/item_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="6dp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="6dp"
         android:textAppearance="?attr/textAppearanceListItem" />
+
 </LinearLayout>
