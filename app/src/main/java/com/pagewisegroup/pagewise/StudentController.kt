@@ -47,8 +47,8 @@ class StudentController (context: Context, val student: Student) {
     fun addReadingSession(assignName: String, startPage: Int, endPage: Int, startTime: Long, endTime: Long) {
         val rs = ReadingSession(startPage,endPage,startTime,endTime)
         if(student.getAssignment(assignName).progress.sessionExists(rs)) return
-        student.getAssignment(assignName).progress.addFullSession(rs)
-        dbm.recordSession(rs,student.getAssignment(assignName).id!!, student.id!!)
+        student.getAssignment(assignName).progress.addSession(rs)
+        dbm.recordSession(rs, student.getAssignment(assignName).id!!, student.id!!)
     }
 
     //temp for testing/demoing scheduling

@@ -195,7 +195,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
             val progress = Progress(a)
             if (sTable?.moveToFirst() == true) {
                 do {
-                    progress.Session(fetchSession(sTable.getLong(0))!!)
+                    progress.addSession(fetchSession(sTable.getLong(0))!!)
                 } while (sTable.moveToNext())
             }
             a.progress = progress

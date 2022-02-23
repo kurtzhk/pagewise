@@ -1,5 +1,6 @@
 package com.pagewisegroup.pagewise
 
+import android.content.Context
 import java.io.Serializable
 import java.util.*
 import kotlin.Comparator
@@ -8,14 +9,19 @@ import kotlin.Comparator
 class Progress(val assignment: Assignment) : Serializable {
     private val sessions: MutableList<ReadingSession> = mutableListOf()
 
-    fun addSession(endPage: Int, startTime: Long, endTime: Long){
+    fun addSessionDB(context: Context, studentId: Long?,endPage: Int, startTime: Long, endTime: Long){
         val startPage = getCurrentPage()
         if(endPage >= assignment.pageEnd) assignment.completed = true
         val rs = ReadingSession(startPage,endPage,startTime,endTime)
-        if(!sessionExists(rs)) sessions.add(rs)
+        if(sessionExists(rs)) return
+        sessions.add(rs)
+        //Adds to database
+        //This is messy af, but we have no way of access student controller & its database from here
+        val dbm = DatabaseManager(context)
+        dbm.recordSession(rs, assignment.id!!, studentId!!)
     }
 
-    fun addFullSession(session: ReadingSession) {
+    fun addSession(session: ReadingSession) {
         if(!sessionExists(session)) sessions.add(session)
     }
 
@@ -27,9 +33,7 @@ class Progress(val assignment: Assignment) : Serializable {
     fun sessionExists(rs: ReadingSession) : Boolean{
         sessions.forEach {
             //there is no situation that you should reread the exact same pages
-            if(it.startPage == rs.startPage && it.endPage == rs.endPage) {
-                return true
-            }
+            if(it.startPage == rs.startPage && it.endPage == rs.endPage) return true
         }
         return false
     }
