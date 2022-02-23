@@ -3,6 +3,7 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
+android:id="@+id/loginView"
 tools:context=".MainActivity"
 android:orientation="vertical"
 android:gravity="center">
@@ -21,30 +22,4 @@ android:gravity="center">
         android:layout_height="wrap_content"
         android:text="@string/intro_string"
         android:layout_marginBottom="20dp"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <Button
-            android:theme="@style/Theme.PageWiseButton"
-            android:id="@+id/teacher_loginbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Teacher"
-            android:layout_marginEnd="20dp"
-            android:textSize="20sp"
-            style="Widget.AppCompat.Button" />
-
-        <Button
-            android:theme="@style/Theme.PageWiseButton"
-            android:id="@+id/student_loginbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Student"
-            android:textSize="20sp"
-            style="Widget.AppCompat.Button" />
-    </LinearLayout>
 </LinearLayout>

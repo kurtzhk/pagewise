@@ -1,12 +1,11 @@
 package com.pagewisegroup.pagewise
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import java.util.*
+import androidx.appcompat.app.AppCompatActivity
 
 class FinishReadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,9 +23,9 @@ class FinishReadingActivity : AppCompatActivity() {
             val n = num.text.toString().toIntOrNull()
             if(n != null && n >= progressObj.getCurrentPage() && n <= progressObj.assignment.pageEnd){
                 //log session and return to student view
-                progressObj.addSession(n,intent.getLongExtra("pagewise.STIME",0),
+                progressObj.addSessionDB(this,student.id,n,intent.getLongExtra("pagewise.STIME",0),
                     intent.getLongExtra("pagewise.ETIME",1))
-                val intent = Intent(this, StudentViewActivity::class.java).apply(){
+                val intent = Intent(this, StudentViewActivity::class.java).apply {
                     putExtra("STUDENT",student)
                 }
                 startActivity(intent)
