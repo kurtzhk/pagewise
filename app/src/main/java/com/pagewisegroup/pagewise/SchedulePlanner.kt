@@ -37,12 +37,12 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
         if(daysLeft <= 0) return
 
-        val pagesPerDay = (assignment.pageEnd - assignment.currentPage) / daysLeft.toDouble()
+        val pagesPerDay = (assignment.pageEnd - assignment.progress.getCurrentPage()) / daysLeft.toDouble()
 
         //Adds day to schedule
         var today = false
         var date = currentDate
-        var pageEnd = assignment.currentPage
+        var pageEnd = assignment.progress.getCurrentPage()
         for(i in 1..daysLeft) {
             val pageStart = pageEnd
 
