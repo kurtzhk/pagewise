@@ -1,5 +1,6 @@
 package com.pagewisegroup.pagewise
 
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,7 +31,8 @@ class AssignmentRecyclerViewAdapter(private val assignments: ArrayList<Assignmen
         val progress = "${assignment.progress.getCurrentPage() - assignment.pageStart}/${assignment.pageEnd - assignment.pageStart}"
         holder.progressTextView.text = progress
         val time = StringBuilder()
-        if(assignment.timeToComplete > 60) time.append("${floor(assignment.timeToComplete).toInt()}h")
+        Log.d("ttc", assignment.timeToComplete.toString())
+        if(assignment.timeToComplete > 60) time.append("${floor(assignment.timeToComplete).toInt()/60}h")
         val min = ceil(assignment.timeToComplete%60).toInt()
         if(min > 0) time.append(" ${min}min")
         holder.timeTextView.text = time

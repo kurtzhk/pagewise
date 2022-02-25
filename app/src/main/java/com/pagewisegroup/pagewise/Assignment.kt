@@ -19,7 +19,6 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
 
     fun updateCompletionEstimate(pagesPerMinute: Double) {
         timeToComplete = (pageEnd - progress.getCurrentPage()) / pagesPerMinute
-        Log.d("updated time", timeToComplete.toString())
     }
 
     /* Builder object, so can create assignment from id */
