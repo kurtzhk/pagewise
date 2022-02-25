@@ -31,7 +31,7 @@ class ScheduleViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_assignment_view_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_schedule_view_list, container, false)
         //Checks if empty and gives error message if there is
         if(student.schedule.isEmpty()) {
             val bundle = Bundle()

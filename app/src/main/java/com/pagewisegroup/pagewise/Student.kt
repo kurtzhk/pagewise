@@ -156,18 +156,6 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         return arr
     }
 
-    //TEMP for testing
-    fun printProgress() {
-        classes.forEach {
-            it.assignments.forEach {
-                val assignName = it.name
-                it.progress.getSessions().forEach {
-                    Log.d("SESSION", "$assignName: ${it.startPage} to ${it.endPage} ")
-                }
-            }
-        }
-    }
-
     //prints info about student
     override fun toString(): String {
         val studentInfo = StringBuilder()

@@ -70,7 +70,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         values.put("due_date", assignment.dueDate.time)
         values.put("page_start", assignment.pageStart)
         values.put("page_end", assignment.pageEnd)
-        values.put("time_to_complete", assignment.hoursToComplete)
+        values.put("time_to_complete", assignment.timeToComplete)
         values.put("completed", assignment.completed)
         if (assignment.id != null) {
             writableDatabase?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.id}", null)
@@ -188,7 +188,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
             val timeToComplete = aTable.getDouble(4)
             val completed = aTable.getInt(5) == 1
             val a = Assignment(name, Date(dueDate), pageStart, pageEnd)
-            a.hoursToComplete = timeToComplete
+            a.timeToComplete = timeToComplete
             a.completed = completed
             a.id = id
             //updates progress

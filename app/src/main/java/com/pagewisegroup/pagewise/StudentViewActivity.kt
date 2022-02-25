@@ -89,13 +89,17 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun displayClassView(){
+        //updates reading speed (and time to complete)
+        studentController.calculateReadingSpeeds()
         supportFragmentManager.commit {
             replace<StudentClassFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
     }
 
-    fun displayReadingView(){
+    fun displayReadingView() {
+        //updates reading speed (and time to complete)
+        studentController.calculateReadingSpeeds()
         supportFragmentManager.commit {
             replace<RecordReadingFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
@@ -120,7 +124,6 @@ class StudentViewActivity : AppCompatActivity() {
     fun displayScheduleEntry(){
         //updates schedule or creates one if it does not exist
         studentController.createSchedule()
-
         supportFragmentManager.commit {
             replace<ScheduleViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)

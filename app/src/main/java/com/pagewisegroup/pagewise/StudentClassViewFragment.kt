@@ -15,17 +15,17 @@ import android.view.ViewGroup
  */
 class StudentClassFragment : Fragment() {
     private var columnCount = 1
-    lateinit var student : Student
+    lateinit var student: Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-            //studentClasses = it.getParcelableArrayList<>()(STUDENT_CLASSES)
-        }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_class_view_list, container, false)
 
         // Set the adapter
@@ -39,20 +39,5 @@ class StudentClassFragment : Fragment() {
             }
         }
         return view
-    }
-
-    companion object {
-
-        const val ARG_COLUMN_COUNT = "column-count"
-        const val STUDENT_CLASSES = "student_class_list"
-
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            StudentClassFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                    //putParcelableArrayList(STUDENT_CLASSES, studentClasses)
-                }
-            }
     }
 }
