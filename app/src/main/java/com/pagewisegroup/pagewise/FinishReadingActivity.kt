@@ -20,8 +20,13 @@ class FinishReadingActivity : AppCompatActivity() {
 
         btn.setOnClickListener{
             //get entered number, check in range
-            val n = num.text.toString().toIntOrNull()
-            if(n != null && n >= progressObj.getCurrentPage() && n <= progressObj.assignment.pageEnd){
+            var n = num.text.toString().toIntOrNull()
+            if(n != null && n >= progressObj.getCurrentPage()) {
+                //To handle "over" reading
+                if(n >= progressObj.assignment.pageEnd) {
+                    n = progressObj.assignment.pageEnd
+                    progressObj.assignment.completed = true
+                }
                 //log session and return to student view
                 progressObj.addSessionDB(this,student.id,n,intent.getLongExtra("pagewise.STIME",0),
                     intent.getLongExtra("pagewise.ETIME",1))
@@ -29,8 +34,11 @@ class FinishReadingActivity : AppCompatActivity() {
                     putExtra("STUDENT",student)
                 }
                 startActivity(intent)
+            } else {
+                //error handling
+                if(n == null) num.error = "Please enter a end page"
+                else num.error = "End page should be after start page (${progressObj.getCurrentPage()})"
             }
-            Log.d("Progress", "Read to page $n")
         }
     }
 }

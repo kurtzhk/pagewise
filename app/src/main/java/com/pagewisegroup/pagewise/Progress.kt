@@ -14,11 +14,12 @@ class Progress(val assignment: Assignment) : Serializable {
         if(endPage >= assignment.pageEnd) assignment.completed = true
         val rs = ReadingSession(startPage,endPage,startTime,endTime)
         if(sessionExists(rs)) return
-        sessions.add(rs)
         //Adds to database
         //This is messy af, but we have no way of access student controller & its database from here
         val dbm = DatabaseManager(context)
         dbm.recordSession(rs, assignment.id!!, studentId!!)
+        sessions.add(rs)
+
     }
 
     fun addSession(session: ReadingSession) {

@@ -1,7 +1,5 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Intent
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -52,7 +50,8 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         if(timeLeft > 60) time.append("${floor(timeLeft).toInt()/60}h")
         val min = ceil(timeLeft%60).toInt()
         if(min > 0) time.append(" ${min}min")
-        time.append(" left")
+        if(timeLeft > 0) time.append(" left")
+        else time.append("Finished")
         holder.timeView.text = time
     }
 
