@@ -30,7 +30,7 @@ class ReadingActivity : AppCompatActivity() {
                 val intent = Intent(this,FinishReadingActivity::class.java).apply() {
                     putExtra("pagewise.STIME",startTime)
                     putExtra("pagewise.ETIME", currentTimeMillis())
-                    putExtra("pagewise.PROGRESS",assignment.progress)
+                    putExtra("pagewise.ASSN_NAME",assignName)
                     putExtra("STUDENT",student)
                     Log.d("End time in ms",""+currentTimeMillis())
                 }
