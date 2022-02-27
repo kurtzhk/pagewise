@@ -1,6 +1,5 @@
 package com.pagewisegroup.pagewise
 
-import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 
 import com.pagewisegroup.pagewise.databinding.FragmentClassViewBinding
+import java.lang.StringBuilder
 import java.lang.System.currentTimeMillis
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * [RecyclerView.Adapter] that can display a [PWClass].
@@ -39,10 +41,18 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         val weekAssignments : List<Assignment> = item.assignments.filter { (it.dueDate.time >= curTime && (it.dueDate.time <= curTime + WEEK_IN_MILLIS)) }
         val assignmentProgresses : Float = weekAssignments.map { it.progress.getCurrentPage() }.sum().toFloat() + 1
         val assignmentPages : Float = weekAssignments.map { it.pageEnd }.sum().toFloat() + 1
+        val timeLeft = weekAssignments.sumOf{it.timeToComplete}
         holder.bar.progress = ((assignmentProgresses / assignmentPages) * 100).toInt()
         holder.pwClass = item
         val progressText = "Weekly Progress: ${holder.bar.progress}%"
         holder.progressText.text = progressText
+        val time = StringBuilder()
+        if(timeLeft > 60) time.append("${floor(timeLeft).toInt()/60}h")
+        val min = ceil(timeLeft%60).toInt()
+        if(min > 0) time.append(" ${min}min")
+        if(timeLeft > 0) time.append(" left")
+        else time.append("Finished")
+        holder.timeView.text = time
     }
 
     override fun getItemCount(): Int = values.size
@@ -52,7 +62,7 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         val nameView: TextView = binding.className
         val bar: ProgressBar = binding.weeklyProgress
         val progressText: TextView = binding.progressText
-        //val timeView: TextView = binding.classTime
+        val timeView: TextView = binding.classTime
         lateinit var pwClass: PWClass
 
         init {

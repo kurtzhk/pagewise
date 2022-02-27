@@ -13,10 +13,9 @@ class StudentController (context: Context, val student: Student) {
 
     init {
         if(student.classes.isEmpty()) fetchClasses() //avoid class duplication
-
         createTempAssignments() //for testing
         createTempProgress() //for testing charts & schedule
-        student.printProgress()
+        calculateReadingSpeeds()
     }
 
     //gets all classes from db and adds them to class arraylist
@@ -57,9 +56,9 @@ class StudentController (context: Context, val student: Student) {
         addClass("CSCI 492")
         addClass("English 101")
         addClass("Bio 101")
-        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,1,26,23,59,59),0,1000),"CSCI 492")
-        addAssignment(Assignment("Kotlin Research", Date(2022-1900,1,28,23,59,59),5,53),"CSCI 492")
-        addAssignment(Assignment("English Book #5", Date(2022-1900,2,2,23,59,59),17,125),"English 101")
+        addAssignment(Assignment("Some CSCI Paper", Date(2022-1900,2,6,23,59,59),0,1000),"CSCI 492")
+        addAssignment(Assignment("Kotlin Research", Date(2022-1900,2,8,23,59,59),5,53),"CSCI 492")
+        addAssignment(Assignment("English Book #5", Date(2022-1900,2,12,23,59,59),17,125),"English 101")
     }
 
     //creates temp progress for testing
@@ -90,10 +89,13 @@ class StudentController (context: Context, val student: Student) {
         student.classes.forEach {
             val classReadingSpeed = calculateReadingSpeed(it.name)
             //if there is > 5 sessions adds classReading speed, else adds total
-            if(classReadingSpeed == 0.0)
+            if(classReadingSpeed == 0.0) {
                 student.readingSpeed.add(totalReadingSpeed)
-            else
+                it.assignments.forEach { it.updateCompletionEstimate(totalReadingSpeed) }
+            } else {
                 student.readingSpeed.add(classReadingSpeed)
+                it.assignments.forEach { it.updateCompletionEstimate(classReadingSpeed) }
+            }
         }
     }
 

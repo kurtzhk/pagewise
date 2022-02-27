@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".EnterAssignmentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -33,7 +31,8 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
-        android:text="Assignment Name"
+        android:hint="Assignment Name"
+        android:textColorHint="@color/white"
         android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,19 +43,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/assignmentName"
-        app:layout_constraintTop_toBottomOf="@+id/assignmentName">
+        app:layout_constraintTop_toBottomOf="@+id/assignmentName"
+        >
 
         <AutoCompleteTextView
             android:id="@+id/class_choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Class"
-            android:textColor="@color/white"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:inputType="textNoSuggestions"/>
+            android:inputType="textNoSuggestions"
+            android:text="Class"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.pagewisegroup.pagewise.DateDisplayView
@@ -69,12 +69,14 @@
         android:focusable="false"
         android:inputType="none"
         android:onClick="showDatePickerDialog"
-        android:text="Due: MM/DD/YYYY"
+        android:hint="Due: MM/DD/YYYY"
+        android:textColorHint="@color/white"
         android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dropdown" />
 
     <EditText
+        android:maxLines="1"
         android:id="@+id/pageStart"
         android:layout_width="49dp"
         android:layout_height="45dp"
@@ -87,6 +89,7 @@
         app:layout_constraintTop_toBottomOf="@+id/assignmentDueDate" />
 
     <EditText
+        android:maxLines="1"
         android:id="@+id/pageEnd"
         android:layout_width="49dp"
         android:layout_height="45dp"

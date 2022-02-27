@@ -1,12 +1,13 @@
 package com.pagewisegroup.pagewise
 
+import android.util.Log
 import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.util.*
 
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int): Serializable {
     var completed: Boolean = false
-    var hoursToComplete: Double = 0.0
+    var timeToComplete: Double = 0.0
     var id: Long? = null
     var uniqueString = ""
     var progress: Progress = Progress(this)
@@ -16,13 +17,8 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
         if(uniqueString.isBlank()) createUniqueString()
     }
 
-    fun updateCompletionEstimate(pagesPerHour: Double) {
-        hoursToComplete = (pageEnd - pageStart) / pagesPerHour
-    }
-
-    fun completeAssignment(hoursToComplete: Double) {
-        this.hoursToComplete = hoursToComplete
-        completed = true
+    fun updateCompletionEstimate(pagesPerMinute: Double) {
+        timeToComplete = (pageEnd - progress.getCurrentPage()) / pagesPerMinute
     }
 
     /* Builder object, so can create assignment from id */

@@ -39,7 +39,6 @@ class RecordReadingFragment : Fragment() {
             view.findViewById<MaterialButton>(R.id.timeYourselfButton).setOnClickListener {
                 //checks to see if class exists
                 if(student.assignExists(classDropdown.text.toString(),assignDropdown.text.toString())) {
-                    //TODO set student through here in bundle once bundles are worked out
                     val intent = Intent(requireActivity().baseContext, ReadingActivity::class.java)
                     intent.putExtra("STUDENT",student)
                     intent.putExtra("ASSIGN_NAME",assignDropdown.text.toString())

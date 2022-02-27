@@ -56,46 +56,71 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun buildAssignment(v: View) {
-        val name = findViewById<EditText>(R.id.assignmentName).text.toString()
-        val pickedClass = findViewById<AutoCompleteTextView>(R.id.class_choice).text.toString()
-        val due = findViewById<DateDisplayView>(R.id.assignmentDueDate)
-        val pageStart = findViewById<EditText>(R.id.pageStart).text.toString().toInt()
-        val pageEnd = findViewById<EditText>(R.id.pageEnd).text.toString().toInt()
+        val name = getEditTextHandler(findViewById(R.id.assignmentName), "name")
+        val pickedClass = getClassHandler(findViewById(R.id.class_choice))
+        val due = getDateHandler(findViewById(R.id.assignmentDueDate))
+        val pageStart = getEditTextHandler(findViewById(R.id.pageStart), "start page")
+        val pageEnd = getEditTextHandler(findViewById(R.id.pageEnd), "end page")
 
-        val assignment = Assignment(name, Date(due.picker.year-1900, due.picker.month, due.picker.day), pageStart, pageEnd)
-        studentController.addAssignment(assignment,pickedClass) //TODO: Make it go into correct class
+        //error checks
+        if(name.isNullOrEmpty() || pickedClass.isNullOrEmpty() || pageStart.isNullOrEmpty() || pageEnd.isNullOrEmpty() || due == null) return
+        if(dateInPast(findViewById(R.id.assignmentDueDate),due)) return
+        if(!pageErrorCheck(findViewById(R.id.pageStart),pageStart.toInt(),pageEnd.toInt())) return
+
+        val assignment = Assignment(name, due, pageStart.toInt(), pageEnd.toInt())
+        studentController.addAssignment(assignment,pickedClass)
+        displayClassView()
     }
 
+
     fun buildClass(v: View) {
-        val className = findViewById<TextInputLayout>(R.id.classNameInput).editText?.text.toString()
+        val className = getEditTextHandler(findViewById<TextInputLayout>(R.id.classNameInput).editText!!, "class name")
+        if(className.isNullOrEmpty()) return
         studentController.addClass(className)
+        displayClassView()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun buildReadingSession(v: View) {
-        val assignmentName = findViewById<TextView>(R.id.assignementName).text.trim().toString()
-        val startPage = findViewById<TextView>(R.id.startPage).text.trim().toString().toInt()
-        val endPage = findViewById<TextView>(R.id.endPage).text.trim().toString().toInt()
-        val date = findViewById<DateDisplayView>(R.id.readingDate)
+        val assignmentName = findViewById<TextView>(R.id.assignementName).text.toString()
+        val startPage = findViewById<TextView>(R.id.startPage).text.toString().toInt()
+        var endPage = getEditTextHandler(findViewById(R.id.endPage), "end page")
+        val addedTime = getEditTextHandler(findViewById(R.id.sessionTime), "time spent")
+        val date = getDateHandler(findViewById(R.id.readingDate))
         val time = findViewById<TimePicker>(R.id.timePicker)
+
+        //error checks
+        if(endPage.isNullOrEmpty() || addedTime.isNullOrEmpty() || addedTime.isNullOrEmpty() || date == null) return
+        if(dateInFuture(findViewById(R.id.readingDate),date)) return
+        if(!pageErrorCheck(findViewById(R.id.endPage),startPage.toInt(),endPage.toInt())) return
+        if(endPage.toInt() >= studentController.student.getAssignment(assignmentName).pageEnd) {
+            endPage = studentController.student.getAssignment(assignmentName).pageEnd.toString()
+            studentController.student.getAssignment(assignmentName).completed = true
+        }
+
         //converts date && time to milliseconds
-        val formattedDate = "${date.picker.year-1900}/${date.picker.month}/${date.picker.day} ${time.hour}:${time.minute}:00"
+        val formattedDate = "${date.year-1900}/${date.month}/${date.date} ${time.hour}:${time.minute}:00"
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
         val startTime = sdf.parse(formattedDate).time
-        val addedTime = findViewById<TextView>(R.id.sessionTime).text.trim().toString().toLong()
-        val endTime = startTime + addedTime*60000
+        val endTime = startTime + addedTime.toLong()*60000
         //adds reading session to assignment
-        studentController.addReadingSession(assignmentName,startPage,endPage,startTime,endTime)
+        studentController.addReadingSession(assignmentName,startPage,endPage.toInt(),startTime,endTime)
+        displayClassView()
     }
 
-    fun displayClassView(){
+
+    fun displayClassView() {
+        //updates reading speed (and time to complete)
+        studentController.calculateReadingSpeeds()
         supportFragmentManager.commit {
             replace<StudentClassFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
         }
     }
 
-    fun displayReadingView(){
+    fun displayReadingView() {
+        //updates reading speed (and time to complete)
+        studentController.calculateReadingSpeeds()
         supportFragmentManager.commit {
             replace<RecordReadingFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
@@ -110,7 +135,7 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    fun displayClassEntry(){
+    fun displayClassEntry() {
         supportFragmentManager.commit {
             replace<CreateClassFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
@@ -120,7 +145,6 @@ class StudentViewActivity : AppCompatActivity() {
     fun displayScheduleEntry(){
         //updates schedule or creates one if it does not exist
         studentController.createSchedule()
-
         supportFragmentManager.commit {
             replace<ScheduleViewFragment>(R.id.fragment_frame)
             setReorderingAllowed(true)
@@ -177,5 +201,55 @@ class StudentViewActivity : AppCompatActivity() {
                 // write code to perform some action
             }
         }
+    }
+
+    //error handlers
+    fun getEditTextHandler(text: EditText, errText: String) : String? {
+        if(text.text.isNullOrEmpty()) {
+            text.error = "Please enter ${errText}"
+            return null
+        }
+        return text.text.toString().trim()
+    }
+
+    fun getClassHandler(text: AutoCompleteTextView) : String? {
+        if(studentController.student.getClassIndex(text.text.toString()) < 0) {
+            text.setError("Pick a class")
+            return null
+        }
+        return text.text.toString()
+    }
+
+    fun getDateHandler(dateDisp: DateDisplayView) : Date? {
+        val date = Date(dateDisp.picker.year-1900, dateDisp.picker.month, dateDisp.picker.day)
+        if(dateDisp.picker.month == 0 || dateDisp.picker.day == 0 || dateDisp.picker.day == 0) {
+            dateDisp.error = "Pick a date"
+            return null
+        }
+        return date
+    }
+
+    fun pageErrorCheck(text: TextView,startPage: Int, endPage: Int) : Boolean {
+        if(startPage > endPage) {
+            text.error = "Start page should be before end page"
+            return false
+        }
+        return true
+    }
+
+    fun dateInPast(dateDisp: DateDisplayView, date: Date) : Boolean{
+        if(date.before(Date())) {
+            dateDisp.error = "Due date must be in the future"
+            return true
+        }
+        return false
+    }
+
+    fun dateInFuture(dateDisp: DateDisplayView, date: Date) : Boolean{
+        if(date.after(Date())) {
+            dateDisp.error = "Please pick a past date"
+            return true
+        }
+        return false
     }
 }
