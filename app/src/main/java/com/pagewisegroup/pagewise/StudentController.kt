@@ -73,11 +73,11 @@ class StudentController (context: Context, val student: Student) {
     }
 
     /* creates assignment from uniqueString */
-    fun createAssignmentUniqueString(uniqueString: String, className: String) {
+    /*fun createAssignmentUniqueString(uniqueString: String, className: String) {
         if(uniqueString.isBlank()) return
         val assignment = Assignment.fromUniqueString(uniqueString)
         addAssignment(assignment,className)
-    }
+    }*/
 
     //calculates reading speeds for all classes
     fun calculateReadingSpeeds() {

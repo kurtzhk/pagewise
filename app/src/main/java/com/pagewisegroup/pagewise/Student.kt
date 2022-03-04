@@ -11,7 +11,7 @@ data class PWClass(val name: String, val assignments: ArrayList<Assignment> = Ar
 
 // Object that tracks a Student and their information including names, reading speed, and their classes.
 class Student(var name: String, var id: Long? = null) : Serializable {
-    val classes = ArrayList<PWClass>()
+    var classes = ArrayList<PWClass>()
     var schedule = ArrayList<PlannedDay>()
     //reading speed for classes
     var readingSpeed = ArrayList<Double>()
@@ -135,6 +135,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
 
     //Returns pages read per day for the past n days
     fun getReadingHistory(days: Int) : IntArray {
+        if(days <= 0) return IntArray(0)
         val arr = IntArray(days)
 
         classes.forEach{
@@ -142,11 +143,10 @@ class Student(var name: String, var id: Long? = null) : Serializable {
                 var now = currentTimeMillis()
                 it.progress?.getSessions()?.forEach{
                     var daysAgo = TimeUnit.DAYS.convert(now - it.startTime,TimeUnit.MILLISECONDS)
-                    if(daysAgo < arr.size){
-                        if(daysAgo < 0){
-                            Log.w("Student","Encountered reading session from the future")
-                        }
-                        else{
+                    if(daysAgo < days) {
+                        if(daysAgo <= 0){
+                            return IntArray(0)
+                        } else {
                             arr[daysAgo.toInt()] += it.endPage - it.startPage
                         }
                     }

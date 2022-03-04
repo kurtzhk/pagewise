@@ -13,7 +13,8 @@ class FinishReadingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_finish_reading)
 
         val student = intent.getSerializableExtra("STUDENT") as Student
-        val progressObj = intent.getSerializableExtra("pagewise.PROGRESS") as Progress
+        val aName = intent.getSerializableExtra("pagewise.ASSN_NAME") as String
+        val progressObj = student.getAssignment(aName).progress
 
         val btn = findViewById<Button>(R.id.confirm_session_button)
         val num = findViewById<EditText>(R.id.lastpagenum)

@@ -14,13 +14,15 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
 
     /* creates unique string on creation */
     init {
-        if(uniqueString.isBlank()) createUniqueString()
+        //if(uniqueString.isBlank()) createUniqueString()
     }
 
     fun updateCompletionEstimate(pagesPerMinute: Double) {
-        timeToComplete = (pageEnd - progress.getCurrentPage()) / pagesPerMinute
+        if(pagesPerMinute <= 0.0) timeToComplete = 0.0
+        else timeToComplete = (pageEnd - progress.getCurrentPage()) / pagesPerMinute
     }
 
+    /*
     /* Builder object, so can create assignment from id */
     companion object UniqueStringBuilder {
         fun fromUniqueString(uniqueString: String): Assignment {
@@ -40,10 +42,10 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
         uniqueString = base64Encode(name) + "&" + base64Encode((dueDate.year).toString()) + "&" +
             base64Encode((dueDate.month).toString()) + "&" + base64Encode((dueDate.date).toString()) + "&" +
             base64Encode(pageStart.toString()) + "&" + base64Encode(pageEnd.toString())
-    }
+    }*/
 
     /* Encodes given str to base 64  */
-    fun base64Encode(str: String) : String { return String(android.util.Base64.encode(str.toByteArray(), android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
+    //fun base64Encode(str: String) : String { return String(android.util.Base64.encode(str.toByteArray(), android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
 
     override fun toString(): String {
         val builder: StringBuilder = StringBuilder()
