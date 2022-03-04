@@ -119,10 +119,8 @@ class StudentController (context: Context, val student: Student) {
             }
         }
         //only calculates by class if it has > 5 sessions
-        if(size == 0 || (!className.isNullOrEmpty() && size < 5))
-            return 0.0
-        else
-            return total/size
+        if(size == 0 || (!className.isNullOrEmpty() && size < 5))  return 0.0
+        else return total/size
     }
 
 
