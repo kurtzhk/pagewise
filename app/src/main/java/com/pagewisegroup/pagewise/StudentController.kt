@@ -73,11 +73,11 @@ class StudentController (context: Context, val student: Student) {
     }
 
     /* creates assignment from uniqueString */
-    fun createAssignmentUniqueString(uniqueString: String, className: String) {
+    /*fun createAssignmentUniqueString(uniqueString: String, className: String) {
         if(uniqueString.isBlank()) return
         val assignment = Assignment.fromUniqueString(uniqueString)
         addAssignment(assignment,className)
-    }
+    }*/
 
     //calculates reading speeds for all classes
     fun calculateReadingSpeeds() {
@@ -119,10 +119,8 @@ class StudentController (context: Context, val student: Student) {
             }
         }
         //only calculates by class if it has > 5 sessions
-        if(size == 0 || (!className.isNullOrEmpty() && size < 5))
-            return 0.0
-        else
-            return total/size
+        if(size == 0 || (!className.isNullOrEmpty() && size < 5))  return 0.0
+        else return total/size
     }
 
 

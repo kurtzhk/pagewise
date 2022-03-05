@@ -26,14 +26,15 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
     //Adds given assignment to schedule
     //right now just evenly split works every day for each assignment
     fun updateSchedule(assignment: Assignment, readingSpeedAssign: Double) {
+        val timeManager = TimeManager()
         var currentDate = Date()
         //today only counts today as a work day if there is 10 hr+ left in it
         if(currentDate.hours >= 13) {
-            currentDate = incrementDay(currentDate)
+            currentDate = timeManager.incrementDay(currentDate)
         }
 
         //if the assignment is passed due ignore it
-        var daysLeft = getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
+        var daysLeft = timeManager.getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
         if(daysLeft <= 0) return
 
         val pagesPerDay = (assignment.pageEnd - assignment.progress.getCurrentPage()) / daysLeft.toDouble()
@@ -50,39 +51,16 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
             if(pageEnd > assignment.pageEnd)  pageEnd = assignment.pageEnd
 
             //increments day if it is not today
-            if(today) date = incrementDay(date)
+            if(today) date = timeManager.incrementDay(date)
             else today = true
 
             //adds/updates day in schedule
-            val dayIndex = findDayIndex(schedule, date)
+            val dayIndex = timeManager.findDayIndex(schedule, date)
             if(dayIndex < 0)
                 schedule.add(PlannedDay(date, ArrayList()))
             if(pageEnd-pageStart != 0)
-                schedule[findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeedAssign,pageStart,pageEnd))
+                schedule[timeManager.findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeedAssign,pageStart,pageEnd))
         }
-    }
-
-    //returns index of date in schedule
-    //returns -1 if not in schedule
-    fun findDayIndex(currSchedule: ArrayList<PlannedDay>, date: Date) : Int {
-        for ((index, day) in currSchedule.withIndex())
-            if(day.date.date == date.date && day.date.month == date.month) return index
-        return -1
-    }
-
-    //calculates the difference in time between two given dates
-    //in a given time unit
-    fun getDateDiff(date1: Date, date2: Date, timeUnit: TimeUnit): Long {
-        val diffInMillies = date2.time - date1.time
-        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS)
-    }
-
-    //increases the day by one
-    fun incrementDay(date: Date) : Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DATE, 1)
-        return calendar.time
     }
 
     //prints schedule

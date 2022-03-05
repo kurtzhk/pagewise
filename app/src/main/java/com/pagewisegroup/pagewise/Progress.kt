@@ -44,14 +44,15 @@ class Progress(val assignment: Assignment) : Serializable {
     fun getCurrentPage(): Int {
         sessions.sortedWith(compareBy({it.endPage})) //in case somehow out of order sorts
         if(sessions.isEmpty()) return assignment.pageStart
+        if(sessions.last().endPage>assignment.pageEnd) sessions.last().endPage = assignment.pageEnd
         return sessions.last().endPage
     }
 
     //fraction of assignment complete between 0 and 1
     //note: would need a separate check for completely finished
     fun getPortionComplete(): Float {
-        return (getCurrentPage() - assignment.pageStart).toFloat()/(assignment.pageEnd - assignment.pageStart + 1)
+        return (getCurrentPage() - assignment.pageStart).toFloat()/(assignment.pageEnd - assignment.pageStart)
     }
 }
 
-data class ReadingSession(val startPage: Int, val endPage: Int, val startTime: Long, val endTime: Long):Serializable
+data class ReadingSession(val startPage: Int, var endPage: Int, val startTime: Long, val endTime: Long):Serializable

@@ -56,16 +56,17 @@ class StudentViewActivity : AppCompatActivity() {
     }
 
     fun buildAssignment(v: View) {
-        val name = getEditTextHandler(findViewById(R.id.assignmentName), "name")
-        val pickedClass = getClassHandler(findViewById(R.id.class_choice))
-        val due = getDateHandler(findViewById(R.id.assignmentDueDate))
-        val pageStart = getEditTextHandler(findViewById(R.id.pageStart), "start page")
-        val pageEnd = getEditTextHandler(findViewById(R.id.pageEnd), "end page")
+        val inputValidator = InputValidator()
+        val name = inputValidator.getEditTextHandler(findViewById(R.id.assignmentName), "name")
+        val pickedClass = inputValidator.getClassHandler(findViewById(R.id.class_choice), studentController.student)
+        val due = inputValidator.getDateHandler(findViewById(R.id.assignmentDueDate))
+        val pageStart = inputValidator.getEditTextHandler(findViewById(R.id.pageStart), "start page")
+        val pageEnd = inputValidator.getEditTextHandler(findViewById(R.id.pageEnd), "end page")
 
         //error checks
         if(name.isNullOrEmpty() || pickedClass.isNullOrEmpty() || pageStart.isNullOrEmpty() || pageEnd.isNullOrEmpty() || due == null) return
-        if(dateInPast(findViewById(R.id.assignmentDueDate),due)) return
-        if(!pageErrorCheck(findViewById(R.id.pageStart),pageStart.toInt(),pageEnd.toInt())) return
+        if(inputValidator.dateInPast(findViewById(R.id.assignmentDueDate),due,"Due date must be in the future")) return
+        if(!inputValidator.pageErrorCheck(findViewById(R.id.pageStart),pageStart.toInt(),pageEnd.toInt())) return
 
         val assignment = Assignment(name, due, pageStart.toInt(), pageEnd.toInt())
         studentController.addAssignment(assignment,pickedClass)
@@ -74,7 +75,8 @@ class StudentViewActivity : AppCompatActivity() {
 
 
     fun buildClass(v: View) {
-        val className = getEditTextHandler(findViewById<TextInputLayout>(R.id.classNameInput).editText!!, "class name")
+        val inputValidator = InputValidator()
+        val className = inputValidator.getEditTextHandler(findViewById<TextInputLayout>(R.id.classNameInput).editText!!, "class name")
         if(className.isNullOrEmpty()) return
         studentController.addClass(className)
         displayClassView()
@@ -82,17 +84,18 @@ class StudentViewActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun buildReadingSession(v: View) {
+        val inputValidator = InputValidator()
         val assignmentName = findViewById<TextView>(R.id.assignementName).text.toString()
         val startPage = findViewById<TextView>(R.id.startPage).text.toString().toInt()
-        var endPage = getEditTextHandler(findViewById(R.id.endPage), "end page")
-        val addedTime = getEditTextHandler(findViewById(R.id.sessionTime), "time spent")
-        val date = getDateHandler(findViewById(R.id.readingDate))
+        var endPage = inputValidator.getEditTextHandler(findViewById(R.id.endPage), "end page")
+        val addedTime = inputValidator.getEditTextHandler(findViewById(R.id.sessionTime), "time spent")
+        val date = inputValidator.getDateHandler(findViewById(R.id.readingDate))
         val time = findViewById<TimePicker>(R.id.timePicker)
 
         //error checks
         if(endPage.isNullOrEmpty() || addedTime.isNullOrEmpty() || addedTime.isNullOrEmpty() || date == null) return
-        if(dateInFuture(findViewById(R.id.readingDate),date)) return
-        if(!pageErrorCheck(findViewById(R.id.endPage),startPage.toInt(),endPage.toInt())) return
+        if(!inputValidator.dateInPast(findViewById(R.id.readingDate),date,"Please record past reading")) return
+        if(!inputValidator.pageErrorCheck(findViewById(R.id.endPage),startPage.toInt(),endPage.toInt())) return
         if(endPage.toInt() >= studentController.student.getAssignment(assignmentName).pageEnd) {
             endPage = studentController.student.getAssignment(assignmentName).pageEnd.toString()
             studentController.student.getAssignment(assignmentName).completed = true
@@ -203,53 +206,5 @@ class StudentViewActivity : AppCompatActivity() {
         }
     }
 
-    //error handlers
-    fun getEditTextHandler(text: EditText, errText: String) : String? {
-        if(text.text.isNullOrEmpty()) {
-            text.error = "Please enter ${errText}"
-            return null
-        }
-        return text.text.toString().trim()
-    }
 
-    fun getClassHandler(text: AutoCompleteTextView) : String? {
-        if(studentController.student.getClassIndex(text.text.toString()) < 0) {
-            text.setError("Pick a class")
-            return null
-        }
-        return text.text.toString()
-    }
-
-    fun getDateHandler(dateDisp: DateDisplayView) : Date? {
-        val date = Date(dateDisp.picker.year-1900, dateDisp.picker.month, dateDisp.picker.day)
-        if(dateDisp.picker.month == 0 || dateDisp.picker.day == 0 || dateDisp.picker.day == 0) {
-            dateDisp.error = "Pick a date"
-            return null
-        }
-        return date
-    }
-
-    fun pageErrorCheck(text: TextView,startPage: Int, endPage: Int) : Boolean {
-        if(startPage > endPage) {
-            text.error = "Start page should be before end page"
-            return false
-        }
-        return true
-    }
-
-    fun dateInPast(dateDisp: DateDisplayView, date: Date) : Boolean{
-        if(date.before(Date())) {
-            dateDisp.error = "Due date must be in the future"
-            return true
-        }
-        return false
-    }
-
-    fun dateInFuture(dateDisp: DateDisplayView, date: Date) : Boolean{
-        if(date.after(Date())) {
-            dateDisp.error = "Please pick a past date"
-            return true
-        }
-        return false
-    }
 }
