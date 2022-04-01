@@ -49,7 +49,9 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
     }
 
     //Encodes given str to base 64
-    private fun base64Encode(str: String) : String { return String(android.util.Base64.encode(str.toByteArray(), android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
+    //private fun base64Encode(str: String) : String { return String(android.util.Base64.encode(str.toByteArray(), android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
+    //Placeholder version, replace once implemented
+    private fun base64Encode(str: String) : String { return ""}
 
     override fun toString(): String {
         val builder: StringBuilder = StringBuilder()

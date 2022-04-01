@@ -180,5 +180,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
     fun getReadingSpeed() : ArrayList<Double> { return readingSpeed }
 
     //setters
+    fun setClass(classes: ArrayList<PWClass>) { this.classes = classes}
     fun setSchedule(days: ArrayList<PlannedDay>) { schedule = days}
+    fun setReadingSpeed(speed: ArrayList<Double>) { readingSpeed = speed}
 }

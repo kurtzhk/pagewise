@@ -17,7 +17,7 @@ class AssignmentTest {
     fun updateCompletionEstimateNoProg() {
         val assign = Assignment("name", Date(),0,10)
         assign.updateCompletionEstimate(1.0)
-        assertThat(assign.timeToComplete).isEqualTo(10.0)
+        assertThat(assign.getTimeToComplete()).isEqualTo(10.0)
     }
 
     @Test
@@ -26,9 +26,9 @@ class AssignmentTest {
         val assign = Assignment("name", Date(),0,10)
         val rs = ReadingSession(0, 5,
             System.currentTimeMillis() -301000000, System.currentTimeMillis() -300000000)
-        assign.progress.addSession(rs)
+        assign.getProgress().addSession(rs)
         assign.updateCompletionEstimate(1.0)
-        assertThat(assign.timeToComplete).isEqualTo(5.0)
+        assertThat(assign.getTimeToComplete()).isEqualTo(5.0)
     }
 
     @Test
@@ -36,13 +36,13 @@ class AssignmentTest {
     fun updateCompletionEstimateZero() {
         val assign = Assignment("name", Date(),0,10)
         assign.updateCompletionEstimate(0.0)
-        assertThat(assign.timeToComplete).isEqualTo(0.0)
+        assertThat(assign.getTimeToComplete()).isEqualTo(0.0)
     }
     @Test
     //checks comp estimate when reading speed is negative
     fun updateCompletionEstimateNegative() {
         val assign = Assignment("name", Date(),0,10)
         assign.updateCompletionEstimate(-1.0)
-        assertThat(assign.timeToComplete).isEqualTo(0.0)
+        assertThat(assign.getTimeToComplete()).isEqualTo(0.0)
     }
 }

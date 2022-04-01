@@ -109,7 +109,7 @@ class InputValidatorTest : TestCase() {
         val text = AutoCompleteTextView(context)
         text.setText("test")
         val student = Student("student",0L)
-        student.classes.add(PWClass("error", ArrayList(),0L))
+        student.getClasses().add(PWClass("error", ArrayList(),0L))
         val result = InputValidator().getClassHandler(text,student)
         assertThat(result).isEqualTo(null)
     }
@@ -120,7 +120,7 @@ class InputValidatorTest : TestCase() {
         val text = AutoCompleteTextView(context)
         text.setText("test")
         val student = Student("student",0L)
-        student.classes.add(PWClass("test", ArrayList(),0L))
+        student.getClasses().add(PWClass("test", ArrayList(),0L))
         val result = InputValidator().getClassHandler(text,student)
         assertThat(result).isEqualTo("test")
     }
