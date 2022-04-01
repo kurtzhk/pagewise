@@ -13,15 +13,16 @@ import com.pagewisegroup.pagewise.R
 import com.pagewisegroup.pagewise.Student
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of [Student] profiles.
  */
 class ProfileViewFragment : Fragment() {
 
     private var columnCount = 1
-    val students = ArrayList<Student>()
+    private val students = ArrayList<Student>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //gets students from database
         val dbm = DatabaseManager(requireContext())
         val sCursor = dbm.readableDatabase?.rawQuery("SELECT * FROM STUDENTS", null)
         while (sCursor!!.moveToNext()) {
@@ -30,6 +31,7 @@ class ProfileViewFragment : Fragment() {
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
+        sCursor.close()
     }
 
     override fun onCreateView(
@@ -51,9 +53,9 @@ class ProfileViewFragment : Fragment() {
         return view
     }
 
+    //Uses profile view activity to create new students/profiles
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"
-
         @JvmStatic
         fun newInstance() =
             ProfileViewFragment().apply {

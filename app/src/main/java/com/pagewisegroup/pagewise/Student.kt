@@ -1,19 +1,20 @@
 package com.pagewisegroup.pagewise
 
-import android.util.Log
+import com.pagewisegroup.pagewise.schedule.PlannedDay
 import java.io.Serializable
 import java.lang.System.currentTimeMillis
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-// id fields should only be populated when reading from or writing to database.
+// Class containing assignments
 data class PWClass(val name: String, val assignments: ArrayList<Assignment> = ArrayList(), var id: Long? = null) : Serializable
 
-// Object that tracks a Student and their information including names, reading speed, and their classes.
+/**
+ * Student with given id and name containing [PWClass], [Assignment], schedule
+ */
 class Student(var name: String, var id: Long? = null) : Serializable {
     var classes = ArrayList<PWClass>()
     var schedule = ArrayList<PlannedDay>()
-    //reading speed for classes
     var readingSpeed = ArrayList<Double>()
 
     //list of all assignments without classes
@@ -108,8 +109,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
 
     //Gets schedule where there is one assignment per class
     fun getScheduleByAssignment() : ArrayList<PlannedDay> {
-        var byAssignmentSchedule = ArrayList<PlannedDay>()
-        var index = 0
+        val byAssignmentSchedule = ArrayList<PlannedDay>()
         schedule.forEach {
             val size = it.reading.size
             for(i in 0 until size) {
@@ -122,7 +122,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
 
     //gets reading time by assignment
     fun getReadingSpeedByAssign() : ArrayList<Double> {
-        var byAssign = ArrayList<Double>()
+        val byAssign = ArrayList<Double>()
         var index = 0
         classes.forEach {
             it.assignments.forEach {
@@ -140,9 +140,9 @@ class Student(var name: String, var id: Long? = null) : Serializable {
 
         classes.forEach{
             it.assignments.forEach{
-                var now = currentTimeMillis()
-                it.progress?.getSessions()?.forEach{
-                    var daysAgo = TimeUnit.DAYS.convert(now - it.startTime,TimeUnit.MILLISECONDS)
+                val now = currentTimeMillis()
+                it.progress.getSessions().forEach{
+                    val daysAgo = TimeUnit.DAYS.convert(now - it.startTime,TimeUnit.MILLISECONDS)
                     if(daysAgo < days) {
                         if(daysAgo <= 0){
                             return IntArray(0)
@@ -162,7 +162,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
             .append("name: $name read speed: $readingSpeed ppm id: $id\n")
         classes.forEach {
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
-            if(!it.assignments.isEmpty()) {
+            if(it.assignments.isNotEmpty()) {
                 for(i in 0 until (it.assignments.size-1)) {
                     studentInfo.append("${it.assignments[i].name} (Page ${it.assignments[i].progress.getCurrentPage()}), ")
                 }

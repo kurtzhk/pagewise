@@ -13,10 +13,10 @@
             android:name=".profile.ProfileViewActivity"
             android:exported="false" />
         <activity
-            android:name=".FinishReadingActivity"
+            android:name=".recordReading.FinishReadingActivity"
             android:exported="false" />
         <activity
-            android:name=".ReadingActivity"
+            android:name=".recordReading.ReadingActivity"
             android:exported="false"
             android:label="@string/title_activity_reading"
             android:theme="@style/Theme.PageWise.NoActionBar" />

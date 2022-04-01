@@ -5,6 +5,8 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
+import com.pagewisegroup.pagewise.util.DateDisplayView
+import com.pagewisegroup.pagewise.util.InputValidator
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
@@ -13,6 +15,10 @@ import org.junit.runners.JUnit4
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Unit test for input validator class
+ * Needs context to replicate edit text inputs
+ */
 @RunWith(JUnit4::class)
 class InputValidatorTest : TestCase() {
     lateinit var context: Context

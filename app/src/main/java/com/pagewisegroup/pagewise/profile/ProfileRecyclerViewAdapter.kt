@@ -12,15 +12,14 @@ import com.pagewisegroup.pagewise.StudentViewActivity
 import com.pagewisegroup.pagewise.databinding.FragmentProfileViewBinding
 
 /**
- * [RecyclerView.Adapter] that can display a [Student].
- * TODO: Replace the implementation with code for your data type.
+ * [RecyclerView.Adapter] that can displays [Student].
+ * Allows user to select from different [Student] profiles
  */
 class ProfileRecyclerViewAdapter(
     private val values: List<Student>
 ) : RecyclerView.Adapter<ProfileRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(
             FragmentProfileViewBinding.inflate(
                 LayoutInflater.from(parent.context),

@@ -1,12 +1,15 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.recordReading
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.pagewisegroup.pagewise.*
 
+/**
+ * Activity for uses to finish there current/active [ReadingSession] and update [Progress]
+ */
 class FinishReadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

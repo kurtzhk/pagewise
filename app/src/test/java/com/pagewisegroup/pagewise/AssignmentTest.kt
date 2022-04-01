@@ -6,6 +6,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import java.util.*
 
+/**
+ * Unit tests for assignment
+ */
 @RunWith(JUnit4::class)
 class AssignmentTest {
 

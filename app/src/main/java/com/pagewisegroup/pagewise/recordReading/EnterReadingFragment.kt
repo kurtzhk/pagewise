@@ -1,4 +1,4 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.recordReading
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.pagewisegroup.pagewise.Progress
+import com.pagewisegroup.pagewise.R
+import com.pagewisegroup.pagewise.ReadingSession
+import com.pagewisegroup.pagewise.Student
 
+/**
+ * Fragment for users to enter finished [ReadingSession] and to update [Progress]
+ */
 class EnterReadingFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {

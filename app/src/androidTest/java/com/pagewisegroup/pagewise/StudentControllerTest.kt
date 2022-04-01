@@ -11,6 +11,10 @@ import org.junit.runners.JUnit4
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Unit tests for StudentController
+ * Needs context for StudentController
+ */
 @RunWith(JUnit4::class)
 class StudentControllerTest : TestCase() {
     lateinit var context: Context

@@ -1,29 +1,33 @@
 package com.pagewisegroup.pagewise
 
-import android.util.Log
 import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.util.*
 
+/**
+ * Information about a reading assignment
+ */
+
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int): Serializable {
-    var completed: Boolean = false
+    var completed = false
     var timeToComplete: Double = 0.0
     var id: Long? = null
-    var uniqueString = ""
+    private var uniqueString = ""
     var progress: Progress = Progress(this)
 
-    /* creates unique string on creation */
+    //creates unique string on creation
     init {
-        //if(uniqueString.isBlank()) createUniqueString()
+        if(uniqueString.isBlank()) createUniqueString()
     }
 
+    //updates current page and time to complete
     fun updateCompletionEstimate(pagesPerMinute: Double) {
-        if(pagesPerMinute <= 0.0) timeToComplete = 0.0
-        else timeToComplete = (pageEnd - progress.getCurrentPage()) / pagesPerMinute
+        timeToComplete = if(pagesPerMinute <= 0.0) 0.0
+        else (pageEnd - progress.getCurrentPage()) / pagesPerMinute
     }
 
-    /*
     /* Builder object, so can create assignment from id */
+    // This was never implemented into the end product
     companion object UniqueStringBuilder {
         fun fromUniqueString(uniqueString: String): Assignment {
             val codedAssignInfo = uniqueString.split("&")
@@ -32,20 +36,20 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
             return Assignment(base64Decode(codedAssignInfo[0]), date, base64Decode(codedAssignInfo[4]).toInt(),base64Decode(codedAssignInfo[5]).toInt())
         }
         /* Decodes given str to base 64  */
-        fun base64Decode(str: String) : String { return String(android.util.Base64.decode(str, android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
+        private fun base64Decode(str: String) : String { return String(android.util.Base64.decode(str, android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
     }
 
     /* Creates unique string unique string for assignment */
-    fun createUniqueString() {
+    private fun createUniqueString() {
         if(name.isBlank()) return
         /* String is base64 encoded with "&" as separators */
         uniqueString = base64Encode(name) + "&" + base64Encode((dueDate.year).toString()) + "&" +
             base64Encode((dueDate.month).toString()) + "&" + base64Encode((dueDate.date).toString()) + "&" +
             base64Encode(pageStart.toString()) + "&" + base64Encode(pageEnd.toString())
-    }*/
+    }
 
-    /* Encodes given str to base 64  */
-    //fun base64Encode(str: String) : String { return String(android.util.Base64.encode(str.toByteArray(), android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
+    //Encodes given str to base 64
+    private fun base64Encode(str: String) : String { return String(android.util.Base64.encode(str.toByteArray(), android.util.Base64.DEFAULT), StandardCharsets.UTF_8).trim() }
 
     override fun toString(): String {
         val builder: StringBuilder = StringBuilder()

@@ -5,11 +5,13 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PagewiseDB", null, 1){
+/**
+ * Creates and updates the local database
+ */
+class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PageWiseDB", null, 1){
 
     // Creates the tables for our database. Assignments, classes, students,
     // and a join table between students and classes.
@@ -120,10 +122,6 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         }
         values.clear()
         values.put("student_id", student.id)
-        // this is hacky, there is probably a better solution but I am trying to avoid the problem
-        // of duplicate enrollments as well as dropping enrollments from the database if they don't
-        // exist anymore. Maybe a method in student that handles dropping classes that also manages
-        // the DB? I have to think about it.
         writableDatabase?.delete("ENROLLMENTS", "student_id = ${student.id}", null)
         for (c in student.classes) {
             val cID: Long = recordClass(c)
@@ -133,6 +131,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         }
     }
 
+    //returns student with matching id
     fun fetchStudent(id: Long): Student {
         val sTable = readableDatabase?.rawQuery("SELECT name FROM STUDENTS WHERE student_id = $id", null)
         val eTable = readableDatabase?.rawQuery("SELECT class_id FROM ENROLLMENTS WHERE student_id = $id", null)
@@ -147,16 +146,19 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         return s
     }
 
+    //returns number of classes in db
     fun numberOfClasses(db: SQLiteDatabase?) : Int {
         val cTable = db?.rawQuery("SELECT class_id FROM CLASSES", null) ?: return 0
         return cTable.count
     }
 
+    //returns number of assignments in db
     fun numberOfAssignments(db: SQLiteDatabase?) : Int {
-        val ATable = db?.rawQuery("SELECT class_id FROM ASSIGNMENTS", null) ?: return 0
-        return ATable.count
+        val aTable = db?.rawQuery("SELECT class_id FROM ASSIGNMENTS", null) ?: return 0
+        return aTable.count
     }
 
+    //returns a class with given id
     fun fetchClass(id: Long): PWClass {
         val cTable = readableDatabase?.rawQuery("SELECT name FROM CLASSES WHERE class_id = $id", null)
         val aTable = readableDatabase?.rawQuery("SELECT assignment_id FROM ASSIGNMENTS WHERE class_id = $id", null)
@@ -171,7 +173,8 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         return PWClass(name!!, assignments, id)
     }
 
-    fun fetchAssignment(id: Long): Assignment? {
+    //returns assignment with given id
+    private fun fetchAssignment(id: Long): Assignment? {
         val aTable = readableDatabase?.rawQuery(
             "SELECT name,due_date,page_start,page_end,time_to_complete,completed FROM ASSIGNMENTS WHERE assignment_id = $id",
             null
@@ -204,7 +207,8 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         return null
     }
 
-    fun fetchSession(id: Long): ReadingSession? {
+    //returns reading session with given id
+    private fun fetchSession(id: Long): ReadingSession? {
         val rTable = readableDatabase?.rawQuery(
             "SELECT page_start, page_end, start_time, end_time FROM SESSIONS WHERE session_id = $id",
             null
@@ -219,21 +223,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "Pagewis
         return null
     }
 
-    //Prints the database to the log for debugging.
-    fun logDatabase() {
-        val aTable = readableDatabase?.rawQuery("SELECT * FROM ASSIGNMENTS", null)
-        val cTable = readableDatabase?.rawQuery("SELECT * FROM CLASSES", null)
-        val sTable = readableDatabase?.rawQuery("SELECT * FROM STUDENTS", null)
-        val eTable = readableDatabase?.rawQuery("SELECT * FROM ENROLLMENTS", null)
-        Log.d("Assignment Table", cursorToString(aTable!!))
-        Log.d("Class Table", cursorToString(cTable!!))
-        Log.d("Student Table", cursorToString(sTable!!))
-        Log.d("Enrollment Table", cursorToString(eTable!!))
-        aTable.close()
-        cTable.close()
-        sTable.close()
-        eTable.close()
-    }
+    //Converts given cursor to string and returns
     private fun cursorToString(c: Cursor): String {
         val out = StringBuilder()
         out.append("--TABLE--\n")

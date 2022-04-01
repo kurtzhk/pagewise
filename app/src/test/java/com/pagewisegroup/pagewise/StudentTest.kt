@@ -7,6 +7,9 @@ import org.junit.runners.JUnit4
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Unit testing for student class
+ */
 @RunWith(JUnit4::class)
 class StudentTest {
 

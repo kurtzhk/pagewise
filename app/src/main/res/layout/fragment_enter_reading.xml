@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnterReadingFragment">
+    tools:context=".recordReading.EnterReadingFragment">
 
 
     <TextView
@@ -107,7 +107,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.pagewisegroup.pagewise.DateDisplayView
+    <com.pagewisegroup.pagewise.util.DateDisplayView
         android:id="@+id/readingDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

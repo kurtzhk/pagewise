@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 
+/**
+ * Fragment allowing user to create assignment
+ */
 class EnterAssignmentFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //TODO: remove when bundles added
         student = requireActivity().intent.getSerializableExtra("STUDENT") as Student
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
