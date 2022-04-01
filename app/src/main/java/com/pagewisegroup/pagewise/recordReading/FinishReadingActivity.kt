@@ -1,12 +1,15 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.recordReading
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.pagewisegroup.pagewise.*
 
+/**
+ * Activity for uses to finish there current/active [ReadingSession] and update [Progress]
+ */
 class FinishReadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,7 +17,7 @@ class FinishReadingActivity : AppCompatActivity() {
 
         val student = intent.getSerializableExtra("STUDENT") as Student
         val aName = intent.getSerializableExtra("pagewise.ASSN_NAME") as String
-        val progressObj = student.getAssignment(aName).progress
+        val progressObj = student.getAssignment(aName).getProgress()
 
         val btn = findViewById<Button>(R.id.confirm_session_button)
         val num = findViewById<EditText>(R.id.lastpagenum)
@@ -26,7 +29,7 @@ class FinishReadingActivity : AppCompatActivity() {
                 //To handle "over" reading
                 if(n >= progressObj.assignment.pageEnd) {
                     n = progressObj.assignment.pageEnd
-                    progressObj.assignment.completed = true
+                    progressObj.assignment.setCompleted(true)
                 }
                 //log session and return to student view
                 progressObj.addSessionDB(this,student.id,n,intent.getLongExtra("pagewise.STIME",0),

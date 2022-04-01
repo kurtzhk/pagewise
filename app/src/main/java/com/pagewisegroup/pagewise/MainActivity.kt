@@ -17,11 +17,14 @@ import com.pagewisegroup.pagewise.profile.ProfileViewActivity
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+/**
+ * Starts PageWise displaying logo
+ */
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var activityStarted = false;
+        var activityStarted = false
 
         val intent = Intent(this, ProfileViewActivity::class.java)
 

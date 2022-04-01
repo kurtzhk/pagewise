@@ -1,16 +1,19 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.util
 
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.TextView
+import com.pagewisegroup.pagewise.Student
 import java.util.*
 
-//Handles input validation and error checks
+/**
+ * Handles input validation and error checks
+ */
 class InputValidator {
     //checks if edit text is null, giving errText message if it is
     fun getEditTextHandler(text: EditText, errText: String) : String? {
         if(text.text.isNullOrEmpty()) {
-            text.error = "Please enter ${errText}"
+            text.error = "Please enter $errText"
             return null
         }
         return text.text.toString().trim()
@@ -19,7 +22,7 @@ class InputValidator {
     //checks if class with given name exists, error message if it does not
     fun getClassHandler(text: AutoCompleteTextView,student: Student) : String? {
         if(student.getClassIndex(text.text.toString()) < 0) {
-            text.setError("Pick a class")
+            text.error = "Pick a class"
             return null
         }
         return text.text.toString()

@@ -1,22 +1,19 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.schedule
 
 import android.icu.text.DateFormatSymbols
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.pagewisegroup.pagewise.databinding.FragmentAssignmentViewBinding
 import com.pagewisegroup.pagewise.databinding.FragmentScheduleViewBinding
-import com.pagewisegroup.pagewise.placeholder.PlaceholderContent.PlaceholderItem
 import kotlin.math.ceil
 import kotlin.math.floor
 
 /**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
+ * [RecyclerView.Adapter] that can display a schedule made up of [PlannedDay].
+ * this will take the student object's schedule and generate a view for it.
  */
 class ScheduleRecyclerViewAdapter(private val schedule: ArrayList<PlannedDay>) : RecyclerView.Adapter<ScheduleRecyclerViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

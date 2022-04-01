@@ -59,7 +59,7 @@
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.pagewisegroup.pagewise.DateDisplayView
+    <com.pagewisegroup.pagewise.util.DateDisplayView
         android:id="@+id/assignmentDueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,8 +1,10 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.schedule
 
 import android.icu.text.DateFormatSymbols
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.pagewisegroup.pagewise.Assignment
+import com.pagewisegroup.pagewise.util.TimeManager
 import java.io.Serializable
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -10,13 +12,16 @@ import kotlin.collections.ArrayList
 import kotlin.math.ceil
 import kotlin.math.floor
 
+//Planned reading session
 data class PlannedReading(var assignmentName: String, var plannedMinutes: Double, var startPages: Int, var endPage: Int) : Serializable
+//Planned reading sessions for a day
 data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>): Serializable
 
-//Right now this could be merged with student, but when updated in probably will be nice to have it independent
-//TODO("Overhaul once have more data to work with")
-class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val readingSpeed: ArrayList<Double>) {
-    var schedule = ArrayList<PlannedDay>()
+/**
+ * Creates or updates a planned schedule
+ */
+class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, readingSpeed: ArrayList<Double>) {
+    private var schedule = ArrayList<PlannedDay>()
 
     init {
         for(i in 0 until unfinishedAssignments.size)
@@ -24,8 +29,8 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
     }
 
     //Adds given assignment to schedule
-    //right now just evenly split works every day for each assignment
-    fun updateSchedule(assignment: Assignment, readingSpeedAssign: Double) {
+    //Currently just evenly split works every day for each assignment
+    private fun updateSchedule(assignment: Assignment, readingSpeedAssign: Double) {
         val timeManager = TimeManager()
         var currentDate = Date()
         //today only counts today as a work day if there is 10 hr+ left in it
@@ -34,15 +39,15 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         }
 
         //if the assignment is passed due ignore it
-        var daysLeft = timeManager.getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
+        val daysLeft = timeManager.getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
         if(daysLeft <= 0) return
 
-        val pagesPerDay = (assignment.pageEnd - assignment.progress.getCurrentPage()) / daysLeft.toDouble()
+        val pagesPerDay = (assignment.pageEnd - assignment.getProgress().getCurrentPage()) / daysLeft.toDouble()
 
         //Adds day to schedule
         var today = false
         var date = currentDate
-        var pageEnd = assignment.progress.getCurrentPage()
+        var pageEnd = assignment.getProgress().getCurrentPage()
         for(i in 1..daysLeft) {
             val pageStart = pageEnd
 
@@ -59,7 +64,13 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
             if(dayIndex < 0)
                 schedule.add(PlannedDay(date, ArrayList()))
             if(pageEnd-pageStart != 0)
-                schedule[timeManager.findDayIndex(schedule, date)].reading.add(PlannedReading(assignment.name,(pageEnd-pageStart)/readingSpeedAssign,pageStart,pageEnd))
+                schedule[timeManager.findDayIndex(schedule, date)].reading.add(
+                    PlannedReading(
+                        assignment.name,
+                        (pageEnd-pageStart)/readingSpeedAssign,
+                        pageStart,
+                        pageEnd
+                    ))
         }
     }
 
@@ -81,4 +92,8 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, val reading
         }
         return scheduleString
     }
+
+    //gets schedule
+    fun getSchedule() : ArrayList<PlannedDay> { return schedule }
+
 }

@@ -1,6 +1,8 @@
 package com.pagewisegroup.pagewise
 
 import com.google.common.truth.Truth.assertThat
+import com.pagewisegroup.pagewise.schedule.PlannedDay
+import com.pagewisegroup.pagewise.util.TimeManager
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -8,6 +10,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
+/**
+ * Unit tests for time manager
+ */
 @RunWith(JUnit4::class)
 class TimeManagerTest {
 

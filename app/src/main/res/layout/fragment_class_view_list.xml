@@ -8,5 +8,5 @@
     android:layout_height="match_parent"
     android:layout_margin="50dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".StudentClassFragment"
+    tools:context=".classView.StudentClassFragment"
     tools:listitem="@layout/fragment_class_view" />

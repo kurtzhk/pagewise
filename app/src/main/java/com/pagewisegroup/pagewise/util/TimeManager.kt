@@ -1,11 +1,13 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.util
 
+import com.pagewisegroup.pagewise.schedule.PlannedDay
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.math.abs
 
-//helps manage time with dates and plannedDays
+/**
+ * helps manage time with dates and plannedDays and converting between the two
+ */
 class TimeManager {
     //returns index of date in schedule
     //returns -1 if not in schedule

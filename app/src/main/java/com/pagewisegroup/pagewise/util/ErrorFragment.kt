@@ -1,4 +1,4 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.util
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.pagewisegroup.pagewise.R
+import com.pagewisegroup.pagewise.Student
 
+/**
+ * Fragment displaying error when one occurs
+ */
 class ErrorFragment : Fragment() {
     lateinit var student : Student
     override fun onCreate(savedInstanceState: Bundle?) {

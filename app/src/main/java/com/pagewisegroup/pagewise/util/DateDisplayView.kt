@@ -1,10 +1,13 @@
-package com.pagewisegroup.pagewise
+package com.pagewisegroup.pagewise.util
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import kotlin.text.StringBuilder
 
+/**
+ * Displays date
+ */
 class DateDisplayView : AppCompatEditText {
     var picker: DatePickerFragment = DatePickerFragment(this)
     constructor(context: Context) : super(context)
