@@ -16,7 +16,6 @@ import com.pagewisegroup.pagewise.Student
  * Fragment to display a list of [Assignment]
  * */
 class AssignmentViewFragment : Fragment() {
-
     private var columnCount = 1
     private var assignments: ArrayList<Assignment>? = null
     override fun onCreate(savedInstanceState: Bundle?) {

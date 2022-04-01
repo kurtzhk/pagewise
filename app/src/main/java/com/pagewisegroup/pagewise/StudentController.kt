@@ -11,7 +11,7 @@ class StudentController (context: Context, val student: Student) {
     private lateinit var schedulePlanner: SchedulePlanner
 
     init {
-        if(student.classes.isEmpty()) fetchClasses() //avoid class duplication
+        if(student.getClasses().isEmpty()) fetchClasses() //avoid class duplication
         calculateReadingSpeeds()
     }
 
@@ -19,7 +19,7 @@ class StudentController (context: Context, val student: Student) {
     private fun fetchClasses() {
         val db = dbm.writableDatabase
         for(i in 1..dbm.numberOfClasses(db)) {
-            student.classes.add(dbm.fetchClass(i.toLong()))
+            student.getClasses().add(dbm.fetchClass(i.toLong()))
         }
     }
 
@@ -27,13 +27,13 @@ class StudentController (context: Context, val student: Student) {
     fun addClass(name: String) {
         if(student.getClassIndex(name) > 0) return
         val pwClass = PWClass(name,ArrayList(),null)
-        student.classes.add(pwClass)
+        student.getClasses().add(pwClass)
         dbm.recordClass(pwClass)
     }
 
     //adds assignment to student && database
     fun addAssignment(assignment: Assignment, className: String) {
-        val pwClass = student.classes[student.getClassIndex(className)-1]
+        val pwClass = student.getClasses()[student.getClassIndex(className)-1]
         if(student.getAssignIndex(assignment.name,pwClass) > 0) return
         pwClass.assignments.add(assignment)
         dbm.recordAssignment(assignment,student.getClassIndex(className).toLong())
@@ -42,9 +42,9 @@ class StudentController (context: Context, val student: Student) {
     //adds reading assignment to student && database
     fun addReadingSession(assignName: String, startPage: Int, endPage: Int, startTime: Long, endTime: Long) {
         val rs = ReadingSession(startPage,endPage,startTime,endTime)
-        if(student.getAssignment(assignName).progress.sessionExists(rs)) return
-        student.getAssignment(assignName).progress.addSession(rs)
-        dbm.recordSession(rs, student.getAssignment(assignName).id!!, student.id!!)
+        if(student.getAssignment(assignName).getProgress().sessionExists(rs)) return
+        student.getAssignment(assignName).getProgress().addSession(rs)
+        dbm.recordSession(rs, student.getAssignment(assignName).getId()!!, student.id!!)
     }
 
     /* creates assignment from uniqueString */
@@ -61,14 +61,14 @@ class StudentController (context: Context, val student: Student) {
         var totalReadingSpeed = calculateReadingSpeed(null)
         //If there is no readings record do the average of a page a minute
         if(totalReadingSpeed == 0.0) totalReadingSpeed = 1.0
-        student.classes.forEach {
+        student.getClasses().forEach {
             val classReadingSpeed = calculateReadingSpeed(it.name)
             //if there is > 5 sessions adds classReading speed, else adds total
             if(classReadingSpeed == 0.0) {
-                student.readingSpeed.add(totalReadingSpeed)
+                student.getReadingSpeed().add(totalReadingSpeed)
                 it.assignments.forEach { it.updateCompletionEstimate(totalReadingSpeed) }
             } else {
-                student.readingSpeed.add(classReadingSpeed)
+                student.getReadingSpeed().add(classReadingSpeed)
                 it.assignments.forEach { it.updateCompletionEstimate(classReadingSpeed) }
             }
         }
@@ -78,11 +78,11 @@ class StudentController (context: Context, val student: Student) {
     fun calculateReadingSpeed(className: String?) : Double {
         var total = 0.0
         var size = 0
-        student.classes.forEach {
+        student.getClasses().forEach {
             val currentClass = it.name
             it.assignments.forEach {
                 if((className != null && currentClass == className) || className == null) {
-                    it.progress.getSessions().forEach {
+                    it.getProgress().getSessions().forEach {
                         val time = (it.endTime-it.startTime).toDouble()/60000
                         //only includes reading sessions longer then 1 minute
                         if(time > 1.0) {
@@ -105,6 +105,6 @@ class StudentController (context: Context, val student: Student) {
         //creates schedule
         schedulePlanner = SchedulePlanner(student.getUnfishedAssignments(),student.getReadingSpeedByAssign())
         //sets student schedule
-        student.schedule = schedulePlanner.schedule
+        student.setSchedule(schedulePlanner.getSchedule())
     }
 }

@@ -29,7 +29,7 @@ class EnterReadingFragment : Fragment() {
         //sets the assignment name
         view.findViewById<TextView>(R.id.assignementName).setText(assignment?.name, TextView.BufferType.EDITABLE)
         //sets start page to current page
-        view.findViewById<EditText>(R.id.startPage).setText(assignment?.progress?.getCurrentPage().toString(), TextView.BufferType.EDITABLE)
+        view.findViewById<EditText>(R.id.startPage).setText(assignment?.getProgress()?.getCurrentPage().toString(), TextView.BufferType.EDITABLE)
         return view
     }
 }

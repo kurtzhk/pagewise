@@ -30,7 +30,7 @@ class ScheduleViewFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_schedule_view_list, container, false)
         //Checks if empty and gives error message if there is
-        if(student.schedule.isEmpty()) {
+        if(student.getSchedule().isEmpty()) {
             val bundle = Bundle()
             bundle.putString("errorMessage", "Please add a non-overdue assignment")
             val fragment = ErrorFragment()

@@ -32,13 +32,13 @@ class AssignmentRecyclerViewAdapter(private val assignments: ArrayList<Assignmen
         val yr = (assignment.dueDate.year+1900).toString()
         holder.contentView.text = "${assignment.dueDate.month}/${assignment.dueDate.date}/${yr.subSequence(yr.length-2, yr.length)}"
         //calculates progress
-        holder.barView.progress = (assignment.progress.getPortionComplete() * 100).toInt()
-        val progress = "${assignment.progress.getCurrentPage() - assignment.pageStart}/${assignment.pageEnd - assignment.pageStart}"
+        holder.barView.progress = (assignment.getProgress().getPortionComplete() * 100).toInt()
+        val progress = "${assignment.getProgress().getCurrentPage() - assignment.pageStart}/${assignment.pageEnd - assignment.pageStart}"
         holder.progressTextView.text = progress
         val time = StringBuilder()
         //writes and rounds estimated time
-        if(assignment.timeToComplete > 60) time.append("${floor(assignment.timeToComplete).toInt()/60}h")
-        val min = ceil(assignment.timeToComplete%60).toInt()
+        if(assignment.getTimeToComplete() > 60) time.append("${floor(assignment.getTimeToComplete()).toInt()/60}h")
+        val min = ceil(assignment.getTimeToComplete()%60).toInt()
         if(min > 0) time.append(" ${min}min")
         holder.timeTextView.text = time
     }

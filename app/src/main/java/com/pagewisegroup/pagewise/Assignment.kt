@@ -9,11 +9,11 @@ import java.util.*
  */
 
 class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pageEnd: Int): Serializable {
-    var completed = false
-    var timeToComplete: Double = 0.0
-    var id: Long? = null
+    private var completed = false
+    private var timeToComplete: Double = 0.0
+    private var id: Long? = null
     private var uniqueString = ""
-    var progress: Progress = Progress(this)
+    private var progress: Progress = Progress(this)
 
     //creates unique string on creation
     init {
@@ -64,4 +64,16 @@ class Assignment(val name: String, var dueDate: Date, val pageStart: Int, val pa
             .append(uniqueString)
         return builder.toString()
     }
+
+    //getters
+    fun getProgress() : Progress { return progress }
+    fun getCompleted() : Boolean { return completed }
+    fun getTimeToComplete() : Double { return timeToComplete}
+    fun getId() : Long? { return id }
+
+    //setters
+    fun setProgress(prog: Progress) {progress = prog}
+    fun setCompleted(complete : Boolean) { completed = complete}
+    fun setTimeToComplete(time : Double) { timeToComplete = time}
+    fun setId(id: Long?) {this.id = id}
 }

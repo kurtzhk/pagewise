@@ -13,9 +13,9 @@ data class PWClass(val name: String, val assignments: ArrayList<Assignment> = Ar
  * Student with given id and name containing [PWClass], [Assignment], schedule
  */
 class Student(var name: String, var id: Long? = null) : Serializable {
-    var classes = ArrayList<PWClass>()
-    var schedule = ArrayList<PlannedDay>()
-    var readingSpeed = ArrayList<Double>()
+    private var classes = ArrayList<PWClass>()
+    private var schedule = ArrayList<PlannedDay>()
+    private var readingSpeed = ArrayList<Double>()
 
     //list of all assignments without classes
     fun getAllAssignments() : ArrayList<Assignment> {
@@ -67,7 +67,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         val unfishedAssignments = ArrayList<Assignment>()
         classes.forEach {
             it.assignments.forEach {
-                if(!it.completed)
+                if(!it.getCompleted())
                     unfishedAssignments.add(it)
             }
         }
@@ -126,7 +126,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         var index = 0
         classes.forEach {
             it.assignments.forEach {
-                if(!it.completed) byAssign.add(readingSpeed[index])
+                if(!it.getCompleted()) byAssign.add(readingSpeed[index])
             }
             index++
         }
@@ -141,7 +141,7 @@ class Student(var name: String, var id: Long? = null) : Serializable {
         classes.forEach{
             it.assignments.forEach{
                 val now = currentTimeMillis()
-                it.progress.getSessions().forEach{
+                it.getProgress().getSessions().forEach{
                     val daysAgo = TimeUnit.DAYS.convert(now - it.startTime,TimeUnit.MILLISECONDS)
                     if(daysAgo < days) {
                         if(daysAgo <= 0){
@@ -164,13 +164,21 @@ class Student(var name: String, var id: Long? = null) : Serializable {
             studentInfo.append("Class ${it.name} \n\t Assignments: ")
             if(it.assignments.isNotEmpty()) {
                 for(i in 0 until (it.assignments.size-1)) {
-                    studentInfo.append("${it.assignments[i].name} (Page ${it.assignments[i].progress.getCurrentPage()}), ")
+                    studentInfo.append("${it.assignments[i].name} (Page ${it.assignments[i].getProgress().getCurrentPage()}), ")
                 }
-                studentInfo.append("${it.assignments[it.assignments.size-1].name} (Page ${it.assignments[it.assignments.size-1].progress.getCurrentPage()})\n")
+                studentInfo.append("${it.assignments[it.assignments.size-1].name} (Page ${it.assignments[it.assignments.size-1].getProgress().getCurrentPage()})\n")
             } else {
                 studentInfo.append("N/A \n")
             }
         }
         return studentInfo.toString()
     }
+
+    //getters
+    fun getClasses() : ArrayList<PWClass> { return classes }
+    fun getSchedule() : ArrayList<PlannedDay> { return schedule }
+    fun getReadingSpeed() : ArrayList<Double> { return readingSpeed }
+
+    //setters
+    fun setSchedule(days: ArrayList<PlannedDay>) { schedule = days}
 }

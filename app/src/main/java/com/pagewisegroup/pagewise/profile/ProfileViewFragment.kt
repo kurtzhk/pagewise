@@ -16,7 +16,6 @@ import com.pagewisegroup.pagewise.Student
  * A fragment representing a list of [Student] profiles.
  */
 class ProfileViewFragment : Fragment() {
-
     private var columnCount = 1
     private val students = ArrayList<Student>()
 

@@ -91,7 +91,7 @@ class StudentViewActivity : AppCompatActivity() {
         if(!inputValidator.pageErrorCheck(findViewById(R.id.endPage), startPage,endPage.toInt())) return
         if(endPage.toInt() >= studentController.student.getAssignment(assignmentName).pageEnd) {
             endPage = studentController.student.getAssignment(assignmentName).pageEnd.toString()
-            studentController.student.getAssignment(assignmentName).completed = true
+            studentController.student.getAssignment(assignmentName).setCompleted(true)
         }
 
         //converts date && time to milliseconds

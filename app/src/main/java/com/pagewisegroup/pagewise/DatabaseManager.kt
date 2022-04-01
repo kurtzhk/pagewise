@@ -72,12 +72,12 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PageWis
         values.put("due_date", assignment.dueDate.time)
         values.put("page_start", assignment.pageStart)
         values.put("page_end", assignment.pageEnd)
-        values.put("time_to_complete", assignment.timeToComplete)
-        values.put("completed", assignment.completed)
-        if (assignment.id != null) {
-            writableDatabase?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.id}", null)
+        values.put("time_to_complete", assignment.getTimeToComplete())
+        values.put("completed", assignment.getCompleted())
+        if (assignment.getId() != null) {
+            writableDatabase?.update("ASSIGNMENTS", values, "assignment_id = ${assignment.getId()}", null)
         } else {
-            assignment.id = writableDatabase?.insert("ASSIGNMENTS", null, values)
+            assignment.setId(writableDatabase?.insert("ASSIGNMENTS", null, values))
         }
     }
 
@@ -123,7 +123,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PageWis
         values.clear()
         values.put("student_id", student.id)
         writableDatabase?.delete("ENROLLMENTS", "student_id = ${student.id}", null)
-        for (c in student.classes) {
+        for (c in student.getClasses()) {
             val cID: Long = recordClass(c)
             values.put("class_id", cID)
             writableDatabase?.insert("ENROLLMENTS", null, values)
@@ -140,7 +140,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PageWis
         val s = Student(name!!, id)
         if (eTable?.moveToFirst() == true) {
             do {
-                s.classes.add(fetchClass(eTable.getLong(0)))
+                s.getClasses().add(fetchClass(eTable.getLong(0)))
             } while (eTable.moveToNext())
         }
         return s
@@ -191,9 +191,9 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PageWis
             val timeToComplete = aTable.getDouble(4)
             val completed = aTable.getInt(5) == 1
             val a = Assignment(name, Date(dueDate), pageStart, pageEnd)
-            a.timeToComplete = timeToComplete
-            a.completed = completed
-            a.id = id
+            a.setTimeToComplete(timeToComplete)
+            a.setCompleted(completed)
+            a.setId(id)
             //updates progress
             val progress = Progress(a)
             if (sTable?.moveToFirst() == true) {
@@ -201,7 +201,7 @@ class DatabaseManager(val context: Context) : SQLiteOpenHelper(context, "PageWis
                     progress.addSession(fetchSession(sTable.getLong(0))!!)
                 } while (sTable.moveToNext())
             }
-            a.progress = progress
+            a.setProgress(progress)
             return a
         }
         return null

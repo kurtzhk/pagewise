@@ -21,7 +21,7 @@ data class PlannedDay(val date: Date, var reading: ArrayList<PlannedReading>): S
  * Creates or updates a planned schedule
  */
 class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, readingSpeed: ArrayList<Double>) {
-    var schedule = ArrayList<PlannedDay>()
+    private var schedule = ArrayList<PlannedDay>()
 
     init {
         for(i in 0 until unfinishedAssignments.size)
@@ -42,12 +42,12 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, readingSpee
         val daysLeft = timeManager.getDateDiff(currentDate,assignment.dueDate,TimeUnit.DAYS)
         if(daysLeft <= 0) return
 
-        val pagesPerDay = (assignment.pageEnd - assignment.progress.getCurrentPage()) / daysLeft.toDouble()
+        val pagesPerDay = (assignment.pageEnd - assignment.getProgress().getCurrentPage()) / daysLeft.toDouble()
 
         //Adds day to schedule
         var today = false
         var date = currentDate
-        var pageEnd = assignment.progress.getCurrentPage()
+        var pageEnd = assignment.getProgress().getCurrentPage()
         for(i in 1..daysLeft) {
             val pageStart = pageEnd
 
@@ -92,4 +92,8 @@ class SchedulePlanner (unfinishedAssignments: ArrayList<Assignment>, readingSpee
         }
         return scheduleString
     }
+
+    //gets schedule
+    fun getSchedule() : ArrayList<PlannedDay> { return schedule }
+
 }

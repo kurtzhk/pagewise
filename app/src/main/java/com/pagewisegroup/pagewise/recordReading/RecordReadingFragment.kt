@@ -17,7 +17,8 @@ import com.pagewisegroup.pagewise.Student
  * Allows user to pick between live and past reading session to record
  */
 class RecordReadingFragment : Fragment() {
-    lateinit var student : Student
+    private lateinit var student : Student
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         student = requireActivity().intent.getSerializableExtra("STUDENT") as Student

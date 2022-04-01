@@ -37,7 +37,7 @@ class StudentClassFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = StudentClassRecyclerViewAdapter(student.classes)
+                adapter = StudentClassRecyclerViewAdapter(student.getClasses())
             }
         }
         return view

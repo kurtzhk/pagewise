@@ -24,7 +24,6 @@ import kotlin.math.floor
 const val WEEK_IN_MILLIS : Long = 604800000000
 
 class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : RecyclerView.Adapter<StudentClassRecyclerViewAdapter.ViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             FragmentClassViewBinding.inflate(
@@ -41,9 +40,9 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         val curTime : Long = currentTimeMillis()
         //writes and calculates progress
         val weekAssignments : List<Assignment> = item.assignments.filter { (it.dueDate.time >= curTime && (it.dueDate.time <= curTime + WEEK_IN_MILLIS)) }
-        val assignmentProgresses : Float = weekAssignments.map { it.progress.getCurrentPage() }.sum().toFloat()
+        val assignmentProgresses : Float = weekAssignments.map { it.getProgress().getCurrentPage() }.sum().toFloat()
         val assignmentPages : Float = weekAssignments.map { it.pageEnd }.sum().toFloat()
-        val timeLeft = weekAssignments.sumOf{it.timeToComplete}
+        val timeLeft = weekAssignments.sumOf{it.getTimeToComplete()}
         holder.bar.progress = ((assignmentProgresses / assignmentPages) * 100).toInt()
         if(weekAssignments.isEmpty()) holder.bar.progress = 100
         holder.pwClass = item

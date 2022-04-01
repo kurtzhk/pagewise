@@ -26,7 +26,7 @@ class ReadingActivity : AppCompatActivity() {
         val assignName = intent.getSerializableExtra("ASSIGN_NAME") as String
         val assignment = student.getAssignment(assignName)
 
-        findViewById<TextView>(R.id.assn_name).text = assignment.name + "\nPage " + assignment.progress.getCurrentPage()
+        findViewById<TextView>(R.id.assn_name).text = assignment.name + "\nPage " + assignment.getProgress().getCurrentPage()
         startEndButton.setOnClickListener{
             //Finish reading ression
             if(midSession) {
