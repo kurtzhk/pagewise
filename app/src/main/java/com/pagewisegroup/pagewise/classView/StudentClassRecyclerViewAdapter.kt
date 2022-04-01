@@ -41,10 +41,11 @@ class StudentClassRecyclerViewAdapter(private val values: List<PWClass>) : Recyc
         val curTime : Long = currentTimeMillis()
         //writes and calculates progress
         val weekAssignments : List<Assignment> = item.assignments.filter { (it.dueDate.time >= curTime && (it.dueDate.time <= curTime + WEEK_IN_MILLIS)) }
-        val assignmentProgresses : Float = weekAssignments.map { it.progress.getCurrentPage() }.sum().toFloat() + 1
-        val assignmentPages : Float = weekAssignments.map { it.pageEnd }.sum().toFloat() + 1
+        val assignmentProgresses : Float = weekAssignments.map { it.progress.getCurrentPage() }.sum().toFloat()
+        val assignmentPages : Float = weekAssignments.map { it.pageEnd }.sum().toFloat()
         val timeLeft = weekAssignments.sumOf{it.timeToComplete}
         holder.bar.progress = ((assignmentProgresses / assignmentPages) * 100).toInt()
+        if(weekAssignments.isEmpty()) holder.bar.progress = 100
         holder.pwClass = item
         val progressText = "Weekly Progress: ${holder.bar.progress}%"
         holder.progressText.text = progressText
